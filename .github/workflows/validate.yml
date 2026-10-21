@@ -32,6 +32,11 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
+          # The brands check wants this integration listed in the
+          # home-assistant/brands repository, which a custom repository
+          # cannot do from inside itself. Everything else HACS checks, it
+          # checks. Submitting to brands is a separate, later step.
+          ignore: brands
 
   lint:
     name: Lint and tests
@@ -41,7 +46,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - run: pip install ruff pytest pyyaml
+      - run: pip install ruff==0.14.14 pytest pyyaml
       - run: ruff check .
       - run: ruff format --check .
       # These need no Home Assistant: they check the things that drift —

@@ -1,8 +1,11 @@
 speak:
-  target:
-    device:
-      integration: terrier
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
     text:
       required: true
       example: "Le facteur est passé."
@@ -11,10 +14,13 @@ speak:
           multiline: true
 
 notify:
-  target:
-    device:
-      integration: terrier
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
     text:
       selector:
         text:
@@ -46,10 +52,13 @@ notify:
           mode: box
 
 jingle:
-  target:
-    device:
-      integration: terrier
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
     jingle:
       required: true
       example: ears
@@ -57,10 +66,13 @@ jingle:
         text:
 
 radio:
-  target:
-    device:
-      integration: terrier
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
     station:
       example: fip
       selector:
@@ -70,10 +82,13 @@ radio:
         boolean:
 
 podcast:
-  target:
-    device:
-      integration: terrier
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
     feed:
       example: https://example.org/podcast.rss
       selector:
@@ -91,10 +106,13 @@ podcast:
         boolean:
 
 ears:
-  target:
-    device:
-      integration: terrier
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
     left:
       required: true
       default: 4
@@ -113,10 +131,13 @@ ears:
           mode: slider
 
 mail:
-  target:
-    device:
-      integration: terrier
   fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
     to:
       required: true
       example: nabazprout
