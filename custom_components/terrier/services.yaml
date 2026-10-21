@@ -43,7 +43,7 @@ notify:
     nose:
       selector:
         select:
-          options: [off, blink, double]
+          options: ["off", "blink", "double"]
     counter:
       selector:
         number:
