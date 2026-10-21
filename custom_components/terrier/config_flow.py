@@ -71,7 +71,18 @@ class TerrierConfigFlow(ConfigFlow, domain=DOMAIN):
                 return self.async_create_entry(
                     title=title, data={CONF_BASE_URL: base_url, CONF_TOKEN: token}
                 )
-        return self.async_show_form(step_id="user", data_schema=SCHEMA, errors=errors)
+        return self.async_show_form(
+            step_id="user",
+            data_schema=SCHEMA,
+            errors=errors,
+            # hassfest forbids URLs inside translated strings; they are
+            # placeholders so the text stays translatable and the addresses
+            # live in one place.
+            description_placeholders={
+                "hosted": DEFAULT_URL,
+                "own": "http://terrier.lan:8000",
+            },
+        )
 
     async def async_step_reauth(
         self, entry_data: Mapping[str, Any]

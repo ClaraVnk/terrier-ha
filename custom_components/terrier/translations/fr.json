@@ -108,6 +108,10 @@
       "name": "Parler",
       "description": "Dire quelque chose à voix haute. Le Terrier fabrique la voix, le lapin la joue.",
       "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le ou les lapins concernés."
+        },
         "text": {
           "name": "Texte",
           "description": "Ce qu'il faut dire."
@@ -118,6 +122,10 @@
       "name": "Notifier",
       "description": "Un seul appel pour « il s'est passé quelque chose » : une couleur sur le ventre, un jingle, une phrase, un compteur, un clignotement du nez. Tout est facultatif ; ce que tu donnes est fait, dans l'ordre où une personne le remarque.",
       "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le ou les lapins concernés."
+        },
         "text": {
           "name": "Texte",
           "description": "Dit à voix haute, en dernier."
@@ -148,6 +156,10 @@
       "name": "Jouer un jingle",
       "description": "Jouer un des jingles d'origine de 2006.",
       "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le ou les lapins concernés."
+        },
         "jingle": {
           "name": "Jingle",
           "description": "Son nom, tel que le Terrier le liste."
@@ -158,6 +170,10 @@
       "name": "Radio",
       "description": "Démarrer ou arrêter une webradio.",
       "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le ou les lapins concernés."
+        },
         "station": {
           "name": "Station",
           "description": "Une clé de station, par exemple fip."
@@ -172,6 +188,10 @@
       "name": "Podcast",
       "description": "Lire un épisode du flux de podcast du lapin. Le lapin n'a pas de TLS : un épisode en HTTPS est relayé par le Terrier, et il ne sait pas lire l'AAC du tout.",
       "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le ou les lapins concernés."
+        },
         "feed": {
           "name": "Flux",
           "description": "Définir ou changer le flux. Laisse vide pour utiliser celui enregistré."
@@ -190,6 +210,10 @@
       "name": "Bouger les oreilles",
       "description": "Mettre les oreilles dans une position. 0 est en haut, 16 est un tour complet.",
       "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le ou les lapins concernés."
+        },
         "left": {
           "name": "Gauche",
           "description": "De 0 à 16."
@@ -204,6 +228,10 @@
       "name": "Écrire à un autre lapin",
       "description": "Envoyer un message à un autre lapin par son pseudo. Il sera lu quand ce lapin sera éveillé et que quelqu'un sera là pour l'entendre.",
       "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le ou les lapins concernés."
+        },
         "to": {
           "name": "À",
           "description": "Le pseudo du destinataire."

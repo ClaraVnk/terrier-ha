@@ -108,6 +108,10 @@
       "name": "Speak",
       "description": "Say something out loud. The Terrier renders the voice; the rabbit plays it.",
       "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
         "text": {
           "name": "Text",
           "description": "What to say."
@@ -118,6 +122,10 @@
       "name": "Notify",
       "description": "One call for \"something happened\": a colour on the belly, a jingle, a sentence, a count, a nose blink. Everything is optional; whatever you give is done, in the order a person notices it.",
       "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
         "text": {
           "name": "Text",
           "description": "Said out loud, last."
@@ -148,6 +156,10 @@
       "name": "Play a jingle",
       "description": "Play one of the original 2006 jingles.",
       "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
         "jingle": {
           "name": "Jingle",
           "description": "Its name, as listed by the Terrier."
@@ -158,6 +170,10 @@
       "name": "Radio",
       "description": "Start or stop a web radio.",
       "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
         "station": {
           "name": "Station",
           "description": "A station key, such as fip."
@@ -172,6 +188,10 @@
       "name": "Podcast",
       "description": "Play an episode of the rabbit's podcast feed. The rabbit has no TLS, so an HTTPS episode is relayed by the Terrier; it cannot play AAC at all.",
       "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
         "feed": {
           "name": "Feed",
           "description": "Set or change the feed first. Leave empty to use the saved one."
@@ -190,6 +210,10 @@
       "name": "Move the ears",
       "description": "Put the ears in a position. 0 is up, 16 is a full turn.",
       "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
         "left": {
           "name": "Left",
           "description": "0 to 16."
@@ -204,6 +228,10 @@
       "name": "Write to another rabbit",
       "description": "Send a message to another rabbit by its handle. It is read out when that rabbit is awake and somebody is there to hear it.",
       "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
         "to": {
           "name": "To",
           "description": "The recipient's handle."
