@@ -32,11 +32,13 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # The brands check wants this integration listed in the
-          # home-assistant/brands repository, which a custom repository
-          # cannot do from inside itself. Everything else HACS checks, it
-          # checks. Submitting to brands is a separate, later step.
-          ignore: brands
+          # No `ignore` any more. The brands check wanted this integration
+          # listed in the home-assistant/brands repository, which a custom
+          # repository could not do from inside itself — so it was skipped.
+          # Since Home Assistant 2026.3 an integration ships its own images
+          # in `custom_components/<domain>/brand/`, and local images take
+          # priority over the CDN. There is nothing left to submit, so there
+          # is nothing left to ignore.
 
   lint:
     name: Lint and tests
