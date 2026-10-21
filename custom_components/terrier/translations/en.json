@@ -1,0 +1,137 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to a Terrier",
+        "description": "A Terrier holds the connection to your Nabaztag — the rabbit speaks a 2006 protocol and cannot be reached directly. Use the hosted warren, or the address of one you run yourself.\n\nThe token comes from the Terrier's **Integration** page.",
+        "data": {
+          "base_url": "Terrier address",
+          "token": "API token"
+        },
+        "data_description": {
+          "base_url": "For example https://terrier.cyberloutre.fr, or http://terrier.lan:8000 for your own.",
+          "token": "Starts with trr_. Shown once, on the Integration page."
+        }
+      },
+      "reauth_confirm": {
+        "title": "The token was refused",
+        "description": "The Terrier at {url} no longer accepts this token — it was probably revoked. Create a new one on its Integration page.",
+        "data": { "token": "API token" }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach that address. Check it is the Terrier's web address, that it is reachable from Home Assistant, and that it starts with http:// or https://.",
+      "invalid_auth": "That token was refused. Tokens start with trr_ and are shown once when created.",
+      "no_rabbits": "That token works, but the account behind it has no rabbit. Adopt one on the Terrier first, or check you used the right account."
+    },
+    "abort": {
+      "already_configured": "This Terrier is already set up.",
+      "reauth_successful": "Reconnected."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "breathing": { "name": "Breathing" }
+    },
+    "button": {
+      "compliment": { "name": "Say something nice" },
+      "stop": { "name": "Stop the sound" },
+      "wake": { "name": "Wake up" }
+    },
+    "light": {
+      "nightlight": { "name": "Nightlight" }
+    },
+    "number": {
+      "counter": { "name": "Counter" }
+    },
+    "select": {
+      "nose": {
+        "name": "Nose",
+        "state": {
+          "off": "Off",
+          "blink": "One blink",
+          "double": "Two blinks"
+        }
+      }
+    },
+    "sensor": {
+      "availability": { "name": "Availability" },
+      "disconnects": { "name": "Disconnects" },
+      "session": { "name": "Average session" },
+      "rtt": { "name": "Round trip" },
+      "last_seen": { "name": "Last seen" },
+      "waiting": { "name": "Waiting messages" },
+      "mood": { "name": "Mood" },
+      "counter": { "name": "Counter value" }
+    },
+    "switch": {
+      "sleep": { "name": "Sleep" },
+      "mailbox": { "name": "Postbox open" }
+    }
+  },
+  "services": {
+    "speak": {
+      "name": "Speak",
+      "description": "Say something out loud. The Terrier renders the voice; the rabbit plays it.",
+      "fields": {
+        "text": { "name": "Text", "description": "What to say." }
+      }
+    },
+    "notify": {
+      "name": "Notify",
+      "description": "One call for \"something happened\": a colour on the belly, a jingle, a sentence, a count, a nose blink. Everything is optional; whatever you give is done, in the order a person notices it.",
+      "fields": {
+        "text": { "name": "Text", "description": "Said out loud, last." },
+        "colour": { "name": "Colour", "description": "The belly pulses this colour and returns to dark. A colour that stays on is the nightlight, not a notice." },
+        "level": { "name": "Brightness", "description": "1 to 5." },
+        "jingle": { "name": "Jingle", "description": "One of the twelve original Nabaztag jingles." },
+        "nose": { "name": "Nose", "description": "Off, one blink, or two." },
+        "counter": { "name": "Counter", "description": "How many things are waiting. The nose shows it." }
+      }
+    },
+    "jingle": {
+      "name": "Play a jingle",
+      "description": "Play one of the original 2006 jingles.",
+      "fields": {
+        "jingle": { "name": "Jingle", "description": "Its name, as listed by the Terrier." }
+      }
+    },
+    "radio": {
+      "name": "Radio",
+      "description": "Start or stop a web radio.",
+      "fields": {
+        "station": { "name": "Station", "description": "A station key, such as fip." },
+        "stop": { "name": "Stop", "description": "Stop whatever is playing instead." }
+      }
+    },
+    "podcast": {
+      "name": "Podcast",
+      "description": "Play an episode of the rabbit's podcast feed. The rabbit has no TLS, so an HTTPS episode is relayed by the Terrier; it cannot play AAC at all.",
+      "fields": {
+        "feed": { "name": "Feed", "description": "Set or change the feed first. Leave empty to use the saved one." },
+        "episode": { "name": "Episode", "description": "0 is the latest." },
+        "stop": { "name": "Stop", "description": "Stop playback instead." }
+      }
+    },
+    "ears": {
+      "name": "Move the ears",
+      "description": "Put the ears in a position. 0 is up, 16 is a full turn.",
+      "fields": {
+        "left": { "name": "Left", "description": "0 to 16." },
+        "right": { "name": "Right", "description": "0 to 16." }
+      }
+    },
+    "mail": {
+      "name": "Write to another rabbit",
+      "description": "Send a message to another rabbit by its handle. It is read out when that rabbit is awake and somebody is there to hear it.",
+      "fields": {
+        "to": { "name": "To", "description": "The recipient's handle." },
+        "text": { "name": "Message", "description": "200 characters at most — it is read aloud." },
+        "jingle": { "name": "Jingle", "description": "Played before the words." }
+      }
+    }
+  },
+  "exceptions": {
+    "not_connected": { "message": "The rabbit is not connected to its Terrier." }
+  }
+}

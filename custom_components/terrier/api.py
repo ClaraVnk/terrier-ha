@@ -1,0 +1,170 @@
+"""A thin async client for a Terrier's HTTP API.
+
+Deliberately thin: it knows how to authenticate, how to turn a failure into
+one of three exceptions, and nothing else. Every bit of meaning about what a
+rabbit *is* lives in the entities, where Home Assistant can see it.
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import Any
+
+import aiohttp
+from yarl import URL
+
+_LOGGER = logging.getLogger(__name__)
+
+TIMEOUT = aiohttp.ClientTimeout(total=15)
+
+
+class TerrierError(Exception):
+    """Any failure talking to a Terrier."""
+
+
+class TerrierAuthError(TerrierError):
+    """The token was refused. Home Assistant turns this into a re-auth flow."""
+
+
+class TerrierOffline(TerrierError):
+    """The warren answered, but the rabbit is not connected to it.
+
+    Distinct from TerrierError on purpose: a rabbit that is merely unplugged
+    is not a broken integration, and logging it as one trains people to ignore
+    their logs.
+    """
+
+
+class TerrierClient:
+    """Talks to one Terrier."""
+
+    def __init__(
+        self, session: aiohttp.ClientSession, base_url: str, token: str
+    ) -> None:
+        # Normalised once: a trailing slash in the config entry is the single
+        # most common way a URL ends up with a double slash in every request.
+        self._base = URL(base_url.rstrip("/") + "/")
+        self._session = session
+        self._token = token
+
+    @property
+    def base_url(self) -> str:
+        return str(self._base).rstrip("/")
+
+    async def _request(
+        self, method: str, path: str, json: dict[str, Any] | None = None
+    ) -> Any:
+        url = self._base.join(URL(path.lstrip("/")))
+        try:
+            async with self._session.request(
+                method,
+                url,
+                json=json,
+                timeout=TIMEOUT,
+                headers={"Authorization": f"Bearer {self._token}"},
+            ) as resp:
+                if resp.status in (401, 403):
+                    raise TerrierAuthError("the API token was refused")
+                body: Any = None
+                if resp.content_type == "application/json":
+                    body = await resp.json()
+                if resp.status == 503:
+                    # The warren's own word for "the rabbit is not there".
+                    raise TerrierOffline(
+                        (body or {}).get("error", "the rabbit is not connected")
+                    )
+                if resp.status == 404:
+                    raise TerrierError(f"{path}: not found")
+                if resp.status >= 400:
+                    raise TerrierError(
+                        f"{path}: HTTP {resp.status} "
+                        f"{(body or {}).get('error', await resp.text())}"
+                    )
+                return body
+        except TimeoutError as err:
+            raise TerrierError(f"{path}: timed out") from err
+        except aiohttp.ClientError as err:
+            raise TerrierError(f"{path}: {err}") from err
+
+    # --- reading ---------------------------------------------------------
+    async def rabbits(self) -> list[dict[str, Any]]:
+        return await self._request("GET", "/api/rabbits") or []
+
+    async def rabbit(self, mac: str) -> dict[str, Any]:
+        return await self._request("GET", f"/api/rabbits/{mac}") or {}
+
+    async def mood(self, mac: str) -> dict[str, Any]:
+        return await self._request("GET", f"/api/rabbits/{mac}/mood") or {}
+
+    async def mail(self, mac: str) -> dict[str, Any]:
+        return await self._request("GET", f"/api/rabbits/{mac}/mail") or {}
+
+    async def jingles(self) -> list[str]:
+        return await self._request("GET", "/api/jingles") or []
+
+    # --- doing -----------------------------------------------------------
+    async def notify(self, mac: str, **fields: Any) -> dict[str, Any]:
+        """Belly, nose, counter, jingle and words in one call."""
+        body = {k: v for k, v in fields.items() if v not in (None, "")}
+        return await self._request("POST", f"/api/rabbits/{mac}/notify", body)
+
+    async def speak(self, mac: str, text: str) -> None:
+        await self._request("POST", f"/api/rabbits/{mac}/speak", {"text": text})
+
+    async def play_jingle(self, mac: str, name: str) -> None:
+        await self._request("POST", f"/api/rabbits/{mac}/jingle", {"jingle": name})
+
+    async def radio(
+        self, mac: str, station: str | None = None, stop: bool = False
+    ) -> None:
+        body = {"stop": True} if stop else {"station": station}
+        await self._request("POST", f"/api/rabbits/{mac}/radio", body)
+
+    async def podcast(
+        self, mac: str, feed: str | None = None, episode: int = 0, stop: bool = False
+    ) -> dict[str, Any]:
+        body: dict[str, Any] = {"stop": True} if stop else {"episode": episode}
+        if feed and not stop:
+            body["feed"] = feed
+        return await self._request("POST", f"/api/rabbits/{mac}/podcast", body)
+
+    async def ears(self, mac: str, left: int, right: int) -> None:
+        await self._request(
+            "POST", f"/api/rabbits/{mac}/ears", {"left": left, "right": right}
+        )
+
+    async def sleep(self, mac: str, asleep: bool) -> None:
+        await self._request("POST", f"/api/rabbits/{mac}/sleep", {"asleep": asleep})
+
+    async def nose(self, mac: str, mode: str) -> None:
+        await self._request("POST", f"/api/rabbits/{mac}/nose", {"mode": mode})
+
+    async def counter(self, mac: str, value: int, label: str | None = None) -> None:
+        body: dict[str, Any] = {"value": value}
+        if label is not None:
+            body["label"] = label
+        await self._request("POST", f"/api/rabbits/{mac}/counter", body)
+
+    async def nightlight(
+        self, mac: str, on: bool, colour: str | None = None, level: int | None = None
+    ) -> None:
+        body: dict[str, Any] = {"on": on}
+        if colour:
+            body["colour"] = colour
+        if level is not None:
+            body["level"] = level
+        await self._request("POST", f"/api/rabbits/{mac}/nightlight", body)
+
+    async def compliment(self, mac: str) -> dict[str, Any]:
+        return await self._request("POST", f"/api/rabbits/{mac}/compliment")
+
+    async def send_mail(
+        self, mac: str, to: str, text: str, jingle: str | None = None
+    ) -> dict[str, Any]:
+        body: dict[str, Any] = {"to": to, "text": text}
+        if jingle:
+            body["jingle"] = jingle
+        return await self._request("POST", f"/api/rabbits/{mac}/mail", body)
+
+    async def nudge_mood(self, mac: str, kind: str = "speak") -> dict[str, Any]:
+        return await self._request("POST", f"/api/rabbits/{mac}/mood", {"kind": kind})

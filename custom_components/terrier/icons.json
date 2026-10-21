@@ -1,0 +1,36 @@
+{
+  "entity": {
+    "binary_sensor": { "breathing": { "default": "mdi:rabbit" } },
+    "button": {
+      "compliment": { "default": "mdi:heart-outline" },
+      "stop": { "default": "mdi:stop" },
+      "wake": { "default": "mdi:weather-sunset-up" }
+    },
+    "light": { "nightlight": { "default": "mdi:lightbulb-night" } },
+    "number": { "counter": { "default": "mdi:numeric" } },
+    "select": { "nose": { "default": "mdi:circle" } },
+    "sensor": {
+      "availability": { "default": "mdi:chart-donut" },
+      "disconnects": { "default": "mdi:lan-disconnect" },
+      "session": { "default": "mdi:timer-outline" },
+      "rtt": { "default": "mdi:swap-horizontal" },
+      "last_seen": { "default": "mdi:clock-outline" },
+      "waiting": { "default": "mdi:mailbox-up" },
+      "mood": { "default": "mdi:emoticon-outline" },
+      "counter": { "default": "mdi:numeric" }
+    },
+    "switch": {
+      "sleep": { "default": "mdi:sleep", "state": { "off": "mdi:sleep-off" } },
+      "mailbox": { "default": "mdi:mailbox" }
+    }
+  },
+  "services": {
+    "speak": "mdi:account-voice",
+    "notify": "mdi:bell-ring-outline",
+    "jingle": "mdi:music-note",
+    "radio": "mdi:radio",
+    "podcast": "mdi:podcast",
+    "ears": "mdi:rabbit",
+    "mail": "mdi:email-outline"
+  }
+}

@@ -1,0 +1,50 @@
+name: Validate
+
+# The two checks that decide whether this is installable at all: hassfest says
+# Home Assistant will load it, HACS says HACS will offer it. Neither is
+# optional, and both fail loudly rather than warning.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Both validators move. A monthly run catches the day one of them starts
+    # requiring something new, rather than a user discovering it for us.
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hassfest:
+    name: Home Assistant will load it
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS will offer it
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hacs/action@main
+        with:
+          category: integration
+
+  lint:
+    name: Lint and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install ruff pytest pyyaml
+      - run: ruff check .
+      - run: ruff format --check .
+      # These need no Home Assistant: they check the things that drift —
+      # a service registered but never declared, a translation that lost a
+      # key, a colour that does not map back to itself.
+      - run: pytest tests -q

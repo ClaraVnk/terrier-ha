@@ -1,0 +1,10 @@
+target-version = "py313"
+line-length = 88
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    # The config flow and the entity descriptions read better with the
+    # argument names spelled out, even when they shadow a builtin.
+    "A003",
+]

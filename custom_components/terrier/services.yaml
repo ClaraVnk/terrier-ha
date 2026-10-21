@@ -1,0 +1,132 @@
+speak:
+  target:
+    device:
+      integration: terrier
+  fields:
+    text:
+      required: true
+      example: "Le facteur est passé."
+      selector:
+        text:
+          multiline: true
+
+notify:
+  target:
+    device:
+      integration: terrier
+  fields:
+    text:
+      selector:
+        text:
+          multiline: true
+    colour:
+      selector:
+        select:
+          options: [warm, amber, rose, violet, blue, green, white]
+    level:
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 5
+          mode: slider
+    jingle:
+      example: ears
+      selector:
+        text:
+    nose:
+      selector:
+        select:
+          options: [off, blink, double]
+    counter:
+      selector:
+        number:
+          min: 0
+          max: 255
+          mode: box
+
+jingle:
+  target:
+    device:
+      integration: terrier
+  fields:
+    jingle:
+      required: true
+      example: ears
+      selector:
+        text:
+
+radio:
+  target:
+    device:
+      integration: terrier
+  fields:
+    station:
+      example: fip
+      selector:
+        text:
+    stop:
+      selector:
+        boolean:
+
+podcast:
+  target:
+    device:
+      integration: terrier
+  fields:
+    feed:
+      example: https://example.org/podcast.rss
+      selector:
+        text:
+          type: url
+    episode:
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 11
+          mode: box
+    stop:
+      selector:
+        boolean:
+
+ears:
+  target:
+    device:
+      integration: terrier
+  fields:
+    left:
+      required: true
+      default: 4
+      selector:
+        number:
+          min: 0
+          max: 16
+          mode: slider
+    right:
+      required: true
+      default: 4
+      selector:
+        number:
+          min: 0
+          max: 16
+          mode: slider
+
+mail:
+  target:
+    device:
+      integration: terrier
+  fields:
+    to:
+      required: true
+      example: nabazprout
+      selector:
+        text:
+    text:
+      required: true
+      selector:
+        text:
+          multiline: true
+    jingle:
+      selector:
+        text:

@@ -1,0 +1,137 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Se connecter à un Terrier",
+        "description": "Un Terrier tient la connexion avec ton Nabaztag — le lapin parle un protocole de 2006 et ne peut pas être joint directement. Utilise le terrier hébergé, ou l'adresse de celui que tu fais tourner toi-même.\n\nLe jeton se crée sur la page **Intégration** du Terrier.",
+        "data": {
+          "base_url": "Adresse du Terrier",
+          "token": "Jeton d'API"
+        },
+        "data_description": {
+          "base_url": "Par exemple https://terrier.cyberloutre.fr, ou http://terrier.lan:8000 pour le tien.",
+          "token": "Commence par trr_. Affiché une seule fois, sur la page Intégration."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Le jeton a été refusé",
+        "description": "Le Terrier de {url} n'accepte plus ce jeton — il a probablement été révoqué. Crée-en un nouveau sur sa page Intégration.",
+        "data": { "token": "Jeton d'API" }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossible de joindre cette adresse. Vérifie que c'est bien l'adresse web du Terrier, qu'elle est joignable depuis Home Assistant, et qu'elle commence par http:// ou https://.",
+      "invalid_auth": "Ce jeton a été refusé. Les jetons commencent par trr_ et ne sont affichés qu'une fois, à leur création.",
+      "no_rabbits": "Le jeton fonctionne, mais le compte derrière n'a aucun lapin. Adopte-en un sur le Terrier d'abord, ou vérifie que tu as pris le bon compte."
+    },
+    "abort": {
+      "already_configured": "Ce Terrier est déjà configuré.",
+      "reauth_successful": "Reconnecté."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "breathing": { "name": "Respire" }
+    },
+    "button": {
+      "compliment": { "name": "Dire quelque chose de gentil" },
+      "stop": { "name": "Arrêter le son" },
+      "wake": { "name": "Réveiller" }
+    },
+    "light": {
+      "nightlight": { "name": "Veilleuse" }
+    },
+    "number": {
+      "counter": { "name": "Compteur" }
+    },
+    "select": {
+      "nose": {
+        "name": "Nez",
+        "state": {
+          "off": "Éteint",
+          "blink": "Un clignotement",
+          "double": "Deux clignotements"
+        }
+      }
+    },
+    "sensor": {
+      "availability": { "name": "Disponibilité" },
+      "disconnects": { "name": "Déconnexions" },
+      "session": { "name": "Durée moyenne de session" },
+      "rtt": { "name": "Aller-retour" },
+      "last_seen": { "name": "Vu pour la dernière fois" },
+      "waiting": { "name": "Messages en attente" },
+      "mood": { "name": "Humeur" },
+      "counter": { "name": "Valeur du compteur" }
+    },
+    "switch": {
+      "sleep": { "name": "Sommeil" },
+      "mailbox": { "name": "Boîte ouverte" }
+    }
+  },
+  "services": {
+    "speak": {
+      "name": "Parler",
+      "description": "Dire quelque chose à voix haute. Le Terrier fabrique la voix, le lapin la joue.",
+      "fields": {
+        "text": { "name": "Texte", "description": "Ce qu'il faut dire." }
+      }
+    },
+    "notify": {
+      "name": "Notifier",
+      "description": "Un seul appel pour « il s'est passé quelque chose » : une couleur sur le ventre, un jingle, une phrase, un compteur, un clignotement du nez. Tout est facultatif ; ce que tu donnes est fait, dans l'ordre où une personne le remarque.",
+      "fields": {
+        "text": { "name": "Texte", "description": "Dit à voix haute, en dernier." },
+        "colour": { "name": "Couleur", "description": "Le ventre pulse cette couleur puis revient au noir. Une couleur qui reste, c'est la veilleuse, pas un avis." },
+        "level": { "name": "Luminosité", "description": "De 1 à 5." },
+        "jingle": { "name": "Jingle", "description": "Un des douze jingles d'origine du Nabaztag." },
+        "nose": { "name": "Nez", "description": "Éteint, un clignotement, ou deux." },
+        "counter": { "name": "Compteur", "description": "Combien de choses attendent. C'est le nez qui l'affiche." }
+      }
+    },
+    "jingle": {
+      "name": "Jouer un jingle",
+      "description": "Jouer un des jingles d'origine de 2006.",
+      "fields": {
+        "jingle": { "name": "Jingle", "description": "Son nom, tel que le Terrier le liste." }
+      }
+    },
+    "radio": {
+      "name": "Radio",
+      "description": "Démarrer ou arrêter une webradio.",
+      "fields": {
+        "station": { "name": "Station", "description": "Une clé de station, par exemple fip." },
+        "stop": { "name": "Arrêter", "description": "Arrêter ce qui joue, plutôt que de lancer." }
+      }
+    },
+    "podcast": {
+      "name": "Podcast",
+      "description": "Lire un épisode du flux de podcast du lapin. Le lapin n'a pas de TLS : un épisode en HTTPS est relayé par le Terrier, et il ne sait pas lire l'AAC du tout.",
+      "fields": {
+        "feed": { "name": "Flux", "description": "Définir ou changer le flux. Laisse vide pour utiliser celui enregistré." },
+        "episode": { "name": "Épisode", "description": "0 est le plus récent." },
+        "stop": { "name": "Arrêter", "description": "Arrêter la lecture." }
+      }
+    },
+    "ears": {
+      "name": "Bouger les oreilles",
+      "description": "Mettre les oreilles dans une position. 0 est en haut, 16 est un tour complet.",
+      "fields": {
+        "left": { "name": "Gauche", "description": "De 0 à 16." },
+        "right": { "name": "Droite", "description": "De 0 à 16." }
+      }
+    },
+    "mail": {
+      "name": "Écrire à un autre lapin",
+      "description": "Envoyer un message à un autre lapin par son pseudo. Il sera lu quand ce lapin sera éveillé et que quelqu'un sera là pour l'entendre.",
+      "fields": {
+        "to": { "name": "À", "description": "Le pseudo du destinataire." },
+        "text": { "name": "Message", "description": "200 caractères au plus — c'est lu à voix haute." },
+        "jingle": { "name": "Jingle", "description": "Joué avant les mots." }
+      }
+    }
+  },
+  "exceptions": {
+    "not_connected": { "message": "Le lapin n'est pas connecté à son Terrier." }
+  }
+}
