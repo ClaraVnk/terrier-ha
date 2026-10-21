@@ -14,7 +14,6 @@ Run it as:
     python tools/make_brand_icon.py nabaztag.jpg custom_components/terrier/brand
 """
 
-
 import sys
 
 from PIL import Image, ImageFilter
@@ -22,7 +21,7 @@ from PIL import Image, ImageFilter
 SRC = sys.argv[1] if len(sys.argv) > 1 else "nabaztag.jpg"
 OUT = sys.argv[2] if len(sys.argv) > 2 else "."
 
-WHITE = 243          # a pixel at least this bright may be background
+WHITE = 243  # a pixel at least this bright may be background
 
 
 def cutout(path: str) -> Image.Image:
@@ -56,25 +55,26 @@ def cutout(path: str) -> Image.Image:
         x, y = q.popleft()
         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
             nx, ny = x + dx, y + dy
-            if 0 <= nx < w and 0 <= ny < h and not bg[ny * w + nx] \
-                    and grey[nx, ny] >= WHITE:
+            if (
+                0 <= nx < w
+                and 0 <= ny < h
+                and not bg[ny * w + nx]
+                and grey[nx, ny] >= WHITE
+            ):
                 bg[ny * w + nx] = 1
                 q.append((nx, ny))
 
-    alpha = Image.frombytes("L", (w, h),
-                            bytes(0 if v else 255 for v in bg))
+    alpha = Image.frombytes("L", (w, h), bytes(0 if v else 255 for v in bg))
     # The raised ear's tip is a specular highlight blown to pure 255 — the
     # same value as the paper — so the flood walks straight into it and bites
     # a notch out of the ear. No threshold can separate them; they are the
     # same colour. A morphological closing can: dilate, then erode by the
     # same amount, which fills any gap narrower than the kernel and leaves
     # the silhouette where it was.
-    alpha = alpha.filter(ImageFilter.MaxFilter(21)).filter(
-        ImageFilter.MinFilter(21))
+    alpha = alpha.filter(ImageFilter.MaxFilter(21)).filter(ImageFilter.MinFilter(21))
     # Then pull the edge in by a pixel and soften it, so no white halo
     # survives against the tile.
-    alpha = alpha.filter(ImageFilter.MinFilter(3)).filter(
-        ImageFilter.GaussianBlur(0.8))
+    alpha = alpha.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
     im.putalpha(alpha)
     return im
 
@@ -94,8 +94,12 @@ def square(im: Image.Image, size: int) -> Image.Image:
     # of the bell, so that is what gets centred.
     a = im.getchannel("A").load()
     base = im.height - 1
-    rows = [x for y in range(max(0, base - 14), base + 1)
-            for x in range(im.width) if a[x, y] > 120]
+    rows = [
+        x
+        for y in range(max(0, base - 14), base + 1)
+        for x in range(im.width)
+        if a[x, y] > 120
+    ]
     body_cx = (min(rows) + max(rows)) // 2 if rows else im.width // 2
     pad.alpha_composite(im, (side // 2 - body_cx, (side - im.height) // 2))
     # A little air, the way brands renders everything else.
@@ -104,14 +108,18 @@ def square(im: Image.Image, size: int) -> Image.Image:
     # is the project's accent everywhere else, down to the colour the rabbit
     # breathes in out of the box.
     from PIL import ImageDraw
+
     F = 4
     big = size * F
     out = Image.new("RGBA", (big, big), (0, 0, 0, 0))
-    ImageDraw.Draw(out).rounded_rectangle([0, 0, big - 1, big - 1],
-                                          radius=int(big * 0.22), fill=VIOLET)
+    ImageDraw.Draw(out).rounded_rectangle(
+        [0, 0, big - 1, big - 1], radius=int(big * 0.22), fill=VIOLET
+    )
     inner = int(big * 0.82)
-    out.alpha_composite(pad.resize((inner, inner), Image.LANCZOS),
-                        ((big - inner) // 2, (big - inner) // 2))
+    out.alpha_composite(
+        pad.resize((inner, inner), Image.LANCZOS),
+        ((big - inner) // 2, (big - inner) // 2),
+    )
     return out.resize((size, size), Image.LANCZOS)
 
 
