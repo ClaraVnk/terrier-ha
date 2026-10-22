@@ -38,3 +38,17 @@ SERVICE_RADIO = "radio"
 SERVICE_PODCAST = "podcast"
 SERVICE_EARS = "ears"
 SERVICE_MAIL = "mail"
+# The rest of the warren, reachable at last — see settings.py for the
+# settings that became entities instead.
+SERVICE_ASK = "ask"
+SERVICE_LISTEN = "listen"
+SERVICE_AIR = "air"
+SERVICE_AMBIENT = "ambient"
+SERVICE_SET_CONFIG = "set_config"
+SERVICE_RFID_BIND = "rfid_bind"
+SERVICE_RFID_REMOVE = "rfid_remove"
+
+# The belly palette as the warren names it. Distinct from COLOURS above,
+# which maps those names to RGB for the light's colour wheel: these are the
+# strings the API accepts, and the firmware knows no others.
+BELLY_COLOURS = ("blue", "sky", "green", "red", "orange", "violet", "yellow", "white")

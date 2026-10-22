@@ -7,23 +7,39 @@ off an arbitrary entity would make every automation read as though it were.
 
 from __future__ import annotations
 
+from typing import Any
+
 import voluptuous as vol
-from homeassistant.core import HomeAssistant, ServiceCall, callback
+from homeassistant.core import (
+    HomeAssistant,
+    ServiceCall,
+    ServiceResponse,
+    SupportsResponse,
+    callback,
+)
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 
 from .api import TerrierError, TerrierOffline
 from .const import (
+    BELLY_COLOURS,
     COLOURS,
     DOMAIN,
     NOSE_MODES,
+    SERVICE_AIR,
+    SERVICE_AMBIENT,
+    SERVICE_ASK,
     SERVICE_EARS,
     SERVICE_JINGLE,
+    SERVICE_LISTEN,
     SERVICE_MAIL,
     SERVICE_NOTIFY,
     SERVICE_PODCAST,
     SERVICE_RADIO,
+    SERVICE_RFID_BIND,
+    SERVICE_RFID_REMOVE,
+    SERVICE_SET_CONFIG,
     SERVICE_SPEAK,
 )
 
@@ -44,6 +60,35 @@ NOTIFY_SCHEMA = vol.Schema(
 )
 
 SPEAK_SCHEMA = vol.Schema({**_TARGET, vol.Required("text"): cv.string})
+ASK_SCHEMA = vol.Schema({**_TARGET, vol.Required("question"): cv.string})
+LISTEN_SCHEMA = vol.Schema(
+    {
+        **_TARGET,
+        vol.Optional("seconds"): vol.All(vol.Coerce(float), vol.Range(min=1, max=8)),
+    }
+)
+AIR_SCHEMA = vol.Schema({**_TARGET})
+AMBIENT_SCHEMA = vol.Schema(
+    {
+        **_TARGET,
+        vol.Exclusive("colour", "what"): vol.In(BELLY_COLOURS),
+        vol.Exclusive("clear", "what"): cv.boolean,
+    }
+)
+SET_CONFIG_SCHEMA = vol.Schema(
+    {**_TARGET, vol.Required("settings"): vol.Schema({cv.string: object})}
+)
+RFID_BIND_SCHEMA = vol.Schema(
+    {
+        **_TARGET,
+        vol.Required("tag"): cv.string,
+        vol.Required("type"): vol.In(("say", "radio", "weather", "webhook")),
+        vol.Optional("text"): cv.string,
+        vol.Optional("station"): cv.string,
+        vol.Optional("url"): cv.url,
+    }
+)
+RFID_REMOVE_SCHEMA = vol.Schema({**_TARGET, vol.Required("tag"): cv.string})
 JINGLE_SCHEMA = vol.Schema({**_TARGET, vol.Required("jingle"): cv.string})
 RADIO_SCHEMA = vol.Schema(
     {
@@ -117,6 +162,25 @@ async def _run(hass: HomeAssistant, call: ServiceCall, verb) -> None:
         await coordinator.async_request_refresh()
 
 
+async def _ask_one(hass: HomeAssistant, call: ServiceCall, verb) -> ServiceResponse:
+    """Like `_run`, but hands back what the rabbit heard and said.
+
+    A question with no answer would be a strange thing to automate, so these
+    two return a response. Several targets answer as a dict keyed by MAC
+    rather than the last one winning silently.
+    """
+    out: dict[str, Any] = {}
+    for coordinator, mac in _targets(hass, call):
+        try:
+            out[mac] = await verb(coordinator.client, mac)
+        except TerrierOffline as err:
+            raise HomeAssistantError(f"the rabbit is not connected ({err})") from err
+        except TerrierError as err:
+            raise HomeAssistantError(str(err)) from err
+        await coordinator.async_request_refresh()
+    return out
+
+
 @callback
 def async_setup_services(hass: HomeAssistant) -> None:
     """Registered once for the whole integration, not once per entry."""
@@ -172,7 +236,65 @@ def async_setup_services(hass: HomeAssistant) -> None:
             ),
         )
 
+    async def ask(call: ServiceCall) -> ServiceResponse:
+        return await _ask_one(
+            hass, call, lambda c, mac: c.ask(mac, call.data["question"])
+        )
+
+    async def listen(call: ServiceCall) -> ServiceResponse:
+        """Push-to-talk. The rabbit records one sentence, the warren
+        transcribes it with the owner's key and the rabbit answers out
+        loud — and the words come back here so an automation can act on
+        them rather than only overhear them."""
+        return await _ask_one(
+            hass, call, lambda c, mac: c.listen(mac, call.data.get("seconds"))
+        )
+
+    async def air(call: ServiceCall) -> None:
+        await _run(hass, call, lambda c, mac: c.say_air(mac))
+
+    async def ambient(call: ServiceCall) -> None:
+        """The colour the belly BREATHES in, which is not the same thing as
+        lighting it: clearing the service stops the breathing altogether,
+        which surprised the warren's own operator once already."""
+        if call.data.get("clear"):
+            fields: dict[str, Any] = {"clear": True}
+        elif "colour" in call.data:
+            fields = {"colour": call.data["colour"]}
+        else:
+            raise ServiceValidationError("give it a colour, or clear: true")
+        await _run(hass, call, lambda c, mac: c.ambient(mac, **fields))
+
+    async def set_config(call: ServiceCall) -> None:
+        """The long tail: a wake word, a feed, coordinates, a model name.
+
+        The warren applies the whole patch or none of it, so a failure here
+        means nothing changed — there is no half-written rabbit to repair.
+        API keys are refused on purpose: Home Assistant would have to hold
+        one to send it.
+        """
+        settings = call.data["settings"]
+        if not settings:
+            raise ServiceValidationError("no settings given")
+        await _run(hass, call, lambda c, mac: c.set_config(mac, **settings))
+
+    async def rfid_bind(call: ServiceCall) -> None:
+        action = {
+            k: v for k, v in call.data.items() if k not in (ATTR_DEVICE_ID, "tag")
+        }
+        await _run(
+            hass, call, lambda c, mac: c.rfid_bind(mac, call.data["tag"], **action)
+        )
+
+    async def rfid_remove(call: ServiceCall) -> None:
+        await _run(hass, call, lambda c, mac: c.rfid_remove(mac, call.data["tag"]))
+
     for name, handler, schema in (
+        (SERVICE_AIR, air, AIR_SCHEMA),
+        (SERVICE_AMBIENT, ambient, AMBIENT_SCHEMA),
+        (SERVICE_SET_CONFIG, set_config, SET_CONFIG_SCHEMA),
+        (SERVICE_RFID_BIND, rfid_bind, RFID_BIND_SCHEMA),
+        (SERVICE_RFID_REMOVE, rfid_remove, RFID_REMOVE_SCHEMA),
         (SERVICE_SPEAK, speak, SPEAK_SCHEMA),
         (SERVICE_NOTIFY, notify, NOTIFY_SCHEMA),
         (SERVICE_JINGLE, jingle, JINGLE_SCHEMA),
@@ -182,3 +304,17 @@ def async_setup_services(hass: HomeAssistant) -> None:
         (SERVICE_MAIL, mail, MAIL_SCHEMA),
     ):
         hass.services.async_register(DOMAIN, name, handler, schema=schema)
+
+    # The two that answer. Registered apart because they carry a response,
+    # and a service that returns one has to say so at registration time.
+    for name, handler, schema in (
+        (SERVICE_ASK, ask, ASK_SCHEMA),
+        (SERVICE_LISTEN, listen, LISTEN_SCHEMA),
+    ):
+        hass.services.async_register(
+            DOMAIN,
+            name,
+            handler,
+            schema=schema,
+            supports_response=SupportsResponse.ONLY,
+        )

@@ -1,4 +1,4 @@
-"""The two things on a rabbit you turn on and off."""
+"""What a rabbit does on its own, turned on and off."""
 
 from __future__ import annotations
 
@@ -11,7 +11,9 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import TerrierConfigEntry
 from .api import TerrierError
+from .config_entity import TerrierSetting
 from .entity import TerrierEntity
+from .settings import SWITCHES
 
 
 async def async_setup_entry(
@@ -20,10 +22,18 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     coordinator = entry.runtime_data
+    macs = list(coordinator.data or {})
     async_add_entities(
-        cls(coordinator, mac)
-        for mac in coordinator.data or {}
-        for cls in (TerrierSleep, TerrierMailbox)
+        [
+            cls(coordinator, mac)
+            for mac in macs
+            for cls in (TerrierSleep, TerrierMailbox)
+        ]
+        + [
+            TerrierSettingSwitch(coordinator, mac, setting)
+            for mac in macs
+            for setting in SWITCHES
+        ]
     )
 
 
@@ -92,3 +102,22 @@ class TerrierMailbox(TerrierEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         raise HomeAssistantError("Closing a rabbit's postbox is done on the Terrier")
+
+
+class TerrierSettingSwitch(TerrierSetting, SwitchEntity):
+    """A yes-or-no setting: the morning weather, the alarm, the chime.
+
+    These are what the integration was missing — not verbs the rabbit
+    performs but the schedule it keeps, which is exactly the half an
+    automation wants to reach for.
+    """
+
+    @property
+    def is_on(self) -> bool:
+        return bool(self.value)
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self.write(True)
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self.write(False)

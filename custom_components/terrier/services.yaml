@@ -151,3 +151,127 @@ mail:
     jingle:
       selector:
         text:
+
+ask:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    question:
+      required: true
+      example: "Quel temps fait-il à Genève ?"
+      selector:
+        text:
+          multiline: true
+
+listen:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    seconds:
+      selector:
+        number:
+          min: 1
+          max: 8
+          step: 1
+          unit_of_measurement: s
+
+air:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+
+ambient:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    colour:
+      selector:
+        select:
+          options:
+            - blue
+            - sky
+            - green
+            - red
+            - orange
+            - violet
+            - yellow
+            - white
+    clear:
+      selector:
+        boolean:
+
+set_config:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    settings:
+      required: true
+      example: '{"wake_word": "nabi", "weather_place": "Genève"}'
+      selector:
+        object:
+
+rfid_bind:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    tag:
+      required: true
+      example: "04a1b2c3d4e5"
+      selector:
+        text:
+    type:
+      required: true
+      selector:
+        select:
+          options:
+            - say
+            - radio
+            - weather
+            - webhook
+    text:
+      selector:
+        text:
+          multiline: true
+    station:
+      selector:
+        text:
+    url:
+      selector:
+        text:
+
+rfid_remove:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    tag:
+      required: true
+      selector:
+        text:

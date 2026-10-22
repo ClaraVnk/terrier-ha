@@ -56,6 +56,12 @@
     "number": {
       "counter": {
         "name": "Compteur"
+      },
+      "nightlight_level": {
+        "name": "Intensité de la veilleuse"
+      },
+      "weather_belly_minutes": {
+        "name": "Météo sur le ventre pendant"
       }
     },
     "select": {
@@ -65,6 +71,66 @@
           "off": "Éteint",
           "blink": "Un clignotement",
           "double": "Deux clignotements"
+        }
+      },
+      "personality": {
+        "name": "Personnalité",
+        "state": {
+          "off": "Éteinte",
+          "discret": "Discrète",
+          "normal": "Normale",
+          "vif": "Vive"
+        }
+      },
+      "voice_speed": {
+        "name": "Débit de parole",
+        "state": {
+          "slow": "Lent",
+          "normal": "Normal",
+          "fast": "Rapide"
+        }
+      },
+      "night_mode": {
+        "name": "La nuit",
+        "state": {
+          "quiet": "Se taire",
+          "sleep": "Dormir"
+        }
+      },
+      "nightlight_colour": {
+        "name": "Couleur de la veilleuse",
+        "state": {
+          "blue": "Bleu",
+          "sky": "Bleu ciel",
+          "green": "Vert",
+          "red": "Rouge",
+          "orange": "Orange",
+          "violet": "Violet",
+          "yellow": "Jaune",
+          "white": "Blanc"
+        }
+      },
+      "clock_mode": {
+        "name": "Style du carillon",
+        "state": {
+          "speak": "Dire l'heure",
+          "chime": "Carillon seul",
+          "both": "Les deux"
+        }
+      },
+      "clock_every": {
+        "name": "Carillon toutes les",
+        "state": {
+          "hour": "Heure",
+          "half": "Demi-heure"
+        }
+      },
+      "weather_show": {
+        "name": "Météo en",
+        "state": {
+          "both": "Voix et ventre",
+          "speak": "Voix",
+          "belly": "Ventre seul"
         }
       }
     },
@@ -100,6 +166,92 @@
       },
       "mailbox": {
         "name": "Boîte ouverte"
+      },
+      "weather_enabled": {
+        "name": "Météo du matin"
+      },
+      "air_enabled": {
+        "name": "Qualité de l'air"
+      },
+      "alarm_enabled": {
+        "name": "Réveil"
+      },
+      "clock_enabled": {
+        "name": "Carillon horaire"
+      },
+      "night_enabled": {
+        "name": "Mode nuit"
+      },
+      "nightlight_enabled": {
+        "name": "Veilleuse programmée"
+      },
+      "podcast_enabled": {
+        "name": "Podcast quotidien"
+      },
+      "tamagotchi_enabled": {
+        "name": "Humeur"
+      },
+      "compliment_enabled": {
+        "name": "Compliment quotidien"
+      },
+      "llm_enabled": {
+        "name": "Répond aux questions"
+      },
+      "weather_rainbow": {
+        "name": "Arc-en-ciel quand il pleut"
+      },
+      "air_speak": {
+        "name": "Annonce l'air à voix haute"
+      },
+      "alarm_weather": {
+        "name": "Météo avec le réveil"
+      },
+      "hw_sleep": {
+        "name": "Veille matérielle la nuit"
+      },
+      "surprise_enabled": {
+        "name": "Coucous surprise"
+      },
+      "presence_share": {
+        "name": "Annonce ses arrivées"
+      },
+      "devmode": {
+        "name": "Sonde développeur"
+      }
+    },
+    "time": {
+      "weather_hour": {
+        "name": "Météo à"
+      },
+      "alarm_hour": {
+        "name": "Réveil à"
+      },
+      "air_hour": {
+        "name": "Qualité de l'air à"
+      },
+      "compliment_hour": {
+        "name": "Compliment à"
+      },
+      "podcast_hour": {
+        "name": "Podcast à"
+      },
+      "clock_from": {
+        "name": "Carillon à partir de"
+      },
+      "clock_to": {
+        "name": "Carillon jusqu'à"
+      },
+      "night_from": {
+        "name": "Nuit à partir de"
+      },
+      "night_to": {
+        "name": "Nuit jusqu'à"
+      },
+      "nightlight_from": {
+        "name": "Veilleuse à partir de"
+      },
+      "nightlight_to": {
+        "name": "Veilleuse jusqu'à"
       }
     }
   },
@@ -243,6 +395,120 @@
         "jingle": {
           "name": "Jingle",
           "description": "Joué avant les mots."
+        }
+      }
+    },
+    "ask": {
+      "name": "Poser une question",
+      "description": "Interroge le modèle du lapin, avec la clé du propriétaire. Il répond à voix haute, et la réponse revient à l'automatisation.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "question": {
+          "name": "Question",
+          "description": "Ce qu'on lui demande."
+        }
+      }
+    },
+    "listen": {
+      "name": "Écouter",
+      "description": "Appuyer-pour-parler : le lapin enregistre une phrase, le terrier la transcrit et il répond à voix haute. Nécessite une clé de transcription. Rien n'écoute tout seul.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "seconds": {
+          "name": "Secondes",
+          "description": "Durée maximale. Il s'arrête seul après un silence."
+        }
+      }
+    },
+    "air": {
+      "name": "Annoncer la qualité de l'air",
+      "description": "Annonce la qualité de l'air maintenant, sans attendre l'heure quotidienne.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        }
+      }
+    },
+    "ambient": {
+      "name": "Couleur de respiration",
+      "description": "La couleur dans laquelle le ventre respire, et qui persiste. L'effacer arrête la respiration.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "colour": {
+          "name": "Couleur",
+          "description": "L'une des huit que connaît le firmware."
+        },
+        "clear": {
+          "name": "Effacer",
+          "description": "Arrête complètement la respiration."
+        }
+      }
+    },
+    "set_config": {
+      "name": "Modifier les réglages",
+      "description": "N'importe quel réglage du lapin, appliqué d'un bloc ou pas du tout. Les clés d'API sont refusées exprès — elles restent sur la page du terrier.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "settings": {
+          "name": "Réglages",
+          "description": "Un dictionnaire réglage → valeur."
+        }
+      }
+    },
+    "rfid_bind": {
+      "name": "Associer une puce",
+      "description": "Associe une puce RFID à ce que fait le lapin quand on la présente.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "tag": {
+          "name": "Puce",
+          "description": "L'identifiant de la puce."
+        },
+        "type": {
+          "name": "Action",
+          "description": "Ce qu'elle déclenche : say, radio, weather ou webhook."
+        },
+        "text": {
+          "name": "Texte",
+          "description": "Pour une action say."
+        },
+        "station": {
+          "name": "Station",
+          "description": "Pour une action radio."
+        },
+        "url": {
+          "name": "URL",
+          "description": "Pour une action webhook."
+        }
+      }
+    },
+    "rfid_remove": {
+      "name": "Retirer une puce",
+      "description": "Dissocie une puce.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "tag": {
+          "name": "Puce",
+          "description": "La puce à retirer."
         }
       }
     }
