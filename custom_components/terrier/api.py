@@ -35,6 +35,21 @@ class TerrierOffline(TerrierError):
     """
 
 
+async def _why(resp: aiohttp.ClientResponse, body: Any) -> str:
+    """What the warren said, in the words it said it.
+
+    A refused settings write answers `{"error": "nothing was changed",
+    "errors": {"nightlight_colour": "expected one of ..."}}`. Reporting only
+    the first half tells an owner that something failed and not which setting
+    or why, which is the least useful half of a perfectly good answer.
+    """
+    body = body if isinstance(body, dict) else {}
+    detail = body.get("errors")
+    if isinstance(detail, dict) and detail:
+        return "; ".join(f"{k}: {v}" for k, v in sorted(detail.items()))
+    return str(body.get("error") or f"HTTP {resp.status} {await resp.text()}")
+
+
 class TerrierClient:
     """Talks to one Terrier."""
 
@@ -76,10 +91,7 @@ class TerrierClient:
                 if resp.status == 404:
                     raise TerrierError(f"{path}: not found")
                 if resp.status >= 400:
-                    raise TerrierError(
-                        f"{path}: HTTP {resp.status} "
-                        f"{(body or {}).get('error', await resp.text())}"
-                    )
+                    raise TerrierError(f"{path}: {await _why(resp, body)}")
                 return body
         except TimeoutError as err:
             raise TerrierError(f"{path}: timed out") from err
