@@ -51,13 +51,15 @@ This integration is how Home Assistant talks to it.
 ### 👀 What it looks like
 
 <p align="center">
-  <img src="docs/device.png" alt="The rabbit's device page in Home Assistant: controls, sensors, and a link back to its warren" width="420">
-  <img src="docs/dashboard.png" alt="A dashboard with the nightlight, sleep, the morning weather and the diagnostics" width="420">
+  <img src="docs/dashboard.png" alt="A dashboard with the nightlight, sleep, the morning weather and the schedule" width="860">
 </p>
 <p align="center">
-  <img src="docs/schedule.png" alt="The rabbit's settings as entities: morning weather, alarm, night mode, personality" width="250">
-  <img src="docs/integration.png" alt="The integration page: one bridge, one device, 53 entities" width="420">
-  <img src="docs/config-flow.png" alt="The setup dialog asking for a warren address and an API token" width="420">
+  <img src="docs/device.png" alt="The rabbit's device page in Home Assistant: controls, sensors, and a link back to its warren" width="560">
+  <img src="docs/schedule.png" alt="The rabbit's settings as entities: morning weather, alarm, night mode, personality" width="290">
+</p>
+<p align="center">
+  <img src="docs/integration.png" alt="The integration page: one bridge, one device, 53 entities" width="500">
+  <img src="docs/config-flow.png" alt="The setup dialog asking for a warren address and an API token" width="350">
 </p>
 
 <sub>A real Home Assistant against a real Nabaztag:tag&nbsp;v2 — only the MAC address is masked. Shown in French; the integration ships English and French.</sub>
