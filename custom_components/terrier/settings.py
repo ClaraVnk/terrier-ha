@@ -33,12 +33,12 @@ from homeassistant.helpers.entity import EntityCategory
 class Setting:
     """One config key, and how it should look."""
 
-    key: str                      # the warren's config key, and our entity key
+    key: str  # the warren's config key, and our entity key
     icon: str
     enabled: bool = True
     category: EntityCategory | None = EntityCategory.CONFIG
-    options: tuple[str, ...] = ()        # selects only
-    minimum: int = 0                     # numbers only
+    options: tuple[str, ...] = ()  # selects only
+    minimum: int = 0  # numbers only
     maximum: int = 100
     step: int = 1
     unit: str | None = None
@@ -64,8 +64,12 @@ SWITCHES: tuple[Setting, ...] = (
     Setting(key="hw_sleep", icon="mdi:power-sleep", enabled=False),
     Setting(key="surprise_enabled", icon="mdi:party-popper", enabled=False),
     Setting(key="presence_share", icon="mdi:account-group-outline", enabled=False),
-    Setting(key="devmode", icon="mdi:bug-outline", enabled=False,
-            category=EntityCategory.DIAGNOSTIC),
+    Setting(
+        key="devmode",
+        icon="mdi:bug-outline",
+        enabled=False,
+        category=EntityCategory.DIAGNOSTIC,
+    ),
 )
 
 # ------------------------------------------------------------------ times
@@ -90,30 +94,53 @@ TIMES: tuple[Setting, ...] = (
 # too, but an entity's options have to exist before the first poll answers,
 # so they are mirrored here and guarded by a test that compares the two.
 SELECTS: tuple[Setting, ...] = (
-    Setting(key="personality", icon="mdi:drama-masks",
-            options=("off", "discret", "normal", "vif")),
-    Setting(key="voice_speed", icon="mdi:speedometer",
-            options=("slow", "normal", "fast")),
-    Setting(key="night_mode", icon="mdi:weather-night",
-            options=("quiet", "sleep")),
-    Setting(key="nightlight_colour", icon="mdi:palette",
-            options=("blue", "sky", "green", "red", "orange", "violet",
-                     "yellow", "white")),
-    Setting(key="clock_mode", icon="mdi:bell-outline", enabled=False,
-            options=("speak", "chime", "both")),
-    Setting(key="clock_every", icon="mdi:timer-outline", enabled=False,
-            options=("hour", "half")),
-    Setting(key="weather_show", icon="mdi:weather-cloudy", enabled=False,
-            options=("both", "speak", "belly")),
+    Setting(
+        key="personality",
+        icon="mdi:drama-masks",
+        options=("off", "discret", "normal", "vif"),
+    ),
+    Setting(
+        key="voice_speed", icon="mdi:speedometer", options=("slow", "normal", "fast")
+    ),
+    Setting(key="night_mode", icon="mdi:weather-night", options=("quiet", "sleep")),
+    Setting(
+        key="nightlight_colour",
+        icon="mdi:palette",
+        options=("blue", "sky", "green", "red", "orange", "violet", "yellow", "white"),
+    ),
+    Setting(
+        key="clock_mode",
+        icon="mdi:bell-outline",
+        enabled=False,
+        options=("speak", "chime", "both"),
+    ),
+    Setting(
+        key="clock_every",
+        icon="mdi:timer-outline",
+        enabled=False,
+        options=("hour", "half"),
+    ),
+    Setting(
+        key="weather_show",
+        icon="mdi:weather-cloudy",
+        enabled=False,
+        options=("both", "speak", "belly"),
+    ),
 )
 
 # ---------------------------------------------------------------- numbers
 
 NUMBERS: tuple[Setting, ...] = (
-    Setting(key="nightlight_level", icon="mdi:brightness-6",
-            minimum=1, maximum=5),
-    Setting(key="weather_belly_minutes", icon="mdi:timer-sand", enabled=False,
-            minimum=0, maximum=1440, step=5, unit="min"),
+    Setting(key="nightlight_level", icon="mdi:brightness-6", minimum=1, maximum=5),
+    Setting(
+        key="weather_belly_minutes",
+        icon="mdi:timer-sand",
+        enabled=False,
+        minimum=0,
+        maximum=1440,
+        step=5,
+        unit="min",
+    ),
 )
 
 ALL: tuple[Setting, ...] = SWITCHES + TIMES + SELECTS + NUMBERS

@@ -64,9 +64,7 @@ ASK_SCHEMA = vol.Schema({**_TARGET, vol.Required("question"): cv.string})
 LISTEN_SCHEMA = vol.Schema(
     {
         **_TARGET,
-        vol.Optional("seconds"): vol.All(
-            vol.Coerce(float), vol.Range(min=1, max=8)
-        ),
+        vol.Optional("seconds"): vol.All(vol.Coerce(float), vol.Range(min=1, max=8)),
     }
 )
 AIR_SCHEMA = vol.Schema({**_TARGET})
@@ -281,8 +279,9 @@ def async_setup_services(hass: HomeAssistant) -> None:
         await _run(hass, call, lambda c, mac: c.set_config(mac, **settings))
 
     async def rfid_bind(call: ServiceCall) -> None:
-        action = {k: v for k, v in call.data.items()
-                  if k not in (ATTR_DEVICE_ID, "tag")}
+        action = {
+            k: v for k, v in call.data.items() if k not in (ATTR_DEVICE_ID, "tag")
+        }
         await _run(
             hass, call, lambda c, mac: c.rfid_bind(mac, call.data["tag"], **action)
         )
@@ -313,6 +312,9 @@ def async_setup_services(hass: HomeAssistant) -> None:
         (SERVICE_LISTEN, listen, LISTEN_SCHEMA),
     ):
         hass.services.async_register(
-            DOMAIN, name, handler, schema=schema,
+            DOMAIN,
+            name,
+            handler,
+            schema=schema,
             supports_response=SupportsResponse.ONLY,
         )

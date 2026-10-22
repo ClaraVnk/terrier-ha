@@ -25,8 +25,12 @@ import pytest
 _ROOT = pathlib.Path(__file__).resolve().parent.parent
 COMPONENT = _ROOT / "custom_components" / "terrier"
 
-PLATFORM = {"SWITCHES": "switch", "TIMES": "time",
-            "SELECTS": "select", "NUMBERS": "number"}
+PLATFORM = {
+    "SWITCHES": "switch",
+    "TIMES": "time",
+    "SELECTS": "select",
+    "NUMBERS": "number",
+}
 
 
 def _tables() -> dict[str, list[dict]]:
@@ -46,7 +50,7 @@ def _tables() -> dict[str, list[dict]]:
                 try:
                     row[kw.arg] = ast.literal_eval(kw.value)
                 except ValueError:
-                    row[kw.arg] = None          # EntityCategory, not a literal
+                    row[kw.arg] = None  # EntityCategory, not a literal
             rows.append(row)
         out[node.target.id] = rows
     return out

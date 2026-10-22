@@ -24,10 +24,16 @@ async def async_setup_entry(
     coordinator = entry.runtime_data
     macs = list(coordinator.data or {})
     async_add_entities(
-        [cls(coordinator, mac) for mac in macs
-         for cls in (TerrierSleep, TerrierMailbox)]
-        + [TerrierSettingSwitch(coordinator, mac, setting)
-           for mac in macs for setting in SWITCHES]
+        [
+            cls(coordinator, mac)
+            for mac in macs
+            for cls in (TerrierSleep, TerrierMailbox)
+        ]
+        + [
+            TerrierSettingSwitch(coordinator, mac, setting)
+            for mac in macs
+            for setting in SWITCHES
+        ]
     )
 
 

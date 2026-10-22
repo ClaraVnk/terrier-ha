@@ -51,5 +51,4 @@ SERVICE_RFID_REMOVE = "rfid_remove"
 # The belly palette as the warren names it. Distinct from COLOURS above,
 # which maps those names to RGB for the light's colour wheel: these are the
 # strings the API accepts, and the firmware knows no others.
-BELLY_COLOURS = ("blue", "sky", "green", "red", "orange", "violet",
-                 "yellow", "white")
+BELLY_COLOURS = ("blue", "sky", "green", "red", "orange", "violet", "yellow", "white")

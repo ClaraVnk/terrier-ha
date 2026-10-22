@@ -195,9 +195,10 @@ class TerrierClient:
         return await self._request("POST", f"/api/rabbits/{mac}/ambient", fields) or {}
 
     async def ask(self, mac: str, question: str) -> dict[str, Any]:
-        return await self._request(
-            "POST", f"/api/rabbits/{mac}/ask", {"q": question}
-        ) or {}
+        return (
+            await self._request("POST", f"/api/rabbits/{mac}/ask", {"q": question})
+            or {}
+        )
 
     async def listen(self, mac: str, seconds: float | None = None) -> dict[str, Any]:
         body: dict[str, Any] = {}
@@ -213,15 +214,11 @@ class TerrierClient:
     async def set_config(self, mac: str, **patch: Any) -> dict[str, Any]:
         """Write settings. The warren applies all of them or none, so a
         caller that gets a 200 knows exactly where it stands."""
-        return await self._request(
-            "POST", f"/api/rabbits/{mac}/config", patch
-        ) or {}
+        return await self._request("POST", f"/api/rabbits/{mac}/config", patch) or {}
 
     async def rfid_bind(self, mac: str, tag: str, **action: Any) -> dict[str, Any]:
         body = {"tag": tag, **action}
         return await self._request("POST", f"/api/rabbits/{mac}/rfid", body) or {}
 
     async def rfid_remove(self, mac: str, tag: str) -> dict[str, Any]:
-        return await self._request(
-            "DELETE", f"/api/rabbits/{mac}/rfid/{tag}"
-        ) or {}
+        return await self._request("DELETE", f"/api/rabbits/{mac}/rfid/{tag}") or {}

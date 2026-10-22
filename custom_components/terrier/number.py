@@ -29,8 +29,11 @@ async def async_setup_entry(
     macs = list(coordinator.data or {})
     async_add_entities(
         [TerrierCounter(coordinator, mac) for mac in macs]
-        + [TerrierSettingNumber(coordinator, mac, setting)
-           for mac in macs for setting in NUMBERS]
+        + [
+            TerrierSettingNumber(coordinator, mac, setting)
+            for mac in macs
+            for setting in NUMBERS
+        ]
     )
 
 
