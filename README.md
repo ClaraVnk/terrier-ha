@@ -66,6 +66,28 @@ This integration is how Home Assistant talks to it.
   in **one** call. A parcel arriving should not need five service calls.
 - 📻 **Radio, podcasts, jingles, ear choreography, and mail to other rabbits**,
   each as a service with a proper UI form.
+- ⏰ **Its whole schedule, as entities** — the morning weather, the alarm, the
+  hourly chime, night mode, the nightlight and the daily podcast, each a
+  `switch` with the `time` that goes with it. This is the half an automation
+  most wants to reach, and it used to need a browser.
+- 🎚️ **Its settings, as `select`s and `number`s** — personality, speaking
+  speed, chime style, nightlight colour and brightness. The options are the
+  warren's own, so a colour the firmware has never heard of cannot be chosen.
+- 🤖 **`terrier.ask`** — put a question to the rabbit's own model, with your
+  own key. It answers out loud, and the answer comes back to the automation.
+- 🎙️ **`terrier.listen`** — push-to-talk. The rabbit records one sentence,
+  the warren transcribes it and it answers aloud; the words come back so an
+  automation can act on them. Nothing listens on its own, ever.
+- 🏷️ **`terrier.rfid_bind`** — tie a tag to a phrase, a station, the weather
+  or a webhook.
+- ⚙️ **`terrier.set_config`** — the long tail: wake word, voice, coordinates,
+  feed URL, model name. Applied all at once or not at all.
+
+> **API keys are the one thing this cannot set.** The warren refuses to write
+> them over HTTP on purpose: Home Assistant would have to hold one to send
+> it, and a key pasted into an automation is a key in a YAML backup, in a
+> snapshot, and in whatever syncs that snapshot. They stay on the warren's
+> own settings page.
 
 ### 📦 Install
 

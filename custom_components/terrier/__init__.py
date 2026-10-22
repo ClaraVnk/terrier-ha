@@ -26,6 +26,7 @@ PLATFORMS: list[Platform] = [
     Platform.SELECT,
     Platform.SENSOR,
     Platform.SWITCH,
+    Platform.TIME,
 ]
 
 type TerrierConfigEntry = ConfigEntry[TerrierCoordinator]

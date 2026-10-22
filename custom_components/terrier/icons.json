@@ -1,27 +1,185 @@
 {
   "entity": {
-    "binary_sensor": { "breathing": { "default": "mdi:rabbit" } },
-    "button": {
-      "compliment": { "default": "mdi:heart-outline" },
-      "stop": { "default": "mdi:stop" },
-      "wake": { "default": "mdi:weather-sunset-up" }
+    "binary_sensor": {
+      "breathing": {
+        "default": "mdi:rabbit"
+      }
     },
-    "light": { "nightlight": { "default": "mdi:lightbulb-night" } },
-    "number": { "counter": { "default": "mdi:numeric" } },
-    "select": { "nose": { "default": "mdi:circle" } },
+    "button": {
+      "compliment": {
+        "default": "mdi:heart-outline"
+      },
+      "stop": {
+        "default": "mdi:stop"
+      },
+      "wake": {
+        "default": "mdi:weather-sunset-up"
+      }
+    },
+    "light": {
+      "nightlight": {
+        "default": "mdi:lightbulb-night"
+      }
+    },
+    "number": {
+      "counter": {
+        "default": "mdi:numeric"
+      },
+      "nightlight_level": {
+        "default": "mdi:brightness-6"
+      },
+      "weather_belly_minutes": {
+        "default": "mdi:timer-sand"
+      }
+    },
+    "select": {
+      "nose": {
+        "default": "mdi:circle"
+      },
+      "personality": {
+        "default": "mdi:drama-masks"
+      },
+      "voice_speed": {
+        "default": "mdi:speedometer"
+      },
+      "night_mode": {
+        "default": "mdi:weather-night"
+      },
+      "nightlight_colour": {
+        "default": "mdi:palette"
+      },
+      "clock_mode": {
+        "default": "mdi:bell-outline"
+      },
+      "clock_every": {
+        "default": "mdi:timer-outline"
+      },
+      "weather_show": {
+        "default": "mdi:weather-cloudy"
+      }
+    },
     "sensor": {
-      "availability": { "default": "mdi:chart-donut" },
-      "disconnects": { "default": "mdi:lan-disconnect" },
-      "session": { "default": "mdi:timer-outline" },
-      "rtt": { "default": "mdi:swap-horizontal" },
-      "last_seen": { "default": "mdi:clock-outline" },
-      "waiting": { "default": "mdi:mailbox-up" },
-      "mood": { "default": "mdi:emoticon-outline" },
-      "counter": { "default": "mdi:numeric" }
+      "availability": {
+        "default": "mdi:chart-donut"
+      },
+      "disconnects": {
+        "default": "mdi:lan-disconnect"
+      },
+      "session": {
+        "default": "mdi:timer-outline"
+      },
+      "rtt": {
+        "default": "mdi:swap-horizontal"
+      },
+      "last_seen": {
+        "default": "mdi:clock-outline"
+      },
+      "waiting": {
+        "default": "mdi:mailbox-up"
+      },
+      "mood": {
+        "default": "mdi:emoticon-outline"
+      },
+      "counter": {
+        "default": "mdi:numeric"
+      }
     },
     "switch": {
-      "sleep": { "default": "mdi:sleep", "state": { "off": "mdi:sleep-off" } },
-      "mailbox": { "default": "mdi:mailbox" }
+      "sleep": {
+        "default": "mdi:sleep",
+        "state": {
+          "off": "mdi:sleep-off"
+        }
+      },
+      "mailbox": {
+        "default": "mdi:mailbox"
+      },
+      "weather_enabled": {
+        "default": "mdi:weather-partly-cloudy"
+      },
+      "air_enabled": {
+        "default": "mdi:air-filter"
+      },
+      "alarm_enabled": {
+        "default": "mdi:alarm"
+      },
+      "clock_enabled": {
+        "default": "mdi:clock-outline"
+      },
+      "night_enabled": {
+        "default": "mdi:weather-night"
+      },
+      "nightlight_enabled": {
+        "default": "mdi:lightbulb-night"
+      },
+      "podcast_enabled": {
+        "default": "mdi:podcast"
+      },
+      "tamagotchi_enabled": {
+        "default": "mdi:emoticon-outline"
+      },
+      "compliment_enabled": {
+        "default": "mdi:heart-outline"
+      },
+      "llm_enabled": {
+        "default": "mdi:robot-outline"
+      },
+      "weather_rainbow": {
+        "default": "mdi:looks"
+      },
+      "air_speak": {
+        "default": "mdi:bullhorn-outline"
+      },
+      "alarm_weather": {
+        "default": "mdi:weather-sunny-alert"
+      },
+      "hw_sleep": {
+        "default": "mdi:power-sleep"
+      },
+      "surprise_enabled": {
+        "default": "mdi:party-popper"
+      },
+      "presence_share": {
+        "default": "mdi:account-group-outline"
+      },
+      "devmode": {
+        "default": "mdi:bug-outline"
+      }
+    },
+    "time": {
+      "weather_hour": {
+        "default": "mdi:weather-partly-cloudy"
+      },
+      "alarm_hour": {
+        "default": "mdi:alarm"
+      },
+      "air_hour": {
+        "default": "mdi:air-filter"
+      },
+      "compliment_hour": {
+        "default": "mdi:heart-outline"
+      },
+      "podcast_hour": {
+        "default": "mdi:podcast"
+      },
+      "clock_from": {
+        "default": "mdi:clock-start"
+      },
+      "clock_to": {
+        "default": "mdi:clock-end"
+      },
+      "night_from": {
+        "default": "mdi:weather-night"
+      },
+      "night_to": {
+        "default": "mdi:weather-sunset-up"
+      },
+      "nightlight_from": {
+        "default": "mdi:lightbulb-night"
+      },
+      "nightlight_to": {
+        "default": "mdi:lightbulb-night-outline"
+      }
     }
   },
   "services": {

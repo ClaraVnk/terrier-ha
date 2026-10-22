@@ -56,6 +56,12 @@
     "number": {
       "counter": {
         "name": "Counter"
+      },
+      "nightlight_level": {
+        "name": "Nightlight brightness"
+      },
+      "weather_belly_minutes": {
+        "name": "Weather on the belly for"
       }
     },
     "select": {
@@ -65,6 +71,66 @@
           "off": "Off",
           "blink": "One blink",
           "double": "Two blinks"
+        }
+      },
+      "personality": {
+        "name": "Personality",
+        "state": {
+          "off": "Off",
+          "discret": "Discreet",
+          "normal": "Normal",
+          "vif": "Lively"
+        }
+      },
+      "voice_speed": {
+        "name": "Speaking speed",
+        "state": {
+          "slow": "Slow",
+          "normal": "Normal",
+          "fast": "Fast"
+        }
+      },
+      "night_mode": {
+        "name": "At night",
+        "state": {
+          "quiet": "Stay quiet",
+          "sleep": "Sleep"
+        }
+      },
+      "nightlight_colour": {
+        "name": "Nightlight colour",
+        "state": {
+          "blue": "Blue",
+          "sky": "Sky",
+          "green": "Green",
+          "red": "Red",
+          "orange": "Orange",
+          "violet": "Violet",
+          "yellow": "Yellow",
+          "white": "White"
+        }
+      },
+      "clock_mode": {
+        "name": "Chime style",
+        "state": {
+          "speak": "Say the hour",
+          "chime": "Chime only",
+          "both": "Both"
+        }
+      },
+      "clock_every": {
+        "name": "Chime every",
+        "state": {
+          "hour": "Hour",
+          "half": "Half hour"
+        }
+      },
+      "weather_show": {
+        "name": "Weather as",
+        "state": {
+          "both": "Spoken and belly",
+          "speak": "Spoken",
+          "belly": "Belly only"
         }
       }
     },
@@ -100,6 +166,92 @@
       },
       "mailbox": {
         "name": "Postbox open"
+      },
+      "weather_enabled": {
+        "name": "Morning weather"
+      },
+      "air_enabled": {
+        "name": "Air quality"
+      },
+      "alarm_enabled": {
+        "name": "Alarm"
+      },
+      "clock_enabled": {
+        "name": "Hourly chime"
+      },
+      "night_enabled": {
+        "name": "Night mode"
+      },
+      "nightlight_enabled": {
+        "name": "Nightlight schedule"
+      },
+      "podcast_enabled": {
+        "name": "Daily podcast"
+      },
+      "tamagotchi_enabled": {
+        "name": "Mood"
+      },
+      "compliment_enabled": {
+        "name": "Daily compliment"
+      },
+      "llm_enabled": {
+        "name": "Answers questions"
+      },
+      "weather_rainbow": {
+        "name": "Rainbow when it rains"
+      },
+      "air_speak": {
+        "name": "Say the air quality"
+      },
+      "alarm_weather": {
+        "name": "Weather with the alarm"
+      },
+      "hw_sleep": {
+        "name": "Hardware sleep at night"
+      },
+      "surprise_enabled": {
+        "name": "Surprise hellos"
+      },
+      "presence_share": {
+        "name": "Announce arrivals"
+      },
+      "devmode": {
+        "name": "Developer probe"
+      }
+    },
+    "time": {
+      "weather_hour": {
+        "name": "Weather at"
+      },
+      "alarm_hour": {
+        "name": "Alarm at"
+      },
+      "air_hour": {
+        "name": "Air quality at"
+      },
+      "compliment_hour": {
+        "name": "Compliment at"
+      },
+      "podcast_hour": {
+        "name": "Podcast at"
+      },
+      "clock_from": {
+        "name": "Chime from"
+      },
+      "clock_to": {
+        "name": "Chime until"
+      },
+      "night_from": {
+        "name": "Night from"
+      },
+      "night_to": {
+        "name": "Night until"
+      },
+      "nightlight_from": {
+        "name": "Nightlight from"
+      },
+      "nightlight_to": {
+        "name": "Nightlight until"
       }
     }
   },
@@ -243,6 +395,120 @@
         "jingle": {
           "name": "Jingle",
           "description": "Played before the words."
+        }
+      }
+    },
+    "ask": {
+      "name": "Ask a question",
+      "description": "Ask the rabbit's own model, with the owner's key. It answers out loud, and the answer comes back to the automation.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "question": {
+          "name": "Question",
+          "description": "What to ask."
+        }
+      }
+    },
+    "listen": {
+      "name": "Listen",
+      "description": "Push-to-talk: the rabbit records one sentence, the warren transcribes it and the rabbit answers out loud. Needs a transcription key. Nothing listens on its own.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "seconds": {
+          "name": "Seconds",
+          "description": "How long to record at most. It stops on its own after a pause."
+        }
+      }
+    },
+    "air": {
+      "name": "Say the air quality",
+      "description": "Read the air quality out now, rather than waiting for the daily hour.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        }
+      }
+    },
+    "ambient": {
+      "name": "Breathing colour",
+      "description": "The colour the belly breathes in, which persists. Clearing it stops the breathing altogether.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "colour": {
+          "name": "Colour",
+          "description": "One of the eight the firmware knows."
+        },
+        "clear": {
+          "name": "Clear",
+          "description": "Stop the breathing entirely."
+        }
+      }
+    },
+    "set_config": {
+      "name": "Change settings",
+      "description": "Any of the rabbit's settings, applied all at once or not at all. API keys are refused on purpose — they stay on the warren's own page.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "settings": {
+          "name": "Settings",
+          "description": "A mapping of setting to value."
+        }
+      }
+    },
+    "rfid_bind": {
+      "name": "Bind a tag",
+      "description": "Tie an RFID tag to something the rabbit does when it is presented.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "tag": {
+          "name": "Tag",
+          "description": "The tag's identifier."
+        },
+        "type": {
+          "name": "Action",
+          "description": "What it does: say, radio, weather or webhook."
+        },
+        "text": {
+          "name": "Text",
+          "description": "For a say action."
+        },
+        "station": {
+          "name": "Station",
+          "description": "For a radio action."
+        },
+        "url": {
+          "name": "URL",
+          "description": "For a webhook action."
+        }
+      }
+    },
+    "rfid_remove": {
+      "name": "Remove a tag",
+      "description": "Unbind a tag.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "tag": {
+          "name": "Tag",
+          "description": "The tag to remove."
         }
       }
     }

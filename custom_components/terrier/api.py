@@ -168,3 +168,60 @@ class TerrierClient:
 
     async def nudge_mood(self, mac: str, kind: str = "speak") -> dict[str, Any]:
         return await self._request("POST", f"/api/rabbits/{mac}/mood", {"kind": kind})
+
+    # -- the rest of the warren ------------------------------------------- #
+    # Everything below exists because the integration covered sixteen of the
+    # Terrier's routes and the warren has thirty-one. Some of the gap was
+    # ours; some of it was a route that did not exist yet.
+
+    async def state(self, mac: str) -> dict[str, Any]:
+        """What the belly and the ears are actually doing, read back from the
+        rabbit rather than inferred from what we last told it."""
+        return await self._request("GET", f"/api/rabbits/{mac}/state") or {}
+
+    async def air(self, mac: str) -> dict[str, Any]:
+        return await self._request("GET", f"/api/rabbits/{mac}/air") or {}
+
+    async def say_air(self, mac: str) -> dict[str, Any]:
+        """Say the air quality now, rather than waiting for the daily hour."""
+        return await self._request("POST", f"/api/rabbits/{mac}/air", {}) or {}
+
+    async def alarm(self, mac: str, **fields: Any) -> dict[str, Any]:
+        return await self._request("POST", f"/api/rabbits/{mac}/alarm", fields) or {}
+
+    async def ambient(self, mac: str, **fields: Any) -> dict[str, Any]:
+        """The colour the belly breathes in. Clearing it stops the breathing,
+        which is not obvious and is why `clear` is explicit."""
+        return await self._request("POST", f"/api/rabbits/{mac}/ambient", fields) or {}
+
+    async def ask(self, mac: str, question: str) -> dict[str, Any]:
+        return await self._request(
+            "POST", f"/api/rabbits/{mac}/ask", {"q": question}
+        ) or {}
+
+    async def listen(self, mac: str, seconds: float | None = None) -> dict[str, Any]:
+        body: dict[str, Any] = {}
+        if seconds:
+            body["seconds"] = seconds
+        return await self._request("POST", f"/api/rabbits/{mac}/listen", body) or {}
+
+    async def settings(self, mac: str) -> dict[str, Any]:
+        """What this warren will accept — so a client need not hard-code
+        eight belly colours."""
+        return await self._request("GET", f"/api/rabbits/{mac}/settings") or {}
+
+    async def set_config(self, mac: str, **patch: Any) -> dict[str, Any]:
+        """Write settings. The warren applies all of them or none, so a
+        caller that gets a 200 knows exactly where it stands."""
+        return await self._request(
+            "POST", f"/api/rabbits/{mac}/config", patch
+        ) or {}
+
+    async def rfid_bind(self, mac: str, tag: str, **action: Any) -> dict[str, Any]:
+        body = {"tag": tag, **action}
+        return await self._request("POST", f"/api/rabbits/{mac}/rfid", body) or {}
+
+    async def rfid_remove(self, mac: str, tag: str) -> dict[str, Any]:
+        return await self._request(
+            "DELETE", f"/api/rabbits/{mac}/rfid/{tag}"
+        ) or {}
