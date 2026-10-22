@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="530" viewBox="0 0 860 530" font-family="-apple-system,Segoe UI,system-ui,sans-serif">
+<rect width="860" height="530" rx="14" fill="#fbf9f5"/>
+<text x="24" y="42" font-size="17" font-weight="700" fill="#1a1f2e">What one rabbit becomes in Home Assistant</text>
+<rect x="18" y="68" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="68" width="5" height="36" rx="2" fill="#7c3aed"/>
+<text x="38" y="91" font-size="14" font-weight="650" fill="#1a1f2e">Device</text>
+<text x="136" y="91" font-size="14" font-weight="700" fill="#7c3aed">1</text>
+<text x="170" y="91" font-size="13" fill="#5f6372">one per rabbit, with its firmware and serial</text>
+<rect x="18" y="112" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="112" width="5" height="36" rx="2" fill="#2a7951"/>
+<text x="38" y="135" font-size="14" font-weight="650" fill="#1a1f2e">Sensors</text>
+<text x="136" y="135" font-size="14" font-weight="700" fill="#2a7951">8</text>
+<text x="170" y="135" font-size="13" fill="#5f6372">availability, disconnects, session, RTT, mood, counter…</text>
+<rect x="18" y="156" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="156" width="5" height="36" rx="2" fill="#aa531b"/>
+<text x="38" y="179" font-size="14" font-weight="650" fill="#1a1f2e">Switches</text>
+<text x="136" y="179" font-size="14" font-weight="700" fill="#aa531b">19</text>
+<text x="170" y="179" font-size="13" fill="#5f6372">sleep, postbox, and the whole schedule</text>
+<rect x="18" y="200" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="200" width="5" height="36" rx="2" fill="#1f6feb"/>
+<text x="38" y="223" font-size="14" font-weight="650" fill="#1a1f2e">Times</text>
+<text x="136" y="223" font-size="14" font-weight="700" fill="#1f6feb">11</text>
+<text x="170" y="223" font-size="13" fill="#5f6372">every hour a rabbit keeps</text>
+<rect x="18" y="244" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="244" width="5" height="36" rx="2" fill="#b3309a"/>
+<text x="38" y="267" font-size="14" font-weight="650" fill="#1a1f2e">Selects</text>
+<text x="136" y="267" font-size="14" font-weight="700" fill="#b3309a">8</text>
+<text x="170" y="267" font-size="13" fill="#5f6372">nose, personality, speed, chime, nightlight colour</text>
+<rect x="18" y="288" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="288" width="5" height="36" rx="2" fill="#0b7285"/>
+<text x="38" y="311" font-size="14" font-weight="650" fill="#1a1f2e">Numbers</text>
+<text x="136" y="311" font-size="14" font-weight="700" fill="#0b7285">3</text>
+<text x="170" y="311" font-size="13" fill="#5f6372">counter, nightlight brightness, belly minutes</text>
+<rect x="18" y="332" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="332" width="5" height="36" rx="2" fill="#d4a017"/>
+<text x="38" y="355" font-size="14" font-weight="650" fill="#1a1f2e">Light</text>
+<text x="136" y="355" font-size="14" font-weight="700" fill="#d4a017">1</text>
+<text x="170" y="355" font-size="13" fill="#5f6372">the belly</text>
+<rect x="18" y="376" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="376" width="5" height="36" rx="2" fill="#5f6372"/>
+<text x="38" y="399" font-size="14" font-weight="650" fill="#1a1f2e">Buttons</text>
+<text x="136" y="399" font-size="14" font-weight="700" fill="#5f6372">3</text>
+<text x="170" y="399" font-size="13" fill="#5f6372">compliment, stop, wake</text>
+<rect x="18" y="420" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="420" width="5" height="36" rx="2" fill="#2a7951"/>
+<text x="38" y="443" font-size="14" font-weight="650" fill="#1a1f2e">Binary</text>
+<text x="136" y="443" font-size="14" font-weight="700" fill="#2a7951">1</text>
+<text x="170" y="443" font-size="13" fill="#5f6372">breathing</text>
+<rect x="18" y="464" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
+<rect x="18" y="464" width="5" height="36" rx="2" fill="#7c3aed"/>
+<text x="38" y="487" font-size="14" font-weight="650" fill="#1a1f2e">Services</text>
+<text x="136" y="487" font-size="14" font-weight="700" fill="#7c3aed">14</text>
+<text x="170" y="487" font-size="13" fill="#5f6372">air, ambient, ask, ears, jingle, listen, mail, notify, podcast, radio, rfid…</text>
+</svg>

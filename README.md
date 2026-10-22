@@ -13,6 +13,8 @@
 
 <p align="center">
   <a href="https://github.com/hacs/integration"><img src="https://img.shields.io/badge/HACS-custom-41BDF5?style=flat-square&logo=home-assistant&logoColor=white" alt="HACS custom repository"></a>
+  <a href="https://github.com/ClaraVnk/terrier-ha/releases"><img src="https://img.shields.io/github/v/release/ClaraVnk/terrier-ha?style=flat-square&color=41BDF5&display_name=tag&sort=semver" alt="Latest release"></a>
+  <a href="https://github.com/ClaraVnk/terrier-ha/actions"><img src="https://img.shields.io/github/actions/workflow/status/ClaraVnk/terrier-ha/validate.yml?style=flat-square&label=checks" alt="Checks"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="License: Apache 2.0"></a>
   <img src="https://img.shields.io/badge/hardware-Nabaztag%3Atag%20v2-orange?style=flat-square" alt="Nabaztag:tag v2">
   <img src="https://img.shields.io/badge/protocol-Violet-6f42c1?style=flat-square" alt="Violet protocol">
@@ -26,6 +28,8 @@
   <img src="https://img.shields.io/badge/belly%20%26%20nose-live-success?style=flat-square" alt="belly and nose">
   <img src="https://img.shields.io/badge/podcasts-live-success?style=flat-square" alt="podcasts">
   <img src="https://img.shields.io/badge/rabbit%20mail-live-success?style=flat-square" alt="rabbit to rabbit mail">
+  <img src="https://img.shields.io/badge/push--to--talk-live-success?style=flat-square" alt="push to talk">
+  <img src="https://img.shields.io/badge/asks%20a%20model-live-success?style=flat-square" alt="asks a model">
   <br><sub>every capability above verified against a real Nabaztag:tag&nbsp;v2 🐰</sub>
 </p>
 
@@ -89,7 +93,34 @@ This integration is how Home Assistant talks to it.
 > snapshot, and in whatever syncs that snapshot. They stay on the warren's
 > own settings page.
 
+### 🗺️ What one rabbit becomes
+
+<p align="center">
+  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 19 switches, 11 times, 8 selects, 3 numbers, a light, 3 buttons, a binary sensor and 14 services." width="860">
+</p>
+
+<sub>Generated from <code>settings.py</code> and <code>icons.json</code>, so it cannot describe a version that no longer exists. Most of the schedule entities ship disabled — enable the ones you want from the device page.</sub>
+
+<!-- SCREENSHOTS — uncomment this block once the four files in docs/ exist.
+     They have to come off a real Home Assistant with a real rabbit paired;
+     see docs/README.md for what to capture. Leaving it commented keeps the
+     README free of broken images in the meantime.
+
+<p align="center">
+  <img src="docs/device.png" alt="The rabbit's device page in Home Assistant" width="420">
+  <img src="docs/dashboard.png" alt="A dashboard card with the belly light, sleep switch and sensors" width="420">
+</p>
+<p align="center">
+  <img src="docs/services.png" alt="The terrier.notify action form in Developer tools" width="420">
+  <img src="docs/config-flow.png" alt="The setup dialog asking for a warren URL and a token" width="420">
+</p>
+-->
+
 ### 📦 Install
+
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=ClaraVnk&repository=terrier-ha&category=integration"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open this repository inside HACS."></a>
+&nbsp;
+<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=terrier"><img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Open your Home Assistant instance and start setting up a new integration."></a>
 
 **Through HACS** (recommended)
 
