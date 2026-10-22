@@ -12,15 +12,22 @@ on:
 
 permissions:
   contents: read
+  # gitleaks lists the pull request's commits to know what to scan. Without
+  # this it answers 403 "Resource not accessible by integration" — which it
+  # reports as a failed scan rather than a missing permission, so it reads
+  # exactly like a leak.
+  pull-requests: read
 
 jobs:
   secrets:
-    name: Secret scan (gitleaks, whole history)
+    name: Secret scan (gitleaks)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
         with:
+          # The whole history on the scheduled run; on a pull request the
+          # action scans that branch's commits instead.
           fetch-depth: 0
       - uses: gitleaks/gitleaks-action@v2
         env:
