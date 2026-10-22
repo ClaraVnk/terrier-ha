@@ -48,50 +48,44 @@ This integration is how Home Assistant talks to it.
 > will accept a single command. A Terrier holds that session. This integration
 > talks to the Terrier.
 
+### 👀 What it looks like
+
+<p align="center">
+  <img src="docs/device.png" alt="The rabbit's device page in Home Assistant: controls, sensors, and a link back to its warren" width="420">
+  <img src="docs/dashboard.png" alt="A dashboard with the nightlight, sleep, the morning weather and the diagnostics" width="420">
+</p>
+<p align="center">
+  <img src="docs/schedule.png" alt="The rabbit's settings as entities: morning weather, alarm, night mode, personality" width="250">
+  <img src="docs/integration.png" alt="The integration page: one bridge, one device, 53 entities" width="420">
+  <img src="docs/config-flow.png" alt="The setup dialog asking for a warren address and an API token" width="420">
+</p>
+
+<sub>A real Home Assistant, a real 2006 Nabaztag:tag&nbsp;v2, real numbers — 21% availability and 42 disconnects is what an 802.11b radio from 2006 is worth on a modern access point. Only the MAC address was masked. (The interface is in French here; the integration ships English and French.)</sub>
+
 ### ✨ What you get
 
-- 🐰 **One device per rabbit**, named whatever you called it, with its firmware
-  version and serial where Home Assistant expects them.
-- 💡 **The belly as a `light`** — on, off, colour, brightness. It snaps to the
-  seven colours the hardware actually has and *tells you which one it used*,
-  rather than pretending to be an RGB bulb and quietly lying.
-- 🔴 **The nose as a `select`** — off, one blink, two blinks. That really is
-  all three states the hardware can tell apart, and the reason why is in the
-  [notes](#why-the-nose-has-three-states) below.
-- 🔢 **A counter you can point at anything** — parcels in transit, open
-  tickets, days until the holidays. On the hardware it *is* the nose.
-- 😴 **Sleep as a `switch`** — real hardware sleep: lights out, ears down,
-  pushed commands refused. Not a software mute.
+- 🐰 **One device per rabbit**, with its firmware version and serial where
+  Home Assistant expects them
+- 💡 **The belly as a light** — on, off, colour, brightness
+- 🔴 **The nose, the ears and a counter** you can point at anything: parcels
+  in transit, open tickets, days until the holidays
+- 😴 **Sleep as a switch** — real hardware sleep, not a software mute
+- ⏰ **Its whole schedule as entities** — morning weather, alarm, hourly
+  chime, night mode, nightlight, daily podcast
+- 🎚️ **Its settings as selects and numbers** — personality, speaking speed,
+  nightlight colour and brightness
+- 🗣️ **It speaks** — `terrier.speak`, `terrier.notify` (belly, nose, counter,
+  jingle and a sentence in one call), radio, podcasts, jingles, and mail to
+  other rabbits
+- 🤖 **It answers** — `terrier.ask` puts a question to a model with your own
+  key, and `terrier.listen` is push-to-talk: one sentence, transcribed,
+  answered out loud
 - 📊 **Diagnostics that explain a flaky rabbit** — availability, disconnects,
-  average session length, round-trip time, packet loss. A 2006 802.11b radio
-  on a modern access point drops connections, and these turn *"it stopped
-  working"* into *"it lost the server eleven times yesterday"*.
-- 🔔 **`terrier.notify`** — belly, nose, counter, jingle and a spoken sentence
-  in **one** call. A parcel arriving should not need five service calls.
-- 📻 **Radio, podcasts, jingles, ear choreography, and mail to other rabbits**,
-  each as a service with a proper UI form.
-- ⏰ **Its whole schedule, as entities** — the morning weather, the alarm, the
-  hourly chime, night mode, the nightlight and the daily podcast, each a
-  `switch` with the `time` that goes with it. This is the half an automation
-  most wants to reach, and it used to need a browser.
-- 🎚️ **Its settings, as `select`s and `number`s** — personality, speaking
-  speed, chime style, nightlight colour and brightness. The options are the
-  warren's own, so a colour the firmware has never heard of cannot be chosen.
-- 🤖 **`terrier.ask`** — put a question to the rabbit's own model, with your
-  own key. It answers out loud, and the answer comes back to the automation.
-- 🎙️ **`terrier.listen`** — push-to-talk. The rabbit records one sentence,
-  the warren transcribes it and it answers aloud; the words come back so an
-  automation can act on them. Nothing listens on its own, ever.
-- 🏷️ **`terrier.rfid_bind`** — tie a tag to a phrase, a station, the weather
-  or a webhook.
-- ⚙️ **`terrier.set_config`** — the long tail: wake word, voice, coordinates,
-  feed URL, model name. Applied all at once or not at all.
+  session length, round-trip time
 
-> **API keys are the one thing this cannot set.** The warren refuses to write
-> them over HTTP on purpose: Home Assistant would have to hold one to send
-> it, and a key pasted into an automation is a key in a YAML backup, in a
-> snapshot, and in whatever syncs that snapshot. They stay on the warren's
-> own settings page.
+> **API keys are the one thing this cannot set.** Home Assistant would have to
+> hold one to send it, and a key pasted into an automation ends up in a YAML
+> backup. They stay on the warren's own settings page.
 
 ### 🗺️ What one rabbit becomes
 
@@ -99,19 +93,7 @@ This integration is how Home Assistant talks to it.
   <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 19 switches, 11 times, 8 selects, 3 numbers, a light, 3 buttons, a binary sensor and 14 services." width="860">
 </p>
 
-<sub>Generated from <code>settings.py</code> and <code>icons.json</code>, so it cannot describe a version that no longer exists. Most of the schedule entities ship disabled — enable the ones you want from the device page.</sub>
-
-<p align="center">
-  <img src="docs/device.png" alt="La page de l'appareil dans Home Assistant : contrôles, capteurs, et le lien vers le terrier" width="420">
-  <img src="docs/dashboard.png" alt="Un tableau de bord avec la veilleuse, le sommeil, la météo du matin et les diagnostics" width="420">
-</p>
-<p align="center">
-  <img src="docs/schedule.png" alt="Les réglages du lapin comme entités : météo du matin, réveil, mode nuit, personnalité" width="250">
-  <img src="docs/integration.png" alt="La page de l'intégration : un pont, un appareil, 53 entités" width="420">
-  <img src="docs/config-flow.png" alt="Le dialogue de configuration : adresse du terrier et jeton d'API" width="420">
-</p>
-
-<sub>Un vrai Home Assistant, un vrai Nabaztag:tag&nbsp;v2 de 2006, de vraies valeurs — 21&nbsp;% de disponibilité et 42 déconnexions, c'est ce que vaut une radio&nbsp;802.11b sur un point d'accès moderne. Seule l'adresse MAC a été masquée.</sub>
+<sub>Most of the schedule entities ship disabled — enable the ones you want from the device page, rather than meeting thirty-seven at once.</sub>
 
 ### 📦 Install
 
@@ -181,6 +163,13 @@ data: { value: "{{ states('sensor.parcels_in_transit') | int }}" }
 > authorization header. It is on the rabbit's page.
 
 ### 📝 Notes
+
+#### Why the schedule is entities and not a settings page
+
+Turning the morning weather on at 07:30 is the half of a rabbit an
+automation most wants to reach, and until v0.2.0 it needed a browser. Most
+of those entities ship disabled — enable the ones you want from the device
+page, rather than meeting thirty-seven at once.
 
 #### Why the nose has three states
 
