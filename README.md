@@ -101,20 +101,17 @@ This integration is how Home Assistant talks to it.
 
 <sub>Generated from <code>settings.py</code> and <code>icons.json</code>, so it cannot describe a version that no longer exists. Most of the schedule entities ship disabled — enable the ones you want from the device page.</sub>
 
-<!-- SCREENSHOTS — uncomment this block once the four files in docs/ exist.
-     They have to come off a real Home Assistant with a real rabbit paired;
-     see docs/README.md for what to capture. Leaving it commented keeps the
-     README free of broken images in the meantime.
+<p align="center">
+  <img src="docs/device.png" alt="La page de l'appareil dans Home Assistant : contrôles, capteurs, et le lien vers le terrier" width="420">
+  <img src="docs/dashboard.png" alt="Un tableau de bord avec la veilleuse, le sommeil, la météo du matin et les diagnostics" width="420">
+</p>
+<p align="center">
+  <img src="docs/schedule.png" alt="Les réglages du lapin comme entités : météo du matin, réveil, mode nuit, personnalité" width="250">
+  <img src="docs/integration.png" alt="La page de l'intégration : un pont, un appareil, 53 entités" width="420">
+  <img src="docs/config-flow.png" alt="Le dialogue de configuration : adresse du terrier et jeton d'API" width="420">
+</p>
 
-<p align="center">
-  <img src="docs/device.png" alt="The rabbit's device page in Home Assistant" width="420">
-  <img src="docs/dashboard.png" alt="A dashboard card with the belly light, sleep switch and sensors" width="420">
-</p>
-<p align="center">
-  <img src="docs/services.png" alt="The terrier.notify action form in Developer tools" width="420">
-  <img src="docs/config-flow.png" alt="The setup dialog asking for a warren URL and a token" width="420">
-</p>
--->
+<sub>Un vrai Home Assistant, un vrai Nabaztag:tag&nbsp;v2 de 2006, de vraies valeurs — 21&nbsp;% de disponibilité et 42 déconnexions, c'est ce que vaut une radio&nbsp;802.11b sur un point d'accès moderne. Seule l'adresse MAC a été masquée.</sub>
 
 ### 📦 Install
 
