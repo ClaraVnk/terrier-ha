@@ -1,0 +1,52 @@
+name: Security
+
+# Weekly, and on demand. The integration has no dependencies to scan, so what
+# this watches is the repository itself: a token pasted into an example, a
+# warren address with a key on the end, a screenshot committed with something
+# legible in it.
+on:
+  schedule:
+    - cron: "23 5 * * 1"  # Mondays 05:23 UTC
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+  # gitleaks lists the pull request's commits to know what to scan. Without
+  # this it answers 403 "Resource not accessible by integration" — which it
+  # reports as a failed scan rather than a missing permission, so it reads
+  # exactly like a leak.
+  pull-requests: read
+
+jobs:
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # The whole history on the scheduled run; on a pull request the
+          # action scans that branch's commits instead.
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  tokens:
+    name: No warren token in the tree
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Look for anything shaped like a Terrier token
+        # `trr_` followed by a long URL-safe string is what the warren mints,
+        # and it is shown exactly once. One in a committed example would be
+        # live until somebody noticed.
+        run: |
+          if grep -rInE 'trr_[A-Za-z0-9_-]{20,}' . \
+               --exclude-dir=.git --exclude-dir=docs; then
+            echo "::error::a Terrier API token is committed in this tree"
+            exit 1
+          fi
+          echo "none found"

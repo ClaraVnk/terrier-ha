@@ -1,0 +1,12 @@
+# Dependency updates, opened as pull requests.
+#
+# One ecosystem only: a Home Assistant custom integration declares no Python
+# requirements of its own — everything it imports, Home Assistant already
+# ships. What moves under it are the actions that test and validate it.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
