@@ -60,7 +60,7 @@ This integration is how Home Assistant talks to it.
   <img src="docs/config-flow.png" alt="The setup dialog asking for a warren address and an API token" width="420">
 </p>
 
-<sub>A real Home Assistant, a real 2006 Nabaztag:tag&nbsp;v2, real numbers — 21% availability and 42 disconnects is what an 802.11b radio from 2006 is worth on a modern access point. Only the MAC address was masked. (The interface is in French here; the integration ships English and French.)</sub>
+<sub>A real Home Assistant against a real Nabaztag:tag&nbsp;v2 — only the MAC address is masked. Shown in French; the integration ships English and French.</sub>
 
 ### ✨ What you get
 
