@@ -29,7 +29,7 @@ jobs:
           # The whole history on the scheduled run; on a pull request the
           # action scans that branch's commits instead.
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
