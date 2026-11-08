@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           # The whole history on the scheduled run; on a pull request the
           # action scans that branch's commits instead.
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Look for anything shaped like a Terrier token
         # `trr_` followed by a long URL-safe string is what the warren mints,
         # and it is shown exactly once. One in a committed example would be
