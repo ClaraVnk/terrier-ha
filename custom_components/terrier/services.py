@@ -266,7 +266,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
         await _run(hass, call, lambda c, mac: c.ambient(mac, **fields))
 
     async def set_config(call: ServiceCall) -> None:
-        """The long tail: a wake word, a feed, coordinates, a model name.
+        """The long tail: a feed, coordinates, a model name.
 
         The warren applies the whole patch or none of it, so a failure here
         means nothing changed — there is no half-written rabbit to repair.

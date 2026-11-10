@@ -8,8 +8,8 @@ make it wake you up.
 
 These are the settings worth a dashboard tile. Each row says which config
 key it is, and the platform file builds the entity from it; the long tail
-(a wake word, a feed URL, coordinates, a model name) goes through the
-`terrier.set_config` service, which takes any of the fifty-eight keys the
+(a feed URL, coordinates, a model name) goes through the
+`terrier.set_config` service, which takes any of the keys the
 warren declares in `/api/rabbits/<mac>/settings`.
 
 `enabled` says whether the entity appears without being asked for. The ones
