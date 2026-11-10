@@ -226,7 +226,7 @@ set_config:
           multiple: true
     settings:
       required: true
-      example: '{"wake_word": "nabi", "weather_place": "Genève"}'
+      example: '{"weather_place": "Genève", "voice_speed": "slow"}'
       selector:
         object:
 
