@@ -234,3 +234,50 @@ class TerrierClient:
 
     async def rfid_remove(self, mac: str, tag: str) -> dict[str, Any]:
         return await self._request("DELETE", f"/api/rabbits/{mac}/rfid/{tag}") or {}
+
+    async def tell(self, mac: str, what: str) -> dict[str, Any]:
+        """One of the rabbit's services, now: a joke, the name day, the next
+        departures, a story, the agenda, the alerts, the weather..."""
+        return (
+            await self._request("POST", f"/api/rabbits/{mac}/tell", {"what": what})
+            or {}
+        )
+
+    async def reminder_add(self, mac: str, **fields: Any) -> dict[str, Any]:
+        return (
+            await self._request("POST", f"/api/rabbits/{mac}/reminders", fields) or {}
+        )
+
+    async def reminder_remove(self, mac: str, rid: str) -> dict[str, Any]:
+        return (
+            await self._request("DELETE", f"/api/rabbits/{mac}/reminders/{rid}") or {}
+        )
+
+    async def birthday_add(self, mac: str, name: str, day: str) -> dict[str, Any]:
+        body = {"name": name, "day": day}
+        return await self._request("POST", f"/api/rabbits/{mac}/birthdays", body) or {}
+
+    async def birthday_remove(self, mac: str, bid: str) -> dict[str, Any]:
+        return (
+            await self._request("DELETE", f"/api/rabbits/{mac}/birthdays/{bid}") or {}
+        )
+
+    async def button_bind(
+        self, mac: str, gesture: str, **action: Any
+    ) -> dict[str, Any]:
+        body = {"gesture": gesture, **action}
+        return await self._request("POST", f"/api/rabbits/{mac}/button", body) or {}
+
+    async def button_remove(self, mac: str, gesture: str) -> dict[str, Any]:
+        return (
+            await self._request("DELETE", f"/api/rabbits/{mac}/button/{gesture}") or {}
+        )
+
+    async def transport_stop(
+        self, mac: str, network: str, sid: str, name: str
+    ) -> dict[str, Any]:
+        body = {"network": network, "id": sid, "name": name}
+        return (
+            await self._request("POST", f"/api/rabbits/{mac}/transport/stop", body)
+            or {}
+        )

@@ -47,6 +47,40 @@ SERVICE_AMBIENT = "ambient"
 SERVICE_SET_CONFIG = "set_config"
 SERVICE_RFID_BIND = "rfid_bind"
 SERVICE_RFID_REMOVE = "rfid_remove"
+SERVICE_TELL = "tell"
+SERVICE_REMINDER_ADD = "reminder_add"
+SERVICE_REMINDER_REMOVE = "reminder_remove"
+SERVICE_BIRTHDAY_ADD = "birthday_add"
+SERVICE_BIRTHDAY_REMOVE = "birthday_remove"
+SERVICE_BUTTON_BIND = "button_bind"
+SERVICE_BUTTON_REMOVE = "button_remove"
+SERVICE_TRANSPORT_STOP = "transport_stop"
+
+# What a tag or a head gesture can do, and what /tell can say -- the warren's lists.
+ACTION_TYPES = (
+    "say",
+    "radio",
+    "weather",
+    "joke",
+    "ephemeris",
+    "transport",
+    "story",
+    "agenda",
+    "webhook",
+)
+TELL = (
+    "joke",
+    "ephemeris",
+    "transport",
+    "story",
+    "agenda",
+    "alerts",
+    "weather",
+    "clock",
+    "wakeup",
+    "twitch",
+)
+GESTURES = ("click", "double_click", "long_click", "double_long_click")
 
 # The belly palette as the warren names it. Distinct from COLOURS above,
 # which maps those names to RGB for the light's colour wheel: these are the
