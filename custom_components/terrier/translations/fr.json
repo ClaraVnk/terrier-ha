@@ -525,7 +525,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda ou webhook."
+          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre) ou webhook."
         },
         "text": {
           "name": "Texte",
@@ -663,7 +663,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "Les mêmes actions qu'une puce."
+          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre) ou webhook."
         },
         "text": {
           "name": "Texte",

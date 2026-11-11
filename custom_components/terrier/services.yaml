@@ -256,6 +256,7 @@ rfid_bind:
             - transport
             - story
             - agenda
+            - listen
             - webhook
     text:
       selector:
@@ -417,6 +418,7 @@ button_bind:
             - transport
             - story
             - agenda
+            - listen
             - webhook
     text:
       selector:

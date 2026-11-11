@@ -525,7 +525,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda or webhook."
+          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda, listen (hear one sentence and answer) or webhook."
         },
         "text": {
           "name": "Text",
@@ -663,7 +663,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "The same actions as a tag."
+          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda, listen (hear one sentence and answer) or webhook."
         },
         "text": {
           "name": "Text",
