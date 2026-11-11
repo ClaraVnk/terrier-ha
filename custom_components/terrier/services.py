@@ -23,13 +23,19 @@ from homeassistant.helpers import device_registry as dr
 
 from .api import TerrierError, TerrierOffline
 from .const import (
+    ACTION_TYPES,
     BELLY_COLOURS,
     COLOURS,
     DOMAIN,
+    GESTURES,
     NOSE_MODES,
     SERVICE_AIR,
     SERVICE_AMBIENT,
     SERVICE_ASK,
+    SERVICE_BIRTHDAY_ADD,
+    SERVICE_BIRTHDAY_REMOVE,
+    SERVICE_BUTTON_BIND,
+    SERVICE_BUTTON_REMOVE,
     SERVICE_EARS,
     SERVICE_JINGLE,
     SERVICE_LISTEN,
@@ -37,10 +43,15 @@ from .const import (
     SERVICE_NOTIFY,
     SERVICE_PODCAST,
     SERVICE_RADIO,
+    SERVICE_REMINDER_ADD,
+    SERVICE_REMINDER_REMOVE,
     SERVICE_RFID_BIND,
     SERVICE_RFID_REMOVE,
     SERVICE_SET_CONFIG,
     SERVICE_SPEAK,
+    SERVICE_TELL,
+    SERVICE_TRANSPORT_STOP,
+    TELL,
 )
 
 ATTR_DEVICE_ID = "device_id"
@@ -82,13 +93,53 @@ RFID_BIND_SCHEMA = vol.Schema(
     {
         **_TARGET,
         vol.Required("tag"): cv.string,
-        vol.Required("type"): vol.In(("say", "radio", "weather", "webhook")),
+        vol.Required("type"): vol.In(ACTION_TYPES),
         vol.Optional("text"): cv.string,
         vol.Optional("station"): cv.string,
         vol.Optional("url"): cv.url,
     }
 )
 RFID_REMOVE_SCHEMA = vol.Schema({**_TARGET, vol.Required("tag"): cv.string})
+TELL_SCHEMA = vol.Schema({**_TARGET, vol.Required("what"): vol.In(TELL)})
+REMINDER_ADD_SCHEMA = vol.Schema(
+    {
+        **_TARGET,
+        vol.Required("at"): cv.string,
+        vol.Required("text"): cv.string,
+        vol.Optional("repeat", default="once"): vol.In(
+            ("once", "daily", "weekdays", "weekend")
+        ),
+        vol.Optional("date"): cv.string,
+        vol.Optional("confirm", default=False): cv.boolean,
+        vol.Optional("notify"): cv.string,
+    }
+)
+REMINDER_REMOVE_SCHEMA = vol.Schema({**_TARGET, vol.Required("id"): cv.string})
+BIRTHDAY_ADD_SCHEMA = vol.Schema(
+    {**_TARGET, vol.Required("name"): cv.string, vol.Required("day"): cv.string}
+)
+BIRTHDAY_REMOVE_SCHEMA = vol.Schema({**_TARGET, vol.Required("id"): cv.string})
+BUTTON_BIND_SCHEMA = vol.Schema(
+    {
+        **_TARGET,
+        vol.Required("gesture"): vol.In(GESTURES),
+        vol.Required("type"): vol.In(ACTION_TYPES),
+        vol.Optional("text"): cv.string,
+        vol.Optional("station"): cv.string,
+        vol.Optional("url"): cv.url,
+    }
+)
+BUTTON_REMOVE_SCHEMA = vol.Schema(
+    {**_TARGET, vol.Required("gesture"): vol.In(GESTURES)}
+)
+TRANSPORT_STOP_SCHEMA = vol.Schema(
+    {
+        **_TARGET,
+        vol.Required("network"): cv.string,
+        vol.Required("id"): cv.string,
+        vol.Required("name"): cv.string,
+    }
+)
 JINGLE_SCHEMA = vol.Schema({**_TARGET, vol.Required("jingle"): cv.string})
 RADIO_SCHEMA = vol.Schema(
     {
@@ -289,7 +340,59 @@ def async_setup_services(hass: HomeAssistant) -> None:
     async def rfid_remove(call: ServiceCall) -> None:
         await _run(hass, call, lambda c, mac: c.rfid_remove(mac, call.data["tag"]))
 
+    async def tell(call: ServiceCall) -> None:
+        await _run(hass, call, lambda c, mac: c.tell(mac, call.data["what"]))
+
+    async def reminder_add(call: ServiceCall) -> None:
+        fields = {k: v for k, v in call.data.items() if k != ATTR_DEVICE_ID}
+        await _run(hass, call, lambda c, mac: c.reminder_add(mac, **fields))
+
+    async def reminder_remove(call: ServiceCall) -> None:
+        await _run(hass, call, lambda c, mac: c.reminder_remove(mac, call.data["id"]))
+
+    async def birthday_add(call: ServiceCall) -> None:
+        await _run(
+            hass,
+            call,
+            lambda c, mac: c.birthday_add(mac, call.data["name"], call.data["day"]),
+        )
+
+    async def birthday_remove(call: ServiceCall) -> None:
+        await _run(hass, call, lambda c, mac: c.birthday_remove(mac, call.data["id"]))
+
+    async def button_bind(call: ServiceCall) -> None:
+        action = {
+            k: v for k, v in call.data.items() if k not in (ATTR_DEVICE_ID, "gesture")
+        }
+        await _run(
+            hass,
+            call,
+            lambda c, mac: c.button_bind(mac, call.data["gesture"], **action),
+        )
+
+    async def button_remove(call: ServiceCall) -> None:
+        await _run(
+            hass, call, lambda c, mac: c.button_remove(mac, call.data["gesture"])
+        )
+
+    async def transport_stop(call: ServiceCall) -> None:
+        await _run(
+            hass,
+            call,
+            lambda c, mac: c.transport_stop(
+                mac, call.data["network"], call.data["id"], call.data["name"]
+            ),
+        )
+
     for name, handler, schema in (
+        (SERVICE_TELL, tell, TELL_SCHEMA),
+        (SERVICE_REMINDER_ADD, reminder_add, REMINDER_ADD_SCHEMA),
+        (SERVICE_REMINDER_REMOVE, reminder_remove, REMINDER_REMOVE_SCHEMA),
+        (SERVICE_BIRTHDAY_ADD, birthday_add, BIRTHDAY_ADD_SCHEMA),
+        (SERVICE_BIRTHDAY_REMOVE, birthday_remove, BIRTHDAY_REMOVE_SCHEMA),
+        (SERVICE_BUTTON_BIND, button_bind, BUTTON_BIND_SCHEMA),
+        (SERVICE_BUTTON_REMOVE, button_remove, BUTTON_REMOVE_SCHEMA),
+        (SERVICE_TRANSPORT_STOP, transport_stop, TRANSPORT_STOP_SCHEMA),
         (SERVICE_AIR, air, AIR_SCHEMA),
         (SERVICE_AMBIENT, ambient, AMBIENT_SCHEMA),
         (SERVICE_SET_CONFIG, set_config, SET_CONFIG_SCHEMA),

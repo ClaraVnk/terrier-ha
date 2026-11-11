@@ -140,7 +140,7 @@ mail:
           multiple: true
     to:
       required: true
-      example: nabazprout
+      example: my-friends-rabbit
       selector:
         text:
     text:
@@ -251,6 +251,11 @@ rfid_bind:
             - say
             - radio
             - weather
+            - joke
+            - ephemeris
+            - transport
+            - story
+            - agenda
             - webhook
     text:
       selector:
@@ -272,6 +277,194 @@ rfid_remove:
           integration: terrier
           multiple: true
     tag:
+      required: true
+      selector:
+        text:
+
+tell:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    what:
+      required: true
+      selector:
+        select:
+          options:
+            - joke
+            - ephemeris
+            - transport
+            - story
+            - agenda
+            - alerts
+            - weather
+            - clock
+            - wakeup
+            - twitch
+
+reminder_add:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    at:
+      required: true
+      example: "08:00"
+      selector:
+        text:
+    text:
+      required: true
+      example: "Prendre le traitement"
+      selector:
+        text:
+    repeat:
+      selector:
+        select:
+          options:
+            - once
+            - daily
+            - weekdays
+            - weekend
+    date:
+      example: "2026-12-01"
+      selector:
+        text:
+    confirm:
+      selector:
+        boolean:
+    notify:
+      example: "a.relative@example.org"
+      selector:
+        text:
+
+reminder_remove:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    id:
+      required: true
+      selector:
+        text:
+
+birthday_add:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    name:
+      required: true
+      selector:
+        text:
+    day:
+      required: true
+      example: "11-11"
+      selector:
+        text:
+
+birthday_remove:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    id:
+      required: true
+      selector:
+        text:
+
+button_bind:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    gesture:
+      required: true
+      selector:
+        select:
+          options:
+            - click
+            - double_click
+            - long_click
+            - double_long_click
+    type:
+      required: true
+      selector:
+        select:
+          options:
+            - say
+            - radio
+            - weather
+            - joke
+            - ephemeris
+            - transport
+            - story
+            - agenda
+            - webhook
+    text:
+      selector:
+        text:
+          multiline: true
+    station:
+      selector:
+        text:
+    url:
+      selector:
+        text:
+
+button_remove:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    gesture:
+      required: true
+      selector:
+        select:
+          options:
+            - click
+            - double_click
+            - long_click
+            - double_long_click
+
+transport_stop:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    network:
+      required: true
+      example: "horaires-sncf"
+      selector:
+        text:
+    id:
+      required: true
+      selector:
+        text:
+    name:
       required: true
       selector:
         text:

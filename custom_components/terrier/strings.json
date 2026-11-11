@@ -132,6 +132,13 @@
           "speak": "Spoken",
           "belly": "Belly only"
         }
+      },
+      "alerts_mode": {
+        "name": "Alerts",
+        "state": {
+          "belly": "Belly only",
+          "voice": "Belly and voice"
+        }
       }
     },
     "sensor": {
@@ -217,6 +224,30 @@
       },
       "devmode": {
         "name": "Developer probe"
+      },
+      "eph_enabled": {
+        "name": "Daily name day"
+      },
+      "joke_enabled": {
+        "name": "Joke of the day"
+      },
+      "agenda_enabled": {
+        "name": "Morning agenda"
+      },
+      "alerts_enabled": {
+        "name": "Useful alerts"
+      },
+      "alerts_air": {
+        "name": "Air and pollen alerts"
+      },
+      "story_sleep": {
+        "name": "Sleep after the story"
+      },
+      "joke_ai": {
+        "name": "AI-written jokes"
+      },
+      "story_ai": {
+        "name": "AI-written stories"
       }
     },
     "time": {
@@ -252,6 +283,18 @@
       },
       "nightlight_to": {
         "name": "Nightlight until"
+      },
+      "eph_hour": {
+        "name": "Name day time"
+      },
+      "joke_hour": {
+        "name": "Joke time"
+      },
+      "agenda_hour": {
+        "name": "Agenda time"
+      },
+      "birthday_hour": {
+        "name": "Birthday time"
       }
     }
   },
@@ -482,7 +525,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "What it does: say, radio, weather or webhook."
+          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda or webhook."
         },
         "text": {
           "name": "Text",
@@ -509,6 +552,166 @@
         "tag": {
           "name": "Tag",
           "description": "The tag to remove."
+        }
+      }
+    },
+    "tell": {
+      "name": "Say it now",
+      "description": "Have the rabbit say one of its services now.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "what": {
+          "name": "What",
+          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup or twitch."
+        }
+      }
+    },
+    "reminder_add": {
+      "name": "Add a reminder",
+      "description": "At that time the rabbit chimes and says the sentence; it may wait for a press on its head.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "at": {
+          "name": "Time",
+          "description": "HH:MM."
+        },
+        "text": {
+          "name": "Sentence",
+          "description": "What it says."
+        },
+        "repeat": {
+          "name": "When",
+          "description": "once, daily, weekdays or weekend."
+        },
+        "date": {
+          "name": "Date",
+          "description": "For once: YYYY-MM-DD."
+        },
+        "confirm": {
+          "name": "Wait for a press",
+          "description": "Repeat after 10 minutes, then warn someone, if nobody presses its head."
+        },
+        "notify": {
+          "name": "Warn",
+          "description": "An e-mail address; the owner's if empty."
+        }
+      }
+    },
+    "reminder_remove": {
+      "name": "Remove a reminder",
+      "description": "By its id (see the rabbit's reminders).",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "id": {
+          "name": "Id",
+          "description": "The reminder's id."
+        }
+      }
+    },
+    "birthday_add": {
+      "name": "Add a birthday",
+      "description": "On the day, a fanfare and a happy birthday, by name.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "name": {
+          "name": "Name",
+          "description": "First name."
+        },
+        "day": {
+          "name": "Day",
+          "description": "MM-DD or a date."
+        }
+      }
+    },
+    "birthday_remove": {
+      "name": "Remove a birthday",
+      "description": "By its id.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "id": {
+          "name": "Id",
+          "description": "The birthday's id."
+        }
+      }
+    },
+    "button_bind": {
+      "name": "Bind a head gesture",
+      "description": "What a press on the rabbit's head does.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "gesture": {
+          "name": "Gesture",
+          "description": "click, double_click, long_click or double_long_click."
+        },
+        "type": {
+          "name": "Action",
+          "description": "The same actions as a tag."
+        },
+        "text": {
+          "name": "Text",
+          "description": "For a say action."
+        },
+        "station": {
+          "name": "Station",
+          "description": "For a radio action."
+        },
+        "url": {
+          "name": "URL",
+          "description": "For a webhook action."
+        }
+      }
+    },
+    "button_remove": {
+      "name": "Unbind a head gesture",
+      "description": "The gesture does nothing again.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "gesture": {
+          "name": "Gesture",
+          "description": "The gesture to unbind."
+        }
+      }
+    },
+    "transport_stop": {
+      "name": "Set the departures stop",
+      "description": "The stop whose next departures the rabbit says (ids from the Terrier's stop search).",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "network": {
+          "name": "Network",
+          "description": "ch, or a transport.data.gouv.fr network id."
+        },
+        "id": {
+          "name": "Stop id",
+          "description": "The stop's id."
+        },
+        "name": {
+          "name": "Stop name",
+          "description": "How the rabbit names it."
         }
       }
     }

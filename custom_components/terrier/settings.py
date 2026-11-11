@@ -57,11 +57,19 @@ SWITCHES: tuple[Setting, ...] = (
     Setting(key="tamagotchi_enabled", icon="mdi:emoticon-outline"),
     Setting(key="compliment_enabled", icon="mdi:heart-outline"),
     Setting(key="llm_enabled", icon="mdi:robot-outline"),
+    Setting(key="eph_enabled", icon="mdi:calendar-star"),
+    Setting(key="joke_enabled", icon="mdi:emoticon-lol-outline"),
+    Setting(key="agenda_enabled", icon="mdi:calendar-clock"),
+    Setting(key="alerts_enabled", icon="mdi:alert-outline"),
     # The second knob of a pair, or a thing you set once and forget.
     Setting(key="weather_rainbow", icon="mdi:looks", enabled=False),
     Setting(key="air_speak", icon="mdi:bullhorn-outline", enabled=False),
     Setting(key="alarm_weather", icon="mdi:weather-sunny-alert", enabled=False),
     Setting(key="hw_sleep", icon="mdi:power-sleep", enabled=False),
+    Setting(key="alerts_air", icon="mdi:flower-pollen-outline", enabled=False),
+    Setting(key="story_sleep", icon="mdi:sleep", enabled=False),
+    Setting(key="joke_ai", icon="mdi:robot-happy-outline", enabled=False),
+    Setting(key="story_ai", icon="mdi:book-open-variant", enabled=False),
     Setting(key="surprise_enabled", icon="mdi:party-popper", enabled=False),
     Setting(key="presence_share", icon="mdi:account-group-outline", enabled=False),
     Setting(
@@ -79,6 +87,10 @@ TIMES: tuple[Setting, ...] = (
     Setting(key="alarm_hour", icon="mdi:alarm"),
     Setting(key="air_hour", icon="mdi:air-filter", enabled=False),
     Setting(key="compliment_hour", icon="mdi:heart-outline", enabled=False),
+    Setting(key="eph_hour", icon="mdi:calendar-star", enabled=False),
+    Setting(key="joke_hour", icon="mdi:emoticon-lol-outline", enabled=False),
+    Setting(key="agenda_hour", icon="mdi:calendar-clock", enabled=False),
+    Setting(key="birthday_hour", icon="mdi:cake-variant-outline", enabled=False),
     Setting(key="podcast_hour", icon="mdi:podcast", enabled=False),
     Setting(key="clock_from", icon="mdi:clock-start", enabled=False),
     Setting(key="clock_to", icon="mdi:clock-end", enabled=False),
@@ -103,6 +115,7 @@ SELECTS: tuple[Setting, ...] = (
         key="voice_speed", icon="mdi:speedometer", options=("slow", "normal", "fast")
     ),
     Setting(key="night_mode", icon="mdi:weather-night", options=("quiet", "sleep")),
+    Setting(key="alerts_mode", icon="mdi:alert-outline", options=("belly", "voice")),
     Setting(
         key="nightlight_colour",
         icon="mdi:palette",

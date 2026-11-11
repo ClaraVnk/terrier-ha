@@ -82,6 +82,17 @@ This integration is how Home Assistant talks to it.
 - 🤖 **It answers** — `terrier.ask` puts a question to a model with your own
   key, and `terrier.listen` is push-to-talk: one sentence, transcribed,
   answered out loud
+- 🗓️ **It looks after you** — `terrier.reminder_add` (a treatment reminder can
+  wait for a press on the rabbit's head, then warn a relative), birthdays,
+  the morning agenda, the name day, a joke of the day, a bedtime story, and
+  weather warnings, bad air and pollen on its belly (or aloud)
+- 🚌 **The next departures** from your stop, anywhere in France or
+  Switzerland — `terrier.transport_stop`, then `terrier.tell` with
+  `what: transport`
+- 🫳 **Its head as a button** — `terrier.button_bind` maps a click, a double
+  click or a long press to the same actions as a tag
+- 📣 **Any service, now** — `terrier.tell`: joke, name day, departures, story,
+  agenda, alerts, weather, clock, wake-up
 - 📊 **Diagnostics that explain a flaky rabbit** — availability, disconnects,
   session length, round-trip time
 
@@ -92,7 +103,7 @@ This integration is how Home Assistant talks to it.
 ### 🗺️ What one rabbit becomes
 
 <p align="center">
-  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 19 switches, 11 times, 8 selects, 3 numbers, a light, 3 buttons, a binary sensor and 14 services." width="860">
+  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 27 switches, 15 times, 9 selects, 3 numbers, a light, 3 buttons, a binary sensor and 22 services." width="860">
 </p>
 
 <sub>Most of the schedule entities ship disabled — enable the ones you want from the device page, rather than meeting thirty-seven at once.</sub>
@@ -152,11 +163,32 @@ target: { device_id: !input rabbit }
 data: { left: 0, right: 0 }
 ```
 
+A treatment the rabbit insists on, every morning:
+
+```yaml
+action: terrier.reminder_add
+target: { device_id: !input rabbit }
+data:
+  at: "08:00"
+  text: "Prendre le traitement"
+  repeat: daily
+  confirm: true
+  notify: a.relative@example.org
+```
+
+The next buses when the front door opens:
+
+```yaml
+action: terrier.tell
+target: { device_id: !input rabbit }
+data: { what: transport }
+```
+
 Keep a parcel count on the nose, from anything:
 
 ```yaml
 action: number.set_value
-target: { entity_id: number.nabazprout_counter }
+target: { entity_id: number.my_rabbit_counter }
 data: { value: "{{ states('sensor.parcels_in_transit') | int }}" }
 ```
 

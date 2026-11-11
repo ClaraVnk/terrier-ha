@@ -132,6 +132,13 @@
           "speak": "Voix",
           "belly": "Ventre seul"
         }
+      },
+      "alerts_mode": {
+        "name": "Alertes",
+        "state": {
+          "belly": "Ventre seul",
+          "voice": "Ventre et voix"
+        }
       }
     },
     "sensor": {
@@ -217,6 +224,30 @@
       },
       "devmode": {
         "name": "Sonde développeur"
+      },
+      "eph_enabled": {
+        "name": "Éphéméride du jour"
+      },
+      "joke_enabled": {
+        "name": "Blague du jour"
+      },
+      "agenda_enabled": {
+        "name": "Agenda du matin"
+      },
+      "alerts_enabled": {
+        "name": "Alertes utiles"
+      },
+      "alerts_air": {
+        "name": "Alertes air et pollens"
+      },
+      "story_sleep": {
+        "name": "Dormir après l'histoire"
+      },
+      "joke_ai": {
+        "name": "Blagues inventées par l'IA"
+      },
+      "story_ai": {
+        "name": "Histoires inventées par l'IA"
       }
     },
     "time": {
@@ -252,6 +283,18 @@
       },
       "nightlight_to": {
         "name": "Veilleuse jusqu'à"
+      },
+      "eph_hour": {
+        "name": "Heure de l'éphéméride"
+      },
+      "joke_hour": {
+        "name": "Heure de la blague"
+      },
+      "agenda_hour": {
+        "name": "Heure de l'agenda"
+      },
+      "birthday_hour": {
+        "name": "Heure des anniversaires"
       }
     }
   },
@@ -482,7 +525,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "Ce qu'elle déclenche : say, radio, weather ou webhook."
+          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda ou webhook."
         },
         "text": {
           "name": "Texte",
@@ -509,6 +552,166 @@
         "tag": {
           "name": "Puce",
           "description": "La puce à retirer."
+        }
+      }
+    },
+    "tell": {
+      "name": "Le dire maintenant",
+      "description": "Le lapin dit tout de suite l'un de ses services.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "what": {
+          "name": "Quoi",
+          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup ou twitch."
+        }
+      }
+    },
+    "reminder_add": {
+      "name": "Ajouter un rappel",
+      "description": "À l'heure dite, le lapin sonne et dit la phrase ; il peut attendre un appui sur sa tête.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "at": {
+          "name": "Heure",
+          "description": "HH:MM."
+        },
+        "text": {
+          "name": "Phrase",
+          "description": "Ce qu'il dit."
+        },
+        "repeat": {
+          "name": "Quand",
+          "description": "once, daily, weekdays ou weekend."
+        },
+        "date": {
+          "name": "Date",
+          "description": "Pour une fois : AAAA-MM-JJ."
+        },
+        "confirm": {
+          "name": "Attendre un appui",
+          "description": "Répète au bout de 10 minutes, puis prévient quelqu'un, si personne n'appuie sur sa tête."
+        },
+        "notify": {
+          "name": "Prévenir",
+          "description": "Une adresse e-mail ; celle du propriétaire si vide."
+        }
+      }
+    },
+    "reminder_remove": {
+      "name": "Retirer un rappel",
+      "description": "Par son identifiant (voir les rappels du lapin).",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "id": {
+          "name": "Identifiant",
+          "description": "L'identifiant du rappel."
+        }
+      }
+    },
+    "birthday_add": {
+      "name": "Ajouter un anniversaire",
+      "description": "Le jour venu, une fanfare et un joyeux anniversaire, au prénom.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "name": {
+          "name": "Prénom",
+          "description": "Le prénom."
+        },
+        "day": {
+          "name": "Jour",
+          "description": "MM-JJ ou une date."
+        }
+      }
+    },
+    "birthday_remove": {
+      "name": "Retirer un anniversaire",
+      "description": "Par son identifiant.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "id": {
+          "name": "Identifiant",
+          "description": "L'identifiant de l'anniversaire."
+        }
+      }
+    },
+    "button_bind": {
+      "name": "Associer un geste de la tête",
+      "description": "Ce que fait un appui sur la tête du lapin.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "gesture": {
+          "name": "Geste",
+          "description": "click, double_click, long_click ou double_long_click."
+        },
+        "type": {
+          "name": "Action",
+          "description": "Les mêmes actions qu'une puce."
+        },
+        "text": {
+          "name": "Texte",
+          "description": "Pour une action « dire »."
+        },
+        "station": {
+          "name": "Station",
+          "description": "Pour une action radio."
+        },
+        "url": {
+          "name": "URL",
+          "description": "Pour une action webhook."
+        }
+      }
+    },
+    "button_remove": {
+      "name": "Dissocier un geste de la tête",
+      "description": "Le geste ne fait plus rien.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "gesture": {
+          "name": "Geste",
+          "description": "Le geste à dissocier."
+        }
+      }
+    },
+    "transport_stop": {
+      "name": "Choisir l'arrêt des départs",
+      "description": "L'arrêt dont le lapin annonce les prochains départs (identifiants de la recherche du Terrier).",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "network": {
+          "name": "Réseau",
+          "description": "ch, ou l'identifiant d'un réseau de transport.data.gouv.fr."
+        },
+        "id": {
+          "name": "Identifiant",
+          "description": "L'identifiant de l'arrêt."
+        },
+        "name": {
+          "name": "Nom",
+          "description": "Comment le lapin l'appelle."
         }
       }
     }

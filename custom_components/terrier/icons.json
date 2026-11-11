@@ -56,6 +56,9 @@
       },
       "weather_show": {
         "default": "mdi:weather-cloudy"
+      },
+      "alerts_mode": {
+        "default": "mdi:alert-outline"
       }
     },
     "sensor": {
@@ -144,6 +147,30 @@
       },
       "devmode": {
         "default": "mdi:bug-outline"
+      },
+      "eph_enabled": {
+        "default": "mdi:calendar-star"
+      },
+      "joke_enabled": {
+        "default": "mdi:emoticon-lol-outline"
+      },
+      "agenda_enabled": {
+        "default": "mdi:calendar-clock"
+      },
+      "alerts_enabled": {
+        "default": "mdi:alert-outline"
+      },
+      "alerts_air": {
+        "default": "mdi:flower-pollen-outline"
+      },
+      "story_sleep": {
+        "default": "mdi:sleep"
+      },
+      "joke_ai": {
+        "default": "mdi:robot-happy-outline"
+      },
+      "story_ai": {
+        "default": "mdi:book-open-variant"
       }
     },
     "time": {
@@ -179,6 +206,18 @@
       },
       "nightlight_to": {
         "default": "mdi:lightbulb-night-outline"
+      },
+      "eph_hour": {
+        "default": "mdi:calendar-star"
+      },
+      "joke_hour": {
+        "default": "mdi:emoticon-lol-outline"
+      },
+      "agenda_hour": {
+        "default": "mdi:calendar-clock"
+      },
+      "birthday_hour": {
+        "default": "mdi:cake-variant-outline"
       }
     }
   },
@@ -189,6 +228,14 @@
     "radio": "mdi:radio",
     "podcast": "mdi:podcast",
     "ears": "mdi:rabbit",
-    "mail": "mdi:email-outline"
+    "mail": "mdi:email-outline",
+    "tell": "mdi:account-voice",
+    "reminder_add": "mdi:bell-plus-outline",
+    "reminder_remove": "mdi:bell-remove-outline",
+    "birthday_add": "mdi:cake-variant-outline",
+    "birthday_remove": "mdi:cake-variant",
+    "button_bind": "mdi:gesture-tap",
+    "button_remove": "mdi:gesture-tap-hold",
+    "transport_stop": "mdi:bus-stop"
   }
 }
