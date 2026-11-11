@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Se connecter à un Terrier",
-        "description": "Un Terrier tient la connexion avec ton Nabaztag — le lapin parle un protocole de 2006 et ne peut pas être joint directement. Utilise le terrier hébergé, ou l'adresse de celui que tu fais tourner toi-même.\n\nLe jeton se crée sur la page **Intégration** du Terrier.",
+        "description": "Un Terrier tient la connexion avec ton Nabaztag — le lapin parle un protocole de 2006 et ne peut pas être joint directement. Utilise l'adresse du Terrier.\n\nLe jeton se crée sur la page **Intégration** du Terrier.",
         "data": {
           "base_url": "Adresse du Terrier",
           "token": "Jeton d'API"
