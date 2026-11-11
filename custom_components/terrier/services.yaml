@@ -258,6 +258,8 @@ rfid_bind:
             - agenda
             - listen
             - pomodoro
+            - briefing
+            - home_summary
             - webhook
     text:
       selector:
@@ -307,6 +309,8 @@ tell:
             - wakeup
             - twitch
             - pomodoro
+            - briefing
+            - home_summary
 
 reminder_add:
   fields:
@@ -377,6 +381,20 @@ birthday_add:
       selector:
         text:
 
+journal_add:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    text:
+      required: true
+      example: "Le colis est arrivé"
+      selector:
+        text:
+
 birthday_remove:
   fields:
     device_id:
@@ -422,6 +440,8 @@ button_bind:
             - agenda
             - listen
             - pomodoro
+            - briefing
+            - home_summary
             - webhook
     text:
       selector:

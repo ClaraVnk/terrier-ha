@@ -70,6 +70,9 @@ SWITCHES: tuple[Setting, ...] = (
     Setting(key="story_sleep", icon="mdi:sleep", enabled=False),
     Setting(key="joke_ai", icon="mdi:robot-happy-outline", enabled=False),
     Setting(key="story_ai", icon="mdi:book-open-variant", enabled=False),
+    Setting(key="briefing_enabled", icon="mdi:weather-sunset-up"),
+    Setting(key="briefing_ai", icon="mdi:robot-outline", enabled=False),
+    Setting(key="llm_actions", icon="mdi:robot-excited-outline", enabled=False),
     Setting(key="surprise_enabled", icon="mdi:party-popper", enabled=False),
     Setting(key="presence_share", icon="mdi:account-group-outline", enabled=False),
     Setting(
@@ -90,6 +93,7 @@ TIMES: tuple[Setting, ...] = (
     Setting(key="eph_hour", icon="mdi:calendar-star", enabled=False),
     Setting(key="joke_hour", icon="mdi:emoticon-lol-outline", enabled=False),
     Setting(key="agenda_hour", icon="mdi:calendar-clock", enabled=False),
+    Setting(key="briefing_hour", icon="mdi:weather-sunset-up", enabled=False),
     Setting(key="birthday_hour", icon="mdi:cake-variant-outline", enabled=False),
     Setting(key="podcast_hour", icon="mdi:podcast", enabled=False),
     Setting(key="clock_from", icon="mdi:clock-start", enabled=False),

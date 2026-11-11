@@ -52,6 +52,7 @@ SERVICE_REMINDER_ADD = "reminder_add"
 SERVICE_REMINDER_REMOVE = "reminder_remove"
 SERVICE_BIRTHDAY_ADD = "birthday_add"
 SERVICE_BIRTHDAY_REMOVE = "birthday_remove"
+SERVICE_JOURNAL_ADD = "journal_add"
 SERVICE_BUTTON_BIND = "button_bind"
 SERVICE_BUTTON_REMOVE = "button_remove"
 SERVICE_TRANSPORT_STOP = "transport_stop"
@@ -68,6 +69,8 @@ ACTION_TYPES = (
     "agenda",
     "listen",
     "pomodoro",
+    "briefing",
+    "home_summary",
     "webhook",
 )
 TELL = (
@@ -82,6 +85,8 @@ TELL = (
     "wakeup",
     "twitch",
     "pomodoro",
+    "briefing",
+    "home_summary",
 )
 GESTURES = ("click", "double_click", "long_click", "double_long_click")
 

@@ -254,6 +254,15 @@
       },
       "story_ai": {
         "name": "Histoires inventées par l'IA"
+      },
+      "briefing_enabled": {
+        "name": "Briefing du matin"
+      },
+      "briefing_ai": {
+        "name": "Briefing résumé par l'IA"
+      },
+      "llm_actions": {
+        "name": "L'IA peut agir sur le lapin"
       }
     },
     "time": {
@@ -301,6 +310,9 @@
       },
       "birthday_hour": {
         "name": "Heure des anniversaires"
+      },
+      "briefing_hour": {
+        "name": "Briefing du matin"
       }
     }
   },
@@ -718,6 +730,20 @@
         "name": {
           "name": "Nom",
           "description": "Comment le lapin l'appelle."
+        }
+      }
+    },
+    "journal_add": {
+      "name": "Noter pour le résumé de la maison",
+      "description": "Une ligne pour le journal du jour ; le lapin résume la journée à la demande.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "text": {
+          "name": "Texte",
+          "description": "Ce qui s'est passé."
         }
       }
     }

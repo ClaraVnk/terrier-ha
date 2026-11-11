@@ -38,6 +38,7 @@ from .const import (
     SERVICE_BUTTON_REMOVE,
     SERVICE_EARS,
     SERVICE_JINGLE,
+    SERVICE_JOURNAL_ADD,
     SERVICE_LISTEN,
     SERVICE_MAIL,
     SERVICE_NOTIFY,
@@ -119,6 +120,7 @@ BIRTHDAY_ADD_SCHEMA = vol.Schema(
     {**_TARGET, vol.Required("name"): cv.string, vol.Required("day"): cv.string}
 )
 BIRTHDAY_REMOVE_SCHEMA = vol.Schema({**_TARGET, vol.Required("id"): cv.string})
+JOURNAL_ADD_SCHEMA = vol.Schema({**_TARGET, vol.Required("text"): cv.string})
 BUTTON_BIND_SCHEMA = vol.Schema(
     {
         **_TARGET,
@@ -360,6 +362,9 @@ def async_setup_services(hass: HomeAssistant) -> None:
     async def birthday_remove(call: ServiceCall) -> None:
         await _run(hass, call, lambda c, mac: c.birthday_remove(mac, call.data["id"]))
 
+    async def journal_add(call: ServiceCall) -> None:
+        await _run(hass, call, lambda c, mac: c.journal_add(mac, call.data["text"]))
+
     async def button_bind(call: ServiceCall) -> None:
         action = {
             k: v for k, v in call.data.items() if k not in (ATTR_DEVICE_ID, "gesture")
@@ -390,6 +395,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
         (SERVICE_REMINDER_REMOVE, reminder_remove, REMINDER_REMOVE_SCHEMA),
         (SERVICE_BIRTHDAY_ADD, birthday_add, BIRTHDAY_ADD_SCHEMA),
         (SERVICE_BIRTHDAY_REMOVE, birthday_remove, BIRTHDAY_REMOVE_SCHEMA),
+        (SERVICE_JOURNAL_ADD, journal_add, JOURNAL_ADD_SCHEMA),
         (SERVICE_BUTTON_BIND, button_bind, BUTTON_BIND_SCHEMA),
         (SERVICE_BUTTON_REMOVE, button_remove, BUTTON_REMOVE_SCHEMA),
         (SERVICE_TRANSPORT_STOP, transport_stop, TRANSPORT_STOP_SCHEMA),

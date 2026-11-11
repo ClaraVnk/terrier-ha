@@ -254,6 +254,15 @@
       },
       "story_ai": {
         "name": "AI-written stories"
+      },
+      "briefing_enabled": {
+        "name": "Morning briefing"
+      },
+      "briefing_ai": {
+        "name": "Briefing summarised by the AI"
+      },
+      "llm_actions": {
+        "name": "AI may act on the rabbit"
       }
     },
     "time": {
@@ -301,6 +310,9 @@
       },
       "birthday_hour": {
         "name": "Birthday time"
+      },
+      "briefing_hour": {
+        "name": "Morning briefing"
       }
     }
   },
@@ -718,6 +730,20 @@
         "name": {
           "name": "Stop name",
           "description": "How the rabbit names it."
+        }
+      }
+    },
+    "journal_add": {
+      "name": "Note for the home summary",
+      "description": "A line for today's home journal; the rabbit sums up the day on request.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "text": {
+          "name": "Text",
+          "description": "What happened."
         }
       }
     }

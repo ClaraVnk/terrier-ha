@@ -14,12 +14,12 @@
 <rect x="18" y="156" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="156" width="5" height="36" rx="2" fill="#aa531b"/>
 <text x="38" y="179" font-size="14" font-weight="650" fill="#1a1f2e">Switches</text>
-<text x="136" y="179" font-size="14" font-weight="700" fill="#aa531b">27</text>
+<text x="136" y="179" font-size="14" font-weight="700" fill="#aa531b">30</text>
 <text x="170" y="179" font-size="13" fill="#5f6372">sleep, postbox, the whole schedule, alerts</text>
 <rect x="18" y="200" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="200" width="5" height="36" rx="2" fill="#1f6feb"/>
 <text x="38" y="223" font-size="14" font-weight="650" fill="#1a1f2e">Times</text>
-<text x="136" y="223" font-size="14" font-weight="700" fill="#1f6feb">15</text>
+<text x="136" y="223" font-size="14" font-weight="700" fill="#1f6feb">16</text>
 <text x="170" y="223" font-size="13" fill="#5f6372">every hour a rabbit keeps</text>
 <rect x="18" y="244" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="244" width="5" height="36" rx="2" fill="#b3309a"/>
@@ -49,6 +49,6 @@
 <rect x="18" y="464" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="464" width="5" height="36" rx="2" fill="#7c3aed"/>
 <text x="38" y="487" font-size="14" font-weight="650" fill="#1a1f2e">Services</text>
-<text x="136" y="487" font-size="14" font-weight="700" fill="#7c3aed">22</text>
+<text x="136" y="487" font-size="14" font-weight="700" fill="#7c3aed">23</text>
 <text x="170" y="487" font-size="13" fill="#5f6372">tell, reminders, birthdays, head gestures, ask, listen, notify, radio, rfid…</text>
 </svg>
