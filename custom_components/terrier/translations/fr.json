@@ -62,6 +62,12 @@
       },
       "weather_belly_minutes": {
         "name": "Météo sur le ventre pendant"
+      },
+      "pomodoro_minutes": {
+        "name": "Durée du pomodoro"
+      },
+      "pomodoro_break": {
+        "name": "Pause du pomodoro"
       }
     },
     "select": {
@@ -248,6 +254,15 @@
       },
       "story_ai": {
         "name": "Histoires inventées par l'IA"
+      },
+      "briefing_enabled": {
+        "name": "Briefing du matin"
+      },
+      "briefing_ai": {
+        "name": "Briefing résumé par l'IA"
+      },
+      "llm_actions": {
+        "name": "L'IA peut agir sur le lapin"
       }
     },
     "time": {
@@ -295,6 +310,9 @@
       },
       "birthday_hour": {
         "name": "Heure des anniversaires"
+      },
+      "briefing_hour": {
+        "name": "Briefing du matin"
       }
     }
   },
@@ -525,7 +543,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre) ou webhook."
+          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre), pomodoro (lancer ou arrêter) ou webhook."
         },
         "text": {
           "name": "Texte",
@@ -565,7 +583,7 @@
         },
         "what": {
           "name": "Quoi",
-          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup ou twitch."
+          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup, twitch ou pomodoro (lancer ou arrêter)."
         }
       }
     },
@@ -663,7 +681,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre) ou webhook."
+          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre), pomodoro (lancer ou arrêter) ou webhook."
         },
         "text": {
           "name": "Texte",
@@ -712,6 +730,20 @@
         "name": {
           "name": "Nom",
           "description": "Comment le lapin l'appelle."
+        }
+      }
+    },
+    "journal_add": {
+      "name": "Noter pour le résumé de la maison",
+      "description": "Une ligne pour le journal du jour ; le lapin résume la journée à la demande.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "text": {
+          "name": "Texte",
+          "description": "Ce qui s'est passé."
         }
       }
     }

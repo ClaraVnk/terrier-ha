@@ -30,6 +30,12 @@
       },
       "weather_belly_minutes": {
         "default": "mdi:timer-sand"
+      },
+      "pomodoro_minutes": {
+        "default": "mdi:timer-outline"
+      },
+      "pomodoro_break": {
+        "default": "mdi:coffee-outline"
       }
     },
     "select": {
@@ -171,6 +177,15 @@
       },
       "story_ai": {
         "default": "mdi:book-open-variant"
+      },
+      "briefing_enabled": {
+        "default": "mdi:weather-sunset-up"
+      },
+      "briefing_ai": {
+        "default": "mdi:robot-outline"
+      },
+      "llm_actions": {
+        "default": "mdi:robot-excited-outline"
       }
     },
     "time": {
@@ -218,6 +233,9 @@
       },
       "birthday_hour": {
         "default": "mdi:cake-variant-outline"
+      },
+      "briefing_hour": {
+        "default": "mdi:weather-sunset-up"
       }
     }
   },
@@ -236,6 +254,7 @@
     "birthday_remove": "mdi:cake-variant",
     "button_bind": "mdi:gesture-tap",
     "button_remove": "mdi:gesture-tap-hold",
-    "transport_stop": "mdi:bus-stop"
+    "transport_stop": "mdi:bus-stop",
+    "journal_add": "mdi:notebook-edit-outline"
   }
 }

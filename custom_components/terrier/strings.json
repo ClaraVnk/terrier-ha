@@ -62,6 +62,12 @@
       },
       "weather_belly_minutes": {
         "name": "Weather on the belly for"
+      },
+      "pomodoro_minutes": {
+        "name": "Pomodoro length"
+      },
+      "pomodoro_break": {
+        "name": "Pomodoro break"
       }
     },
     "select": {
@@ -248,6 +254,15 @@
       },
       "story_ai": {
         "name": "AI-written stories"
+      },
+      "briefing_enabled": {
+        "name": "Morning briefing"
+      },
+      "briefing_ai": {
+        "name": "Briefing summarised by the AI"
+      },
+      "llm_actions": {
+        "name": "AI may act on the rabbit"
       }
     },
     "time": {
@@ -295,6 +310,9 @@
       },
       "birthday_hour": {
         "name": "Birthday time"
+      },
+      "briefing_hour": {
+        "name": "Morning briefing"
       }
     }
   },
@@ -525,7 +543,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda, listen (hear one sentence and answer) or webhook."
+          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda, listen (hear one sentence and answer), pomodoro (start or stop) or webhook."
         },
         "text": {
           "name": "Text",
@@ -565,7 +583,7 @@
         },
         "what": {
           "name": "What",
-          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup or twitch."
+          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup, twitch or pomodoro (start or stop)."
         }
       }
     },
@@ -663,7 +681,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda, listen (hear one sentence and answer) or webhook."
+          "description": "What it does: say, radio, weather, joke, ephemeris, transport, story, agenda, listen (hear one sentence and answer), pomodoro (start or stop) or webhook."
         },
         "text": {
           "name": "Text",
@@ -712,6 +730,20 @@
         "name": {
           "name": "Stop name",
           "description": "How the rabbit names it."
+        }
+      }
+    },
+    "journal_add": {
+      "name": "Note for the home summary",
+      "description": "A line for today's home journal; the rabbit sums up the day on request.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "text": {
+          "name": "Text",
+          "description": "What happened."
         }
       }
     }

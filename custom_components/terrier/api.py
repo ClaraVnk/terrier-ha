@@ -257,6 +257,10 @@ class TerrierClient:
         body = {"name": name, "day": day}
         return await self._request("POST", f"/api/rabbits/{mac}/birthdays", body) or {}
 
+    async def journal_add(self, mac: str, text: str) -> dict[str, Any]:
+        body = {"text": text}
+        return await self._request("POST", f"/api/rabbits/{mac}/journal", body) or {}
+
     async def birthday_remove(self, mac: str, bid: str) -> dict[str, Any]:
         return (
             await self._request("DELETE", f"/api/rabbits/{mac}/birthdays/{bid}") or {}
