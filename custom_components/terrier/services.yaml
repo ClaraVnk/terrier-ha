@@ -257,6 +257,7 @@ rfid_bind:
             - story
             - agenda
             - listen
+            - pomodoro
             - webhook
     text:
       selector:
@@ -305,6 +306,7 @@ tell:
             - clock
             - wakeup
             - twitch
+            - pomodoro
 
 reminder_add:
   fields:
@@ -419,6 +421,7 @@ button_bind:
             - story
             - agenda
             - listen
+            - pomodoro
             - webhook
     text:
       selector:

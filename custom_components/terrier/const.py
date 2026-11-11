@@ -67,6 +67,7 @@ ACTION_TYPES = (
     "story",
     "agenda",
     "listen",
+    "pomodoro",
     "webhook",
 )
 TELL = (
@@ -80,6 +81,7 @@ TELL = (
     "clock",
     "wakeup",
     "twitch",
+    "pomodoro",
 )
 GESTURES = ("click", "double_click", "long_click", "double_long_click")
 

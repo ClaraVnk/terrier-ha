@@ -62,6 +62,12 @@
       },
       "weather_belly_minutes": {
         "name": "Météo sur le ventre pendant"
+      },
+      "pomodoro_minutes": {
+        "name": "Durée du pomodoro"
+      },
+      "pomodoro_break": {
+        "name": "Pause du pomodoro"
       }
     },
     "select": {
@@ -525,7 +531,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre) ou webhook."
+          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre), pomodoro (lancer ou arrêter) ou webhook."
         },
         "text": {
           "name": "Texte",
@@ -565,7 +571,7 @@
         },
         "what": {
           "name": "Quoi",
-          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup ou twitch."
+          "description": "joke, ephemeris, transport, story, agenda, alerts, weather, clock, wakeup, twitch ou pomodoro (lancer ou arrêter)."
         }
       }
     },
@@ -663,7 +669,7 @@
         },
         "type": {
           "name": "Action",
-          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre) ou webhook."
+          "description": "Ce qu'elle fait : say, radio, weather, joke, ephemeris, transport, story, agenda, listen (écouter une phrase et répondre), pomodoro (lancer ou arrêter) ou webhook."
         },
         "text": {
           "name": "Texte",

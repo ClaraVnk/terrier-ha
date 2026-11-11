@@ -30,6 +30,12 @@
       },
       "weather_belly_minutes": {
         "default": "mdi:timer-sand"
+      },
+      "pomodoro_minutes": {
+        "default": "mdi:timer-outline"
+      },
+      "pomodoro_break": {
+        "default": "mdi:coffee-outline"
       }
     },
     "select": {

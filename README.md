@@ -91,8 +91,10 @@ This integration is how Home Assistant talks to it.
   `what: transport`
 - 🫳 **Its head as a button** — `terrier.button_bind` maps a click, a double
   click or a long press to the same actions as a tag
+- 🍅 **A pomodoro on its head** — bind a gesture to `pomodoro`: *"Concentration
+  maximale !!!"* in a cartoon voice, then a jingle when the break is due
 - 📣 **Any service, now** — `terrier.tell`: joke, name day, departures, story,
-  agenda, alerts, weather, clock, wake-up
+  agenda, alerts, weather, clock, wake-up, pomodoro
 - 📊 **Diagnostics that explain a flaky rabbit** — availability, disconnects,
   session length, round-trip time
 
@@ -103,7 +105,7 @@ This integration is how Home Assistant talks to it.
 ### 🗺️ What one rabbit becomes
 
 <p align="center">
-  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 27 switches, 15 times, 9 selects, 3 numbers, a light, 3 buttons, a binary sensor and 22 services." width="860">
+  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 27 switches, 15 times, 9 selects, 5 numbers, a light, 3 buttons, a binary sensor and 22 services." width="860">
 </p>
 
 <sub>Most of the schedule entities ship disabled — enable the ones you want from the device page, rather than meeting thirty-seven at once.</sub>

@@ -154,6 +154,21 @@ NUMBERS: tuple[Setting, ...] = (
         step=5,
         unit="min",
     ),
+    Setting(
+        key="pomodoro_minutes",
+        icon="mdi:timer-outline",
+        minimum=1,
+        maximum=180,
+        unit="min",
+    ),
+    Setting(
+        key="pomodoro_break",
+        icon="mdi:coffee-outline",
+        enabled=False,
+        minimum=0,
+        maximum=60,
+        unit="min",
+    ),
 )
 
 ALL: tuple[Setting, ...] = SWITCHES + TIMES + SELECTS + NUMBERS
