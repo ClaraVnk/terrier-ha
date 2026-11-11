@@ -66,6 +66,7 @@ ACTION_TYPES = (
     "transport",
     "story",
     "agenda",
+    "listen",
     "webhook",
 )
 TELL = (
