@@ -8,7 +8,7 @@
 
 <p align="center">
   <strong>A 2006 Wi-Fi rabbit, as proper Home Assistant devices.</strong><br>
-  <sub>Entities, not REST calls. Works against the hosted warren or one you run yourself.</sub>
+  <sub>Entities, not REST calls, for a rabbit on Le Terrier.</sub>
 </p>
 
 <p align="center">
@@ -140,7 +140,7 @@ You need two things, and the form asks for exactly those two:
 
 | | |
 |---|---|
-| **Terrier address** | `https://terrier.cyberloutre.fr`, or your own instance |
+| **Terrier address** | `https://terrier.cyberloutre.fr` |
 | **API token** | From the Terrier's **Integration** page. Starts with `trr_`, shown once |
 
 The token is checked before the entry is created — an integration that sets up
@@ -247,8 +247,11 @@ explain *why* it went away are exactly what you want at that moment. The
 | [**ClaraVnk/nabaztag**](https://github.com/ClaraVnk/nabaztag) | The Home Assistant **add-on** (a fully local Violet server) and **Naboot**, the signed custom firmware |
 | [**Le Terrier**](https://terrier.cyberloutre.fr) | The hosted warren — weather, alarm, air quality, podcasts, mail between rabbits |
 
-Running your own Terrier keeps everything on your network and still gives you
-this integration: it is the same API either way.
+Le Terrier's code is private and runs only on its own server, so this
+integration needs it. To keep everything on your own network, use the
+Home Assistant **add-on** from [ClaraVnk/nabaztag](https://github.com/ClaraVnk/nabaztag)
+instead: it is a whole local Violet server with its own Home Assistant
+services, and this integration does not connect to it.
 
 ### 🤝 Contributing
 

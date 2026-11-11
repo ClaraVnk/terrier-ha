@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Connect to a Terrier",
-        "description": "A Terrier holds the connection to your Nabaztag — the rabbit speaks a 2006 protocol and cannot be reached directly. Use the hosted warren, or the address of one you run yourself.\n\nThe token comes from the Terrier's **Integration** page.",
+        "description": "A Terrier holds the connection to your Nabaztag — the rabbit speaks a 2006 protocol and cannot be reached directly. Use the address of Le Terrier.\n\nThe token comes from the Terrier's **Integration** page.",
         "data": {
           "base_url": "Terrier address",
           "token": "API token"
