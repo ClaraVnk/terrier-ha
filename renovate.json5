@@ -1,0 +1,32 @@
+// Dependency updates, opened as pull requests by Renovate (it replaced
+// Dependabot on 2026-11-12, for the whole Nabaztag project at once).
+//
+// The integration declares no Python requirement of its own (manifest.json:
+// "requirements": []), so what moves are the actions of its workflows; the
+// manifest is still watched, should it ever list one.
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended", "helpers:pinGitHubActionDigests"],
+  timezone: "Europe/Paris",
+  schedule: ["before 9am on monday"],
+  labels: ["dependencies"],
+  prConcurrentLimit: 5,
+  dependencyDashboard: true,
+  packageRules: [
+    {
+      // Minor and patch versions and new digests merge themselves once the
+      // checks are green; a major version waits for a human.
+      matchUpdateTypes: ["minor", "patch", "digest", "pinDigest"],
+      automerge: true,
+    },
+    {
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["minor", "patch", "digest", "pinDigest"],
+      groupName: "GitHub Actions",
+    },
+  ],
+  vulnerabilityAlerts: {
+    labels: ["security"],
+    schedule: ["at any time"],
+  },
+}
