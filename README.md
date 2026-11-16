@@ -17,7 +17,8 @@
   <a href="https://github.com/ClaraVnk/terrier-ha/actions"><img src="https://img.shields.io/github/actions/workflow/status/ClaraVnk/terrier-ha/validate.yml?style=flat-square&label=checks" alt="Checks"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="License: Apache 2.0"></a>
   <img src="https://img.shields.io/badge/hardware-Nabaztag%3Atag%20v2-orange?style=flat-square" alt="Nabaztag:tag v2">
-  <img src="https://img.shields.io/badge/v1%20%26%20Karotz-beta-dbab09?style=flat-square" alt="Nabaztag v1 and Karotz: beta">
+  <img src="https://img.shields.io/badge/Karotz-works-44cc11?style=flat-square" alt="Karotz: works">
+  <img src="https://img.shields.io/badge/v1-beta-dbab09?style=flat-square" alt="Nabaztag v1: beta">
   <img src="https://img.shields.io/badge/protocol-Violet-6f42c1?style=flat-square" alt="Violet protocol">
   <img src="https://img.shields.io/badge/config-UI%20only-44cc11?style=flat-square" alt="UI configuration">
   <img src="https://img.shields.io/badge/dependencies-none-3776AB?style=flat-square&logo=python&logoColor=white" alt="No extra dependencies">
@@ -44,13 +45,14 @@ protocol that nobody has run a server for since the company died around 2011.
 This integration is how Home Assistant talks to it.
 
 > [!NOTE]
-> **Nabaztag v1 (2005) and Karotz (v3, 2011): beta.** Both join Le Terrier and
+> **Karotz (v3, 2011): it works. Nabaztag v1 (2005): beta.** Both join Le Terrier and
 > show up here like a Nabaztag:tag, through the same API. A **v1** speaks and
 > moves its ears (it has no microphone, no RFID, and acts at its next poll,
 > a few seconds later). A **Karotz** runs a small client that adopts it like a
 > v2 — speech, ears, its LED, sleep, the head button and Ztamps; no
-> microphone yet, and it stays on WPA2. Nobody here owns either: they were
-> built from their protocols and proven in emulation, not on the real thing.
+> microphone yet, and it stays on WPA2. Since 16 November 2026, real Karotz
+> are adopted on the Terrier with their own key. The v1 was built from its
+> protocol and proven in emulation, not on the real thing yet.
 > The Karotz guide: [terrier.cyberloutre.fr/karotz](https://terrier.cyberloutre.fr/karotz).
 > Have one? [Tell us how it goes](https://github.com/ClaraVnk/nabaztag/issues/new?title=I%20have%20a%20Nabaztag%20v1%20%2F%20Karotz).
 
