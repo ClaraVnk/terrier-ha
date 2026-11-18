@@ -25,10 +25,10 @@ from .api import TerrierError, TerrierOffline
 from .const import (
     ACTION_TYPES,
     BELLY_COLOURS,
-    COLOURS,
     DOMAIN,
     GESTURES,
     NOSE_MODES,
+    OLD_COLOURS,
     SERVICE_AIR,
     SERVICE_AMBIENT,
     SERVICE_ASK,
@@ -53,17 +53,28 @@ from .const import (
     SERVICE_TELL,
     SERVICE_TRANSPORT_STOP,
     TELL,
+    canon,
 )
 
 ATTR_DEVICE_ID = "device_id"
 
 _TARGET = {vol.Required(ATTR_DEVICE_ID): vol.All(cv.ensure_list, [cv.string])}
 
+# The palette, and the older names an automation written before it may still
+# use: the warren reads those as the colour the belly really shows.
+_ANY_COLOUR = vol.In(sorted({*BELLY_COLOURS, *OLD_COLOURS}))
+
+# Settings the warren keeps for its operator. Review of 2026-11-18: the
+# bytecode a rabbit runs was made an operator's choice on the page on
+# 2026-11-13, and `terrier.set_config` was still a way round it for any
+# Home Assistant user.
+OPERATOR_ONLY = ("bytecode",)
+
 NOTIFY_SCHEMA = vol.Schema(
     {
         **_TARGET,
         vol.Optional("text"): cv.string,
-        vol.Optional("colour"): vol.In(sorted(COLOURS)),
+        vol.Optional("colour"): _ANY_COLOUR,
         vol.Optional("level"): vol.All(vol.Coerce(int), vol.Range(min=1, max=5)),
         vol.Optional("jingle"): cv.string,
         vol.Optional("nose"): vol.In(NOSE_MODES),
@@ -83,7 +94,7 @@ AIR_SCHEMA = vol.Schema({**_TARGET})
 AMBIENT_SCHEMA = vol.Schema(
     {
         **_TARGET,
-        vol.Exclusive("colour", "what"): vol.In(BELLY_COLOURS),
+        vol.Exclusive("colour", "what"): _ANY_COLOUR,
         vol.Exclusive("clear", "what"): cv.boolean,
     }
 )
@@ -153,7 +164,9 @@ RADIO_SCHEMA = vol.Schema(
 PODCAST_SCHEMA = vol.Schema(
     {
         **_TARGET,
-        vol.Optional("feed"): cv.url,
+        # A catalogue key or a catalogued feed's address: the warren takes
+        # both, and `cv.url` refused the keys (review of 2026-11-18).
+        vol.Optional("feed"): cv.string,
         vol.Optional("episode", default=0): vol.All(vol.Coerce(int), vol.Range(min=0)),
         vol.Optional("stop", default=False): cv.boolean,
     }
@@ -204,15 +217,35 @@ def _targets(hass: HomeAssistant, call: ServiceCall) -> list[tuple]:
     return found
 
 
-async def _run(hass: HomeAssistant, call: ServiceCall, verb) -> None:
+async def _each(
+    hass: HomeAssistant, call: ServiceCall, verb
+) -> tuple[dict[str, Any], list[str]]:
+    """Every rabbit the call names, each one tried whatever the others did.
+
+    Review of 2026-11-18: the first rabbit that failed stopped the call, the
+    ones after it were never acted on, and the error did not say which had
+    been. Returns what each answered and one line per failure.
+    """
+    out: dict[str, Any] = {}
+    failed: list[str] = []
     for coordinator, mac in _targets(hass, call):
+        name = coordinator.rabbit(mac).get("name") or f"…{mac[-4:]}"
         try:
-            await verb(coordinator.client, mac)
+            out[mac] = await verb(coordinator.client, mac)
         except TerrierOffline as err:
-            raise HomeAssistantError(f"the rabbit is not connected ({err})") from err
+            failed.append(f"{name}: the rabbit is not connected ({err})")
+            continue
         except TerrierError as err:
-            raise HomeAssistantError(str(err)) from err
+            failed.append(f"{name}: {err}")
+            continue
         await coordinator.async_request_refresh()
+    return out, failed
+
+
+async def _run(hass: HomeAssistant, call: ServiceCall, verb) -> None:
+    _out, failed = await _each(hass, call, verb)
+    if failed:
+        raise HomeAssistantError("; ".join(failed))
 
 
 async def _ask_one(hass: HomeAssistant, call: ServiceCall, verb) -> ServiceResponse:
@@ -220,17 +253,14 @@ async def _ask_one(hass: HomeAssistant, call: ServiceCall, verb) -> ServiceRespo
 
     A question with no answer would be a strange thing to automate, so these
     two return a response. Several targets answer as a dict keyed by MAC
-    rather than the last one winning silently.
+    rather than the last one winning silently. One that failed is an error
+    in its place: the others' answers are already paid for.
     """
-    out: dict[str, Any] = {}
-    for coordinator, mac in _targets(hass, call):
-        try:
-            out[mac] = await verb(coordinator.client, mac)
-        except TerrierOffline as err:
-            raise HomeAssistantError(f"the rabbit is not connected ({err})") from err
-        except TerrierError as err:
-            raise HomeAssistantError(str(err)) from err
-        await coordinator.async_request_refresh()
+    out, failed = await _each(hass, call, verb)
+    if not out:
+        raise HomeAssistantError("; ".join(failed))
+    if failed:
+        out["errors"] = failed
     return out
 
 
@@ -250,7 +280,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
                 "nothing to do: give it some text, a colour, a jingle, a nose "
                 "or a counter"
             )
-        await _run(hass, call, lambda c, mac: c.notify(mac, **fields))
+        await _run(hass, call, lambda c, mac: c.notify(mac, fields))
 
     async def jingle(call: ServiceCall) -> None:
         await _run(hass, call, lambda c, mac: c.play_jingle(mac, call.data["jingle"]))
@@ -311,12 +341,12 @@ def async_setup_services(hass: HomeAssistant) -> None:
         lighting it: clearing the service stops the breathing altogether,
         which surprised the warren's own operator once already."""
         if call.data.get("clear"):
-            fields: dict[str, Any] = {"clear": True}
+            await _run(hass, call, lambda c, mac: c.belly_clear(mac))
         elif "colour" in call.data:
-            fields = {"colour": call.data["colour"]}
+            colour = canon(call.data["colour"])
+            await _run(hass, call, lambda c, mac: c.breathe(mac, colour))
         else:
             raise ServiceValidationError("give it a colour, or clear: true")
-        await _run(hass, call, lambda c, mac: c.ambient(mac, **fields))
 
     async def set_config(call: ServiceCall) -> None:
         """The long tail: a feed, coordinates, a model name.
@@ -326,17 +356,22 @@ def async_setup_services(hass: HomeAssistant) -> None:
         API keys are refused on purpose: Home Assistant would have to hold
         one to send it.
         """
-        settings = call.data["settings"]
+        settings = dict(call.data["settings"])
         if not settings:
             raise ServiceValidationError("no settings given")
-        await _run(hass, call, lambda c, mac: c.set_config(mac, **settings))
+        refused = sorted(set(settings) & set(OPERATOR_ONLY))
+        if refused:
+            raise ServiceValidationError(
+                f"{', '.join(refused)}: chosen by the Terrier's operator"
+            )
+        await _run(hass, call, lambda c, mac: c.set_config(mac, settings))
 
     async def rfid_bind(call: ServiceCall) -> None:
         action = {
             k: v for k, v in call.data.items() if k not in (ATTR_DEVICE_ID, "tag")
         }
         await _run(
-            hass, call, lambda c, mac: c.rfid_bind(mac, call.data["tag"], **action)
+            hass, call, lambda c, mac: c.rfid_bind(mac, call.data["tag"], action)
         )
 
     async def rfid_remove(call: ServiceCall) -> None:
@@ -347,7 +382,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
 
     async def reminder_add(call: ServiceCall) -> None:
         fields = {k: v for k, v in call.data.items() if k != ATTR_DEVICE_ID}
-        await _run(hass, call, lambda c, mac: c.reminder_add(mac, **fields))
+        await _run(hass, call, lambda c, mac: c.reminder_add(mac, fields))
 
     async def reminder_remove(call: ServiceCall) -> None:
         await _run(hass, call, lambda c, mac: c.reminder_remove(mac, call.data["id"]))
@@ -372,7 +407,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
         await _run(
             hass,
             call,
-            lambda c, mac: c.button_bind(mac, call.data["gesture"], **action),
+            lambda c, mac: c.button_bind(mac, call.data["gesture"], action),
         )
 
     async def button_remove(call: ServiceCall) -> None:

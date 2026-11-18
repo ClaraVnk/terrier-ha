@@ -12,8 +12,8 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from . import TerrierConfigEntry
 from .api import TerrierError
 from .config_entity import TerrierSetting
-from .const import NOSE_MODES
-from .entity import TerrierEntity
+from .const import NOSE_MODES, canon
+from .entity import TerrierEntity, add_per_rabbit
 from .settings import SELECTS
 
 
@@ -22,15 +22,13 @@ async def async_setup_entry(
     entry: TerrierConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    macs = list(coordinator.data or {})
-    async_add_entities(
-        [TerrierNose(coordinator, mac) for mac in macs]
-        + [
-            TerrierSettingSelect(coordinator, mac, setting)
-            for mac in macs
-            for setting in SELECTS
-        ]
+    add_per_rabbit(
+        entry,
+        async_add_entities,
+        lambda c, mac, _r: [
+            TerrierNose(c, mac),
+            *(TerrierSettingSelect(c, mac, s) for s in SELECTS),
+        ],
     )
 
 
@@ -66,8 +64,10 @@ class TerrierSettingSelect(TerrierSetting, SelectEntity):
     """A setting whose values are a short fixed list.
 
     The options are the warren's own — a belly colour the firmware has never
-    heard of is refused at the other end, and a test compares this list with
-    what `/api/rabbits/<mac>/settings` declares.
+    heard of is refused at the other end. `contract/` compares this list with
+    what `/api/rabbits/<mac>/settings` declares (review of 2026-11-18: the
+    docstring promised that test and none existed; `sky` and `orange` were
+    offered and refused).
     """
 
     def __init__(self, coordinator, mac: str, setting) -> None:
@@ -77,6 +77,9 @@ class TerrierSettingSelect(TerrierSetting, SelectEntity):
     @property
     def current_option(self) -> str | None:
         v = self.value
+        if self._setting.key == "nightlight_colour":
+            # A colour saved under an older name is the one the belly shows.
+            v = canon(v)
         return v if v in self._attr_options else None
 
     async def async_select_option(self, option: str) -> None:

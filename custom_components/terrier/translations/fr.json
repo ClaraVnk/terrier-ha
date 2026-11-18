@@ -9,7 +9,7 @@
           "token": "Jeton d'API"
         },
         "data_description": {
-          "base_url": "Par exemple {hosted}, ou {own} pour le tien.",
+          "base_url": "L'adresse du Terrier : {hosted}.",
           "token": "Commence par trr_. Affiché une seule fois, sur la page Intégration."
         }
       },
@@ -22,9 +22,9 @@
       }
     },
     "error": {
-      "cannot_connect": "Impossible de joindre cette adresse. Vérifie que c'est bien l'adresse web du Terrier, qu'elle est joignable depuis Home Assistant, et qu'elle commence par http:// ou https://.",
+      "cannot_connect": "Impossible de joindre cette adresse. Vérifie que c'est bien l'adresse web du Terrier, qu'elle est joignable depuis Home Assistant, et qu'elle commence par https://.",
       "invalid_auth": "Ce jeton a été refusé. Les jetons commencent par trr_ et ne sont affichés qu'une fois, à leur création.",
-      "no_rabbits": "Le jeton fonctionne, mais le compte derrière n'a aucun lapin. Adopte-en un sur le Terrier d'abord, ou vérifie que tu as pris le bon compte."
+      "https_required": "L'adresse doit commencer par https:// : le jeton voyage dans chaque requête."
     },
     "abort": {
       "already_configured": "Ce Terrier est déjà configuré.",
@@ -107,10 +107,9 @@
         "name": "Couleur de la veilleuse",
         "state": {
           "blue": "Bleu",
-          "sky": "Bleu ciel",
           "green": "Vert",
+          "cyan": "Cyan",
           "red": "Rouge",
-          "orange": "Orange",
           "violet": "Violet",
           "yellow": "Jaune",
           "white": "Blanc"
@@ -507,7 +506,7 @@
         },
         "colour": {
           "name": "Couleur",
-          "description": "L'une des huit que connaît le firmware."
+          "description": "L'une des sept que connaît le firmware. Appliquée par le Terrier dans la demi-minute."
         },
         "clear": {
           "name": "Effacer",
@@ -746,11 +745,6 @@
           "description": "Ce qui s'est passé."
         }
       }
-    }
-  },
-  "exceptions": {
-    "not_connected": {
-      "message": "Le lapin n'est pas connecté à son Terrier."
     }
   }
 }

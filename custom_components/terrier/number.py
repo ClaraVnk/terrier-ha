@@ -16,7 +16,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from . import TerrierConfigEntry
 from .api import TerrierError
 from .config_entity import TerrierSetting
-from .entity import TerrierEntity
+from .entity import TerrierEntity, add_per_rabbit
 from .settings import NUMBERS
 
 
@@ -25,15 +25,13 @@ async def async_setup_entry(
     entry: TerrierConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    macs = list(coordinator.data or {})
-    async_add_entities(
-        [TerrierCounter(coordinator, mac) for mac in macs]
-        + [
-            TerrierSettingNumber(coordinator, mac, setting)
-            for mac in macs
-            for setting in NUMBERS
-        ]
+    add_per_rabbit(
+        entry,
+        async_add_entities,
+        lambda c, mac, _r: [
+            TerrierCounter(c, mac),
+            *(TerrierSettingNumber(c, mac, s) for s in NUMBERS),
+        ],
     )
 
 

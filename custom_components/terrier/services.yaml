@@ -28,7 +28,7 @@ notify:
     colour:
       selector:
         select:
-          options: [warm, amber, rose, violet, blue, green, white]
+          options: [blue, green, cyan, red, violet, yellow, white]
     level:
       default: 5
       selector:
@@ -93,7 +93,6 @@ podcast:
       example: https://example.org/podcast.rss
       selector:
         text:
-          type: url
     episode:
       default: 0
       selector:
@@ -205,10 +204,9 @@ ambient:
         select:
           options:
             - blue
-            - sky
             - green
+            - cyan
             - red
-            - orange
             - violet
             - yellow
             - white
@@ -258,8 +256,14 @@ rfid_bind:
             - agenda
             - listen
             - pomodoro
+            - minuteur
+            - echo
             - briefing
             - home_summary
+            - fierte
+            - horoscope
+            - taichi
+            - rss
             - webhook
     text:
       selector:
@@ -309,8 +313,10 @@ tell:
             - wakeup
             - twitch
             - pomodoro
+            - minuteur
             - briefing
             - home_summary
+            - fierte
 
 reminder_add:
   fields:
@@ -440,8 +446,14 @@ button_bind:
             - agenda
             - listen
             - pomodoro
+            - minuteur
+            - echo
             - briefing
             - home_summary
+            - fierte
+            - horoscope
+            - taichi
+            - rss
             - webhook
     text:
       selector:

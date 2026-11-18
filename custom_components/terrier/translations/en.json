@@ -9,7 +9,7 @@
           "token": "API token"
         },
         "data_description": {
-          "base_url": "For example {hosted}, or {own} for your own.",
+          "base_url": "Le Terrier's address: {hosted}.",
           "token": "Starts with trr_. Shown once, on the Integration page."
         }
       },
@@ -22,9 +22,9 @@
       }
     },
     "error": {
-      "cannot_connect": "Could not reach that address. Check it is the Terrier's web address, that it is reachable from Home Assistant, and that it starts with http:// or https://.",
+      "cannot_connect": "Could not reach that address. Check it is the Terrier's web address, that it is reachable from Home Assistant, and that it starts with https://.",
       "invalid_auth": "That token was refused. Tokens start with trr_ and are shown once when created.",
-      "no_rabbits": "That token works, but the account behind it has no rabbit. Adopt one on the Terrier first, or check you used the right account."
+      "https_required": "The address has to start with https:// — the token travels in every request."
     },
     "abort": {
       "already_configured": "This Terrier is already set up.",
@@ -107,10 +107,9 @@
         "name": "Nightlight colour",
         "state": {
           "blue": "Blue",
-          "sky": "Sky",
           "green": "Green",
+          "cyan": "Cyan",
           "red": "Red",
-          "orange": "Orange",
           "violet": "Violet",
           "yellow": "Yellow",
           "white": "White"
@@ -507,7 +506,7 @@
         },
         "colour": {
           "name": "Colour",
-          "description": "One of the eight the firmware knows."
+          "description": "One of the seven the firmware knows. Le Terrier applies it within half a minute."
         },
         "clear": {
           "name": "Clear",
@@ -746,11 +745,6 @@
           "description": "What happened."
         }
       }
-    }
-  },
-  "exceptions": {
-    "not_connected": {
-      "message": "The rabbit is not connected to its Terrier."
     }
   }
 }

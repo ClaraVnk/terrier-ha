@@ -2,64 +2,90 @@
 
 from __future__ import annotations
 
-import importlib.util
-import sys
+import ast
 from pathlib import Path
+
+import hastub  # noqa: F401  (before custom_components)
+import yaml
+
+from custom_components.terrier import const
+from custom_components.terrier.light import nearest_colour, nearest_level
 
 COMPONENT = Path(__file__).resolve().parents[1] / "custom_components" / "terrier"
 
-
-def _load(name: str):
-    """Import one module without importing Home Assistant.
-
-    light.py imports homeassistant at module level, so the two functions under
-    test are read out of the source and executed on their own. Worth the
-    awkwardness: snapping a colour wrongly is silent, and it is the one piece
-    of real logic in this integration.
-    """
-    import ast
-
-    src = (COMPONENT / name).read_text()
-    tree = ast.parse(src)
-    keep = [
-        n
-        for n in tree.body
-        if isinstance(n, ast.FunctionDef)
-        and n.name in ("nearest_colour", "nearest_level")
-    ]
-    module = ast.Module(body=keep, type_ignores=[])
-    ns: dict = {}
-    const = importlib.util.spec_from_file_location("c", COMPONENT / "const.py")
-    cm = importlib.util.module_from_spec(const)
-    sys.modules["c"] = cm
-    const.loader.exec_module(cm)
-    ns["COLOURS"] = cm.COLOURS
-    ns["LEVELS"] = {1: 31, 2: 64, 3: 115, 4: 179, 5: 255}
-    import math
-
-    ns["math"] = math
-    exec(compile(module, "light.py", "exec"), ns)
-    return ns
+# The warren's palette (terrier indicators.BELLY_PALETTE), copied by hand:
+# the integration cannot import the Terrier, whose code is private. Review of
+# 2026-11-18: three tables in this repository disagreed with it and with
+# each other. contract/ checks this list against a running warren.
+WARREN_PALETTE = {"blue", "green", "cyan", "red", "violet", "yellow", "white"}
+WARREN_OLD_NAMES = {
+    "warm": "red",
+    "amber": "red",
+    "rose": "red",
+    "orange": "red",
+    "sky": "cyan",
+}
 
 
-NS = _load("light.py")
-nearest_colour = NS["nearest_colour"]
-nearest_level = NS["nearest_level"]
-COLOURS = NS["COLOURS"]
+def test_the_palette_is_the_warrens():
+    assert set(const.COLOURS) == WARREN_PALETTE
+    assert set(const.BELLY_COLOURS) == WARREN_PALETTE
+    assert const.DEFAULT_COLOUR in WARREN_PALETTE
+
+
+def test_older_names_read_as_the_warren_reads_them():
+    for old, new in WARREN_OLD_NAMES.items():
+        assert const.canon(old) == new
+    for name in WARREN_PALETTE:
+        assert const.canon(name) == name
+    assert const.canon("teal") is None
+    assert const.canon(None) is None
+
+
+def test_the_select_offers_the_palette():
+    tree = ast.parse((COMPONENT / "settings.py").read_text("utf-8"))
+    options = next(
+        ast.literal_eval(kw.value)
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and any(
+            k.arg == "key" and getattr(k.value, "value", None) == "nightlight_colour"
+            for k in node.keywords
+        )
+        for kw in node.keywords
+        if kw.arg == "options"
+    )
+    assert tuple(options) == const.BELLY_COLOURS
+
+
+def test_the_actions_offer_what_the_code_accepts():
+    """services.yaml is what the UI shows; const is what the schema checks."""
+    spec = yaml.safe_load((COMPONENT / "services.yaml").read_text())
+
+    def options(service, field):
+        return spec[service]["fields"][field]["selector"]["select"]["options"]
+
+    assert options("notify", "colour") == list(const.BELLY_COLOURS)
+    assert options("ambient", "colour") == list(const.BELLY_COLOURS)
+    assert options("tell", "what") == list(const.TELL)
+    assert options("rfid_bind", "type") == list(const.ACTION_TYPES)
+    assert options("button_bind", "type") == list(const.ACTION_TYPES)
 
 
 def test_each_real_colour_maps_to_itself():
     """The round trip has to hold, or the light reports a state it is not in."""
-    for name, rgb in COLOURS.items():
+    for name, rgb in const.COLOURS.items():
         assert nearest_colour(rgb) == name, name
 
 
 def test_an_impossible_colour_lands_somewhere_sensible():
-    assert nearest_colour((0, 0, 0)) in COLOURS
+    assert nearest_colour((0, 0, 0)) in const.COLOURS
     assert nearest_colour((255, 255, 255)) == "white"
     assert nearest_colour((0, 0, 255)) == "blue"
     assert nearest_colour((0, 255, 0)) == "green"
-    assert nearest_colour((255, 0, 0)) in ("amber", "rose")
+    assert nearest_colour((255, 0, 0)) == "red"
+    assert nearest_colour((255, 255, 0)) == "yellow"
+    assert nearest_colour((0, 255, 255)) == "cyan"
 
 
 def test_brightness_maps_onto_the_five_levels_the_hardware_has():

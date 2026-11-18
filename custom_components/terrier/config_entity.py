@@ -35,7 +35,7 @@ class TerrierSetting(TerrierEntity):
     async def write(self, value: Any) -> None:
         try:
             await self.coordinator.client.set_config(
-                self._mac, **{self._setting.key: value}
+                self._mac, {self._setting.key: value}
             )
         except TerrierError as err:
             raise HomeAssistantError(str(err)) from err

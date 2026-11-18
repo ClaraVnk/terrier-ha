@@ -61,10 +61,32 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.13"
-      - run: pip install ruff==0.14.14 pytest pyyaml
+      # aiohttp and voluptuous: the tests drive the real client over HTTP
+      # and the real action schemas; Home Assistant itself is stood in for
+      # by tests/hastub.py.
+      - run: pip install ruff==0.14.14 pytest pyyaml aiohttp voluptuous
       - run: ruff check .
       - run: ruff format --check .
       # These need no Home Assistant: they check the things that drift —
       # a service registered but never declared, a translation that lost a
       # key, a colour that does not map back to itself.
       - run: pytest tests -q
+
+  oldest:
+    name: Loads on the oldest Home Assistant it declares
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13"
+      # The release hacs.json names, not the latest: review of 2026-11-18,
+      # it named one on which no platform could import.
+      - name: Install that release
+        run: |
+          floor=$(python -c 'import json; print(json.load(open("hacs.json"))["homeassistant"])')
+          pip install "homeassistant==$floor"
+      - run: python tools/import_all.py

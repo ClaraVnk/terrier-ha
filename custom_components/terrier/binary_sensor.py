@@ -16,7 +16,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import TerrierConfigEntry
-from .entity import TerrierEntity
+from .entity import TerrierEntity, add_per_rabbit
 
 
 async def async_setup_entry(
@@ -24,9 +24,8 @@ async def async_setup_entry(
     entry: TerrierConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    async_add_entities(
-        TerrierBreathing(coordinator, mac) for mac in coordinator.data or {}
+    add_per_rabbit(
+        entry, async_add_entities, lambda c, mac, _r: [TerrierBreathing(c, mac)]
     )
 
 
@@ -43,9 +42,10 @@ class TerrierBreathing(TerrierEntity, BinarySensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict:
+        # No address. Review of 2026-11-18: the owner's public IP was an
+        # attribute, so the recorder kept it with every change of state.
         r = self.rabbit
         return {
             "last_seen": r.get("last_seen"),
             "firmware": r.get("fw_version"),
-            "ip": r.get("last_ip"),
         }

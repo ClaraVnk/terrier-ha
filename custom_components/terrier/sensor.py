@@ -24,7 +24,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from . import TerrierConfigEntry
-from .entity import TerrierEntity
+from .entity import TerrierEntity, add_per_rabbit
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -117,17 +117,18 @@ async def async_setup_entry(
     entry: TerrierConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    entities: list[SensorEntity] = []
-    for mac, rabbit in (coordinator.data or {}).items():
-        for desc in SENSORS:
-            # The mood is opt-in per rabbit; an entity that is permanently
-            # "unknown" is clutter, so it only appears once somebody asks for
-            # a mood on the Terrier.
-            if desc.key == "mood" and not (rabbit.get("mood") or {}).get("enabled"):
-                continue
-            entities.append(TerrierSensorEntity(coordinator, mac, desc))
-    async_add_entities(entities)
+    def build(coordinator, mac: str, rabbit: dict) -> list[SensorEntity]:
+        # The mood is opt-in per rabbit; an entity that is permanently
+        # "unknown" is clutter, so it only appears once somebody asks for a
+        # mood on the Terrier — on the next poll, not the next restart.
+        mood = bool((rabbit.get("mood") or {}).get("enabled"))
+        return [
+            TerrierSensorEntity(coordinator, mac, desc)
+            for desc in SENSORS
+            if desc.key != "mood" or mood
+        ]
+
+    add_per_rabbit(entry, async_add_entities, build)
 
 
 class TerrierSensorEntity(TerrierEntity, SensorEntity):
