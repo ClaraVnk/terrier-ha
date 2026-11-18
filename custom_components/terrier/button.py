@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import TerrierConfigEntry
 from .api import TerrierClient, TerrierError, TerrierOffline
-from .entity import TerrierEntity
+from .entity import TerrierEntity, add_per_rabbit
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -48,11 +48,10 @@ async def async_setup_entry(
     entry: TerrierConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    async_add_entities(
-        TerrierButtonEntity(coordinator, mac, desc)
-        for mac in coordinator.data or {}
-        for desc in BUTTONS
+    add_per_rabbit(
+        entry,
+        async_add_entities,
+        lambda c, mac, _r: [TerrierButtonEntity(c, mac, d) for d in BUTTONS],
     )
 
 

@@ -8,6 +8,7 @@ rabbit *is* lives in the entities, where Home Assistant can see it.
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 import aiohttp
@@ -16,6 +17,14 @@ from yarl import URL
 _LOGGER = logging.getLogger(__name__)
 
 TIMEOUT = aiohttp.ClientTimeout(total=15)
+# A question and a push-to-talk wait for the warren's speech-to-text (60 s),
+# its model (45 s) and the synthesis, after up to 8 s of listening. Review of
+# 2026-11-18: at 15 s the automation got "timed out" while the rabbit
+# answered anyway, and a retry spent the owner's quota a second time.
+LONG_TIMEOUT = aiohttp.ClientTimeout(total=150)
+
+_MAC = re.compile(r"[0-9a-fA-F]{12}")
+_NOTHING = object()
 
 
 class TerrierError(Exception):
@@ -35,7 +44,17 @@ class TerrierOffline(TerrierError):
     """
 
 
-async def _why(resp: aiohttp.ClientResponse, body: Any) -> str:
+def _where(path: str) -> str:
+    """The path, with the rabbit's MAC cut to its last four digits.
+
+    These messages end up in Home Assistant's log and in bug reports pasted
+    into public issues (review of 2026-11-18); four digits still tell two
+    rabbits apart.
+    """
+    return _MAC.sub(lambda m: "…" + m.group(0)[-4:], path)
+
+
+def _why(resp: aiohttp.ClientResponse, body: Any) -> str:
     """What the warren said, in the words it said it.
 
     A refused settings write answers `{"error": "nothing was changed",
@@ -47,7 +66,11 @@ async def _why(resp: aiohttp.ClientResponse, body: Any) -> str:
     detail = body.get("errors")
     if isinstance(detail, dict) and detail:
         return "; ".join(f"{k}: {v}" for k, v in sorted(detail.items()))
-    return str(body.get("error") or f"HTTP {resp.status} {await resp.text()}")
+    # Never the body of an answer that is not the warren's JSON. Review of
+    # 2026-11-18: a proxy's 502 page went whole into the message — 20 KB of
+    # HTML in Home Assistant's log on every poll.
+    reason = getattr(resp, "reason", None) or ""
+    return str(body.get("error") or f"HTTP {resp.status} {reason}".strip())
 
 
 class TerrierClient:
@@ -67,55 +90,110 @@ class TerrierClient:
         return str(self._base).rstrip("/")
 
     async def _request(
-        self, method: str, path: str, json: dict[str, Any] | None = None
+        self,
+        method: str,
+        path: str,
+        json: dict[str, Any] | None = None,
+        timeout: aiohttp.ClientTimeout = TIMEOUT,
     ) -> Any:
         url = self._base.join(URL(path.lstrip("/")))
+        where = _where(path)
         try:
             async with self._session.request(
                 method,
                 url,
                 json=json,
-                timeout=TIMEOUT,
+                timeout=timeout,
                 headers={"Authorization": f"Bearer {self._token}"},
             ) as resp:
-                if resp.status in (401, 403):
+                # 401 only. The warren answers 401 to a bad token and 404 to a
+                # rabbit that is not yours; a 403 can only come from a proxy
+                # or a firewall in between, and a new token would not get
+                # past it (review of 2026-11-18).
+                if resp.status == 401:
                     raise TerrierAuthError("the API token was refused")
-                body: Any = None
+                body: Any = _NOTHING
                 if resp.content_type == "application/json":
-                    body = await resp.json()
+                    try:
+                        body = await resp.json()
+                    except ValueError as err:
+                        # Truncated, or a page labelled JSON. Review of
+                        # 2026-11-18: this escaped as a raw JSONDecodeError,
+                        # which nothing upstream catches.
+                        raise TerrierError(f"{where}: not valid JSON") from err
                 if resp.status == 503:
                     # The warren's own word for "the rabbit is not there".
-                    raise TerrierOffline(
-                        (body or {}).get("error", "the rabbit is not connected")
-                    )
+                    said = body.get("error") if isinstance(body, dict) else None
+                    raise TerrierOffline(str(said or "the rabbit is not connected"))
                 if resp.status == 404:
-                    raise TerrierError(f"{path}: not found")
+                    raise TerrierError(f"{where}: not found")
                 if resp.status >= 400:
-                    raise TerrierError(f"{path}: {await _why(resp, body)}")
+                    raise TerrierError(f"{where}: {_why(resp, body)}")
+                if body is _NOTHING:
+                    # A 200 that is not JSON is a captive portal or a proxy's
+                    # page, not an empty answer.
+                    raise TerrierError(f"{where}: not a JSON answer")
                 return body
         except TimeoutError as err:
-            raise TerrierError(f"{path}: timed out") from err
+            raise TerrierError(f"{where}: timed out") from err
         except aiohttp.ClientError as err:
-            raise TerrierError(f"{path}: {err}") from err
+            raise TerrierError(f"{where}: {err}") from err
+
+    async def _dict(
+        self,
+        method: str,
+        path: str,
+        json: dict[str, Any] | None = None,
+        timeout: aiohttp.ClientTimeout = TIMEOUT,
+    ) -> dict[str, Any]:
+        """An answer that has to be an object, or a TerrierError."""
+        body = await self._request(method, path, json, timeout)
+        if not isinstance(body, dict):
+            raise TerrierError(f"{_where(path)}: unexpected answer")
+        return body
 
     # --- reading ---------------------------------------------------------
     async def rabbits(self) -> list[dict[str, Any]]:
-        return await self._request("GET", "/api/rabbits") or []
+        listing = await self._request("GET", "/api/rabbits")
+        # Review of 2026-11-18: `{"error": "maintenance"}` with a 200 became
+        # an AttributeError in the coordinator instead of a failed poll.
+        if not isinstance(listing, list) or not all(
+            isinstance(r, dict) for r in listing
+        ):
+            raise TerrierError("/api/rabbits: unexpected answer")
+        return listing
 
     async def rabbit(self, mac: str) -> dict[str, Any]:
-        return await self._request("GET", f"/api/rabbits/{mac}") or {}
+        return await self._dict("GET", f"/api/rabbits/{mac}")
 
     async def mood(self, mac: str) -> dict[str, Any]:
-        return await self._request("GET", f"/api/rabbits/{mac}/mood") or {}
+        return await self._dict("GET", f"/api/rabbits/{mac}/mood")
 
     async def mail(self, mac: str) -> dict[str, Any]:
-        return await self._request("GET", f"/api/rabbits/{mac}/mail") or {}
+        """Who is waiting, and nothing else.
 
-    async def jingles(self) -> list[str]:
-        return await self._request("GET", "/api/jingles") or []
+        The warren's answer carried each voice message as base64 and each
+        text in full (review of 2026-11-18); the sensor needs a count and the
+        senders. Whatever the warren sends, only that is kept in memory.
+        """
+        body = await self._dict("GET", f"/api/rabbits/{mac}/mail")
+        waiting = body.get("waiting")
+        return {
+            "handle": body.get("handle"),
+            "waiting": [
+                {
+                    "id": m.get("id"),
+                    "from_handle": m.get("from_handle"),
+                    "created_at": m.get("created_at"),
+                    "has_audio": bool(m.get("has_audio") or m.get("audio")),
+                }
+                for m in (waiting if isinstance(waiting, list) else [])
+                if isinstance(m, dict)
+            ],
+        }
 
     # --- doing -----------------------------------------------------------
-    async def notify(self, mac: str, **fields: Any) -> dict[str, Any]:
+    async def notify(self, mac: str, fields: dict[str, Any]) -> dict[str, Any]:
         """Belly, nose, counter, jingle and words in one call."""
         body = {k: v for k, v in fields.items() if v not in (None, "")}
         return await self._request("POST", f"/api/rabbits/{mac}/notify", body)
@@ -124,7 +202,9 @@ class TerrierClient:
         await self._request("POST", f"/api/rabbits/{mac}/speak", {"text": text})
 
     async def play_jingle(self, mac: str, name: str) -> None:
-        await self._request("POST", f"/api/rabbits/{mac}/jingle", {"jingle": name})
+        # `name`, as the warren reads it. Review of 2026-11-18: this sent
+        # `jingle`, and every call since the service existed was refused.
+        await self._request("POST", f"/api/rabbits/{mac}/jingle", {"name": name})
 
     async def radio(
         self, mac: str, station: str | None = None, stop: bool = False
@@ -166,6 +246,18 @@ class TerrierClient:
         if level is not None:
             body["level"] = level
         await self._request("POST", f"/api/rabbits/{mac}/nightlight", body)
+        if on and (colour or level is not None):
+            # Saved as the nightlight's colour and level too. Review of
+            # 2026-11-18: the warren lit the colour but kept the old one in
+            # the config, so the light reported the old colour and the
+            # scheduler put it back on its next tick. Harmless on a warren
+            # that saves them itself.
+            patch: dict[str, Any] = {}
+            if colour:
+                patch["nightlight_colour"] = colour
+            if level is not None:
+                patch["nightlight_level"] = level
+            await self.set_config(mac, patch)
 
     async def compliment(self, mac: str) -> dict[str, Any]:
         return await self._request("POST", f"/api/rabbits/{mac}/compliment")
@@ -178,110 +270,89 @@ class TerrierClient:
             body["jingle"] = jingle
         return await self._request("POST", f"/api/rabbits/{mac}/mail", body)
 
-    async def nudge_mood(self, mac: str, kind: str = "speak") -> dict[str, Any]:
-        return await self._request("POST", f"/api/rabbits/{mac}/mood", {"kind": kind})
-
     # -- the rest of the warren ------------------------------------------- #
-    # Everything below exists because the integration covered sixteen of the
-    # Terrier's routes and the warren has thirty-one. Some of the gap was
-    # ours; some of it was a route that did not exist yet.
-
-    async def state(self, mac: str) -> dict[str, Any]:
-        """What the belly and the ears are actually doing, read back from the
-        rabbit rather than inferred from what we last told it."""
-        return await self._request("GET", f"/api/rabbits/{mac}/state") or {}
-
-    async def air(self, mac: str) -> dict[str, Any]:
-        return await self._request("GET", f"/api/rabbits/{mac}/air") or {}
 
     async def say_air(self, mac: str) -> dict[str, Any]:
         """Say the air quality now, rather than waiting for the daily hour."""
-        return await self._request("POST", f"/api/rabbits/{mac}/air", {}) or {}
+        return await self._request("POST", f"/api/rabbits/{mac}/air", {})
 
-    async def alarm(self, mac: str, **fields: Any) -> dict[str, Any]:
-        return await self._request("POST", f"/api/rabbits/{mac}/alarm", fields) or {}
+    async def breathe(self, mac: str, colour: str) -> dict[str, Any]:
+        """The colour the belly breathes in: the `breath_colour` setting.
 
-    async def ambient(self, mac: str, **fields: Any) -> dict[str, Any]:
-        """The colour the belly breathes in. Clearing it stops the breathing,
-        which is not obvious and is why `clear` is explicit."""
-        return await self._request("POST", f"/api/rabbits/{mac}/ambient", fields) or {}
+        Review of 2026-11-18: this posted `{"colour": ...}` to `/ambient`, a
+        raw diagnostic that wants a service number and a byte, and every call
+        was refused. The warren applies the setting on its next tick.
+        """
+        return await self.set_config(mac, {"breath_colour": colour})
+
+    async def belly_clear(self, mac: str) -> dict[str, Any]:
+        """Stop every ambient service and put the bottom LED out."""
+        return await self._request("POST", f"/api/rabbits/{mac}/belly/clear", {})
 
     async def ask(self, mac: str, question: str) -> dict[str, Any]:
-        return (
-            await self._request("POST", f"/api/rabbits/{mac}/ask", {"q": question})
-            or {}
+        return await self._dict(
+            "POST", f"/api/rabbits/{mac}/ask", {"q": question}, LONG_TIMEOUT
         )
 
     async def listen(self, mac: str, seconds: float | None = None) -> dict[str, Any]:
         body: dict[str, Any] = {}
         if seconds:
             body["seconds"] = seconds
-        return await self._request("POST", f"/api/rabbits/{mac}/listen", body) or {}
+        return await self._dict(
+            "POST", f"/api/rabbits/{mac}/listen", body, LONG_TIMEOUT
+        )
 
-    async def settings(self, mac: str) -> dict[str, Any]:
-        """What this warren will accept — so a client need not hard-code
-        eight belly colours."""
-        return await self._request("GET", f"/api/rabbits/{mac}/settings") or {}
-
-    async def set_config(self, mac: str, **patch: Any) -> dict[str, Any]:
+    async def set_config(self, mac: str, patch: dict[str, Any]) -> dict[str, Any]:
         """Write settings. The warren applies all of them or none, so a
-        caller that gets a 200 knows exactly where it stands."""
-        return await self._request("POST", f"/api/rabbits/{mac}/config", patch) or {}
+        caller that gets a 200 knows exactly where it stands.
 
-    async def rfid_bind(self, mac: str, tag: str, **action: Any) -> dict[str, Any]:
-        body = {"tag": tag, **action}
-        return await self._request("POST", f"/api/rabbits/{mac}/rfid", body) or {}
+        A dict, not keyword arguments: review of 2026-11-18, a setting named
+        `mac` sent through `terrier.set_config` crashed with a TypeError.
+        """
+        return await self._request("POST", f"/api/rabbits/{mac}/config", patch)
+
+    async def rfid_bind(
+        self, mac: str, tag: str, action: dict[str, Any]
+    ) -> dict[str, Any]:
+        body = {**action, "tag": tag}
+        return await self._request("POST", f"/api/rabbits/{mac}/rfid", body)
 
     async def rfid_remove(self, mac: str, tag: str) -> dict[str, Any]:
-        return await self._request("DELETE", f"/api/rabbits/{mac}/rfid/{tag}") or {}
+        return await self._request("DELETE", f"/api/rabbits/{mac}/rfid/{tag}")
 
     async def tell(self, mac: str, what: str) -> dict[str, Any]:
         """One of the rabbit's services, now: a joke, the name day, the next
         departures, a story, the agenda, the alerts, the weather..."""
-        return (
-            await self._request("POST", f"/api/rabbits/{mac}/tell", {"what": what})
-            or {}
-        )
+        return await self._request("POST", f"/api/rabbits/{mac}/tell", {"what": what})
 
-    async def reminder_add(self, mac: str, **fields: Any) -> dict[str, Any]:
-        return (
-            await self._request("POST", f"/api/rabbits/{mac}/reminders", fields) or {}
-        )
+    async def reminder_add(self, mac: str, fields: dict[str, Any]) -> dict[str, Any]:
+        return await self._request("POST", f"/api/rabbits/{mac}/reminders", fields)
 
     async def reminder_remove(self, mac: str, rid: str) -> dict[str, Any]:
-        return (
-            await self._request("DELETE", f"/api/rabbits/{mac}/reminders/{rid}") or {}
-        )
+        return await self._request("DELETE", f"/api/rabbits/{mac}/reminders/{rid}")
 
     async def birthday_add(self, mac: str, name: str, day: str) -> dict[str, Any]:
         body = {"name": name, "day": day}
-        return await self._request("POST", f"/api/rabbits/{mac}/birthdays", body) or {}
+        return await self._request("POST", f"/api/rabbits/{mac}/birthdays", body)
 
     async def journal_add(self, mac: str, text: str) -> dict[str, Any]:
         body = {"text": text}
-        return await self._request("POST", f"/api/rabbits/{mac}/journal", body) or {}
+        return await self._request("POST", f"/api/rabbits/{mac}/journal", body)
 
     async def birthday_remove(self, mac: str, bid: str) -> dict[str, Any]:
-        return (
-            await self._request("DELETE", f"/api/rabbits/{mac}/birthdays/{bid}") or {}
-        )
+        return await self._request("DELETE", f"/api/rabbits/{mac}/birthdays/{bid}")
 
     async def button_bind(
-        self, mac: str, gesture: str, **action: Any
+        self, mac: str, gesture: str, action: dict[str, Any]
     ) -> dict[str, Any]:
-        body = {"gesture": gesture, **action}
-        return await self._request("POST", f"/api/rabbits/{mac}/button", body) or {}
+        body = {**action, "gesture": gesture}
+        return await self._request("POST", f"/api/rabbits/{mac}/button", body)
 
     async def button_remove(self, mac: str, gesture: str) -> dict[str, Any]:
-        return (
-            await self._request("DELETE", f"/api/rabbits/{mac}/button/{gesture}") or {}
-        )
+        return await self._request("DELETE", f"/api/rabbits/{mac}/button/{gesture}")
 
     async def transport_stop(
         self, mac: str, network: str, sid: str, name: str
     ) -> dict[str, Any]:
         body = {"network": network, "id": sid, "name": name}
-        return (
-            await self._request("POST", f"/api/rabbits/{mac}/transport/stop", body)
-            or {}
-        )
+        return await self._request("POST", f"/api/rabbits/{mac}/transport/stop", body)

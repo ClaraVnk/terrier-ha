@@ -123,7 +123,9 @@ SELECTS: tuple[Setting, ...] = (
     Setting(
         key="nightlight_colour",
         icon="mdi:palette",
-        options=("blue", "sky", "green", "red", "orange", "violet", "yellow", "white"),
+        # const.BELLY_COLOURS, spelled out so the tests can read it without
+        # Home Assistant; tests/test_colours.py holds the two together.
+        options=("blue", "green", "cyan", "red", "violet", "yellow", "white"),
     ),
     Setting(
         key="clock_mode",

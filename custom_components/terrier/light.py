@@ -25,8 +25,8 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import TerrierConfigEntry
 from .api import TerrierError
-from .const import COLOURS
-from .entity import TerrierEntity
+from .const import COLOURS, DEFAULT_COLOUR, canon
+from .entity import TerrierEntity, add_per_rabbit
 
 # Five levels, as Home Assistant's 0-255 brightness. The rabbit's LED is not
 # linear and the Terrier settled on five steps for that reason.
@@ -47,14 +47,23 @@ def nearest_level(brightness: int) -> int:
     return min(LEVELS, key=lambda lvl: abs(LEVELS[lvl] - brightness))
 
 
+def shown_colour(saved: str | None) -> str:
+    """The colour the belly shows for a saved name, older names included.
+
+    Review of 2026-11-18: a saved `red`, `cyan` or `yellow` — the warren's
+    own names — fell back to warm, so the light showed a colour the belly
+    was not.
+    """
+    return canon(saved) or DEFAULT_COLOUR
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: TerrierConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    async_add_entities(
-        TerrierNightlight(coordinator, mac) for mac in coordinator.data or {}
+    add_per_rabbit(
+        entry, async_add_entities, lambda c, mac, _r: [TerrierNightlight(c, mac)]
     )
 
 
@@ -73,9 +82,7 @@ class TerrierNightlight(TerrierEntity, LightEntity):
 
     @property
     def rgb_color(self) -> tuple[int, int, int]:
-        return COLOURS.get(
-            self.config.get("nightlight_colour") or "warm", COLOURS["warm"]
-        )
+        return COLOURS[shown_colour(self.config.get("nightlight_colour"))]
 
     @property
     def brightness(self) -> int:
@@ -84,7 +91,7 @@ class TerrierNightlight(TerrierEntity, LightEntity):
     @property
     def extra_state_attributes(self) -> dict:
         return {
-            "colour": self.config.get("nightlight_colour") or "warm",
+            "colour": shown_colour(self.config.get("nightlight_colour")),
             "level": self.config.get("nightlight_level") or 2,
             "scheduled": bool(self.config.get("nightlight_enabled")),
             "from": self.config.get("nightlight_from"),
@@ -92,7 +99,7 @@ class TerrierNightlight(TerrierEntity, LightEntity):
         }
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        colour = self.config.get("nightlight_colour") or "warm"
+        colour = shown_colour(self.config.get("nightlight_colour"))
         level = int(self.config.get("nightlight_level") or 2)
         if ATTR_RGB_COLOR in kwargs:
             colour = nearest_colour(kwargs[ATTR_RGB_COLOR])

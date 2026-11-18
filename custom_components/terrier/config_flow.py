@@ -43,17 +43,20 @@ class TerrierConfigFlow(ConfigFlow, domain=DOMAIN):
         """(a title, errors). The token is verified before the entry exists —
         an integration that sets up cleanly and then fails forever is worse
         than one that refuses at the door."""
+        if not base_url.lower().startswith("https://"):
+            # The token travels in every request. Review of 2026-11-18: plain
+            # http was accepted, and Le Terrier is only ever served over TLS.
+            return "", {CONF_BASE_URL: "https_required"}
         client = TerrierClient(async_get_clientsession(self.hass), base_url, token)
         try:
-            rabbits = await client.rabbits()
+            await client.rabbits()
         except TerrierAuthError:
             return "", {CONF_TOKEN: "invalid_auth"}
         except TerrierError:
             return "", {CONF_BASE_URL: "cannot_connect"}
-        if not rabbits:
-            # Not an error, but worth saying: a token with no rabbit behind it
-            # is almost always the wrong account.
-            return "Le Terrier", {"base": "no_rabbits"}
+        # An account with no rabbit yet is not refused any more (review of
+        # 2026-11-18: it blocked set-up and re-auth alike, for an owner
+        # between two rabbits). A rabbit adopted later appears on its own.
         host = base_url.split("//", 1)[-1].rstrip("/")
         return f"Le Terrier ({host})", {}
 
@@ -78,10 +81,7 @@ class TerrierConfigFlow(ConfigFlow, domain=DOMAIN):
             # hassfest forbids URLs inside translated strings; they are
             # placeholders so the text stays translatable and the addresses
             # live in one place.
-            description_placeholders={
-                "hosted": DEFAULT_URL,
-                "own": "http://terrier.lan:8000",
-            },
+            description_placeholders={"hosted": DEFAULT_URL},
         )
 
     async def async_step_reauth(

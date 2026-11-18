@@ -50,6 +50,43 @@ def test_hacs_declares_the_minimum_home_assistant():
     assert "homeassistant" in h
 
 
+# The newest Home Assistant name each import needs, by the release that
+# first had it — measured in the wheels, not remembered. Review of
+# 2026-11-18: hacs.json said 2024.12.0 while every platform imported
+# AddConfigEntryEntitiesCallback, which appeared in 2025.3.0, so HACS offered
+# the integration to three releases on which it could not load. The CI job
+# "oldest" imports everything on the declared release itself.
+NEEDS = {"AddConfigEntryEntitiesCallback": (2025, 3, 0)}
+
+
+def test_the_declared_minimum_has_every_name_imported():
+    h = json.loads((ROOT / "hacs.json").read_text())
+    floor = tuple(int(p) for p in h["homeassistant"].split("."))
+    source = "".join(f.read_text() for f in COMPONENT.glob("*.py"))
+    for name, since in NEEDS.items():
+        if name in source:
+            assert floor >= since, f"{name} needs {since}, hacs.json says {floor}"
+
+
+def test_the_integration_talks_to_a_server_on_the_internet():
+    """Le Terrier is a hosted service (review of 2026-11-18: local_polling)."""
+    assert load("manifest.json")["iot_class"] == "cloud_polling"
+
+
+def test_the_actions_exist_even_when_the_entry_does_not_load():
+    """Registered in async_setup, which needs CONFIG_SCHEMA for hassfest."""
+    tree = ast.parse((COMPONENT / "__init__.py").read_text())
+    functions = {n.name: n for n in tree.body if isinstance(n, ast.AsyncFunctionDef)}
+    calls = lambda fn: {  # noqa: E731
+        c.func.id
+        for c in ast.walk(fn)
+        if isinstance(c, ast.Call) and isinstance(c.func, ast.Name)
+    }
+    assert "async_setup_services" in calls(functions["async_setup"])
+    assert "async_setup_services" not in calls(functions["async_setup_entry"])
+    assert "CONFIG_SCHEMA" in (COMPONENT / "__init__.py").read_text()
+
+
 def _services_in_yaml() -> set[str]:
     return set(yaml.safe_load((COMPONENT / "services.yaml").read_text()))
 

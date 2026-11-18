@@ -9,25 +9,51 @@ DOMAIN = "terrier"
 CONF_BASE_URL = "base_url"
 CONF_TOKEN = "token"
 
-# The Terrier answers from memory for everything except the rabbit's own
-# diagnostics, so polling is cheap. Thirty seconds is also the period of the
-# warren's own scheduler, so a faster poll would only show the same numbers.
+# The listing (online, firmware, config) every thirty seconds — the period of
+# the warren's own scheduler, so a faster poll would only show the same
+# numbers. Everything else every five minutes. Review of 2026-11-18: each
+# rabbit cost three more requests per cycle, one of them a 7-day event
+# summary and one the waiting mail with every voice message in it as
+# base64 — 200 KB per message, twice a minute, for a count.
 DEFAULT_SCAN_INTERVAL = timedelta(seconds=30)
+SLOW_INTERVAL = timedelta(minutes=5)
 
 MANUFACTURER = "Violet"
 MODEL = "Nabaztag:tag v2"
 
-# The belly palette the Terrier exposes, as RGB, so a light entity can show
-# something honest in the colour wheel. These are the warren's own values.
+# The belly's palette, as the warren has it (indicators.BELLY_PALETTE): seven
+# names, one bit per channel in the firmware, and no others. The RGB values
+# are the warren's own (NIGHTLIGHT_COLOURS), so the light's colour wheel shows
+# what the belly shows. Review of 2026-11-18: this table said warm, amber and
+# rose — three names for the same red — and had no cyan and no yellow, so the
+# light could not reach two of the seven and showed a stored "red" as warm.
 COLOURS: dict[str, tuple[int, int, int]] = {
-    "warm": (255, 150, 60),
-    "amber": (255, 100, 20),
-    "rose": (255, 90, 120),
-    "violet": (140, 70, 200),
     "blue": (60, 120, 220),
     "green": (70, 180, 110),
+    "cyan": (60, 200, 210),
+    "red": (220, 70, 60),
+    "violet": (140, 70, 200),
+    "yellow": (240, 210, 70),
     "white": (255, 220, 180),
 }
+DEFAULT_COLOUR = "red"  # the warren's own default for the nightlight
+
+# Names chosen before anybody had read the palette. A saved setting or an
+# older automation may still say them; the warren reads them as these.
+OLD_COLOURS: dict[str, str] = {
+    "warm": "red",
+    "amber": "red",
+    "rose": "red",
+    "orange": "red",
+    "sky": "cyan",
+}
+
+
+def canon(colour: str | None) -> str | None:
+    """A colour as the belly's palette calls it, or None if it has none."""
+    name = OLD_COLOURS.get(colour or "", colour)
+    return name if name in COLOURS else None
+
 
 NOSE_MODES = ("off", "blink", "double")
 
@@ -69,8 +95,14 @@ ACTION_TYPES = (
     "agenda",
     "listen",
     "pomodoro",
+    "minuteur",
+    "echo",
     "briefing",
     "home_summary",
+    "fierte",
+    "horoscope",
+    "taichi",
+    "rss",
     "webhook",
 )
 TELL = (
@@ -85,12 +117,13 @@ TELL = (
     "wakeup",
     "twitch",
     "pomodoro",
+    "minuteur",
     "briefing",
     "home_summary",
+    "fierte",
 )
 GESTURES = ("click", "double_click", "long_click", "double_long_click")
 
-# The belly palette as the warren names it. Distinct from COLOURS above,
-# which maps those names to RGB for the light's colour wheel: these are the
-# strings the API accepts, and the firmware knows no others.
-BELLY_COLOURS = ("blue", "sky", "green", "red", "orange", "violet", "yellow", "white")
+# The names the API accepts for the belly. One table, so the select, the
+# light and the services cannot drift apart again (review of 2026-11-18).
+BELLY_COLOURS = tuple(COLOURS)

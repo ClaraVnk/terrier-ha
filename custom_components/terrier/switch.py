@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from . import TerrierConfigEntry
 from .api import TerrierError
 from .config_entity import TerrierSetting
-from .entity import TerrierEntity
+from .entity import TerrierEntity, add_per_rabbit
 from .settings import SWITCHES
 
 
@@ -21,19 +21,14 @@ async def async_setup_entry(
     entry: TerrierConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    macs = list(coordinator.data or {})
-    async_add_entities(
-        [
-            cls(coordinator, mac)
-            for mac in macs
-            for cls in (TerrierSleep, TerrierMailbox)
-        ]
-        + [
-            TerrierSettingSwitch(coordinator, mac, setting)
-            for mac in macs
-            for setting in SWITCHES
-        ]
+    add_per_rabbit(
+        entry,
+        async_add_entities,
+        lambda c, mac, _r: [
+            TerrierSleep(c, mac),
+            TerrierMailbox(c, mac),
+            *(TerrierSettingSwitch(c, mac, s) for s in SWITCHES),
+        ],
     )
 
 
@@ -89,10 +84,6 @@ class TerrierMailbox(TerrierEntity, SwitchEntity):
     @property
     def is_on(self) -> bool:
         return bool(self.config.get("mail_enabled"))
-
-    @property
-    def available(self) -> bool:
-        return super().available
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         raise HomeAssistantError(
