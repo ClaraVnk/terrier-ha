@@ -505,3 +505,28 @@ transport_stop:
       required: true
       selector:
         text:
+now:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: terrier
+          multiple: true
+    what:
+      required: true
+      selector:
+        select:
+          options:
+            - taichi
+            - story
+            - joke
+            - horoscope
+            - nameday
+            - briefing
+            - agenda
+            - news
+            - transport
+            - weather
+            - time
+            - compliment

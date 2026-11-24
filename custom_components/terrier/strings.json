@@ -46,6 +46,9 @@
       },
       "wake": {
         "name": "Wake up"
+      },
+      "taichi": {
+        "name": "Tai chi"
       }
     },
     "light": {
@@ -68,6 +71,9 @@
       },
       "pomodoro_break": {
         "name": "Pomodoro break"
+      },
+      "volume": {
+        "name": "Volume"
       }
     },
     "select": {
@@ -743,6 +749,20 @@
         "text": {
           "name": "Text",
           "description": "What happened."
+        }
+      }
+    },
+    "now": {
+      "name": "Do it now",
+      "description": "One of the rabbit page's \"now\" actions: tai chi, story, joke, horoscope, name day, briefing, agenda, news, transport, weather, time, compliment.",
+      "fields": {
+        "device_id": {
+          "name": "Rabbit",
+          "description": "The rabbit, or rabbits, to act on."
+        },
+        "what": {
+          "name": "What",
+          "description": "taichi, story, joke, horoscope, nameday, briefing, agenda, news, transport, weather, time or compliment."
         }
       }
     }

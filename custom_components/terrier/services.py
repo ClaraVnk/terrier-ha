@@ -28,6 +28,7 @@ from .const import (
     DOMAIN,
     GESTURES,
     NOSE_MODES,
+    NOW,
     OLD_COLOURS,
     SERVICE_AIR,
     SERVICE_AMBIENT,
@@ -42,6 +43,7 @@ from .const import (
     SERVICE_LISTEN,
     SERVICE_MAIL,
     SERVICE_NOTIFY,
+    SERVICE_NOW,
     SERVICE_PODCAST,
     SERVICE_RADIO,
     SERVICE_REMINDER_ADD,
@@ -113,6 +115,7 @@ RFID_BIND_SCHEMA = vol.Schema(
 )
 RFID_REMOVE_SCHEMA = vol.Schema({**_TARGET, vol.Required("tag"): cv.string})
 TELL_SCHEMA = vol.Schema({**_TARGET, vol.Required("what"): vol.In(TELL)})
+NOW_SCHEMA = vol.Schema({**_TARGET, vol.Required("what"): vol.In(NOW)})
 REMINDER_ADD_SCHEMA = vol.Schema(
     {
         **_TARGET,
@@ -380,6 +383,9 @@ def async_setup_services(hass: HomeAssistant) -> None:
     async def tell(call: ServiceCall) -> None:
         await _run(hass, call, lambda c, mac: c.tell(mac, call.data["what"]))
 
+    async def now(call: ServiceCall) -> None:
+        await _run(hass, call, lambda c, mac: c.now(mac, call.data["what"]))
+
     async def reminder_add(call: ServiceCall) -> None:
         fields = {k: v for k, v in call.data.items() if k != ATTR_DEVICE_ID}
         await _run(hass, call, lambda c, mac: c.reminder_add(mac, fields))
@@ -426,6 +432,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
 
     for name, handler, schema in (
         (SERVICE_TELL, tell, TELL_SCHEMA),
+        (SERVICE_NOW, now, NOW_SCHEMA),
         (SERVICE_REMINDER_ADD, reminder_add, REMINDER_ADD_SCHEMA),
         (SERVICE_REMINDER_REMOVE, reminder_remove, REMINDER_REMOVE_SCHEMA),
         (SERVICE_BIRTHDAY_ADD, birthday_add, BIRTHDAY_ADD_SCHEMA),

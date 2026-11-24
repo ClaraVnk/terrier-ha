@@ -74,6 +74,7 @@ SERVICE_SET_CONFIG = "set_config"
 SERVICE_RFID_BIND = "rfid_bind"
 SERVICE_RFID_REMOVE = "rfid_remove"
 SERVICE_TELL = "tell"
+SERVICE_NOW = "now"
 SERVICE_REMINDER_ADD = "reminder_add"
 SERVICE_REMINDER_REMOVE = "reminder_remove"
 SERVICE_BIRTHDAY_ADD = "birthday_add"
@@ -127,3 +128,19 @@ GESTURES = ("click", "double_click", "long_click", "double_long_click")
 # The names the API accepts for the belly. One table, so the select, the
 # light and the services cannot drift apart again (review of 2026-11-18).
 BELLY_COLOURS = tuple(COLOURS)
+
+# The page's "now" buttons, as the Terrier's /api/rabbits/<mac>/now takes them.
+NOW = (
+    "taichi",
+    "story",
+    "joke",
+    "horoscope",
+    "nameday",
+    "briefing",
+    "agenda",
+    "news",
+    "transport",
+    "weather",
+    "time",
+    "compliment",
+)

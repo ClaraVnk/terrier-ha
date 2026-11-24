@@ -29,6 +29,11 @@ BUTTONS: tuple[TerrierButton, ...] = (
         press=lambda c, mac: c.compliment(mac),
     ),
     TerrierButton(
+        key="taichi",
+        translation_key="taichi",
+        press=lambda c, mac: c.now(mac, "taichi"),
+    ),
+    TerrierButton(
         key="stop",
         translation_key="stop",
         icon="mdi:stop",

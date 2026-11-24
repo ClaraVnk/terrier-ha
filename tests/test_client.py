@@ -319,3 +319,20 @@ def test_a_question_waits_for_the_answer():
     assert ask >= 120
     assert listen >= 120
     assert speak == 15
+
+
+# --- volume and "now" (2026-11-24) -------------------------------------------
+def test_the_volume_is_sent_as_a_percent():
+    async def body(c):
+        await c.volume(MAC, 40)
+
+    seen = run(_with([web.post(f"/api/rabbits/{MAC}/volume", _ok)], body))
+    assert seen[0]["json"] == {"percent": 40}
+
+
+def test_tai_chi_is_a_now_action():
+    async def body(c):
+        await c.now(MAC, "taichi")
+
+    seen = run(_with([web.post(f"/api/rabbits/{MAC}/now", _ok)], body))
+    assert seen[0]["json"] == {"what": "taichi"}

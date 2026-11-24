@@ -325,6 +325,18 @@ class TerrierClient:
         departures, a story, the agenda, the alerts, the weather..."""
         return await self._request("POST", f"/api/rabbits/{mac}/tell", {"what": what})
 
+    async def volume(self, mac: str, percent: int) -> dict[str, Any]:
+        """The loudness, 0-100: saved and sent to the rabbit now; a radio
+        playing starts again at the new volume (Terrier 2026-11-24)."""
+        return await self._request(
+            "POST", f"/api/rabbits/{mac}/volume", {"percent": percent}
+        )
+
+    async def now(self, mac: str, what: str) -> dict[str, Any]:
+        """One of the page's "now" actions: taichi, story, joke, horoscope,
+        nameday, briefing, agenda, news, transport, weather, time, compliment."""
+        return await self._request("POST", f"/api/rabbits/{mac}/now", {"what": what})
+
     async def reminder_add(self, mac: str, fields: dict[str, Any]) -> dict[str, Any]:
         return await self._request("POST", f"/api/rabbits/{mac}/reminders", fields)
 
