@@ -28,8 +28,14 @@ async def async_setup_entry(
     add_per_rabbit(
         entry,
         async_add_entities,
-        lambda c, mac, _r: [
+        lambda c, mac, r: [
             TerrierCounter(c, mac),
+            # A Karotz has no volume setting on the Terrier: its page has none.
+            *(
+                [TerrierVolume(c, mac)]
+                if ((r or {}).get("config") or {}).get("hw") != "karotz"
+                else []
+            ),
             *(TerrierSettingNumber(c, mac, s) for s in NUMBERS),
         ],
     )
@@ -64,6 +70,33 @@ class TerrierCounter(TerrierEntity, NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         try:
             await self.coordinator.client.counter(self._mac, int(value))
+        except TerrierError as err:
+            raise HomeAssistantError(str(err)) from err
+        await self.coordinator.async_request_refresh()
+
+
+class TerrierVolume(TerrierEntity, NumberEntity):
+    """The rabbit's loudness, 0 (silent) to 100 (its loudest), as on its
+    page. A radio playing starts again at the new volume."""
+
+    _attr_translation_key = "volume"
+    _attr_native_min_value = 0
+    _attr_native_max_value = 100
+    _attr_native_step = 5
+    _attr_native_unit_of_measurement = "%"
+    _attr_mode = NumberMode.SLIDER
+
+    def __init__(self, coordinator, mac: str) -> None:
+        super().__init__(coordinator, mac, "volume")
+
+    @property
+    def native_value(self) -> float:
+        v = self.config.get("volume")
+        return float(100 if v is None else v)
+
+    async def async_set_native_value(self, value: float) -> None:
+        try:
+            await self.coordinator.client.volume(self._mac, int(value))
         except TerrierError as err:
             raise HomeAssistantError(str(err)) from err
         await self.coordinator.async_request_refresh()

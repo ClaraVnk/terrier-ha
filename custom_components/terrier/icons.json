@@ -14,6 +14,9 @@
       },
       "wake": {
         "default": "mdi:weather-sunset-up"
+      },
+      "taichi": {
+        "default": "mdi:meditation"
       }
     },
     "light": {
@@ -36,6 +39,9 @@
       },
       "pomodoro_break": {
         "default": "mdi:coffee-outline"
+      },
+      "volume": {
+        "default": "mdi:volume-high"
       }
     },
     "select": {
@@ -255,6 +261,9 @@
     "button_bind": "mdi:gesture-tap",
     "button_remove": "mdi:gesture-tap-hold",
     "transport_stop": "mdi:bus-stop",
-    "journal_add": "mdi:notebook-edit-outline"
+    "journal_add": "mdi:notebook-edit-outline",
+    "now": {
+      "service": "mdi:play-circle-outline"
+    }
   }
 }

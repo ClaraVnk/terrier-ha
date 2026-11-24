@@ -89,7 +89,8 @@ This integration is how Home Assistant talks to it.
 - ⏰ **Its whole schedule as entities** — morning weather, alarm, hourly
   chime, night mode, nightlight, daily podcast
 - 🎚️ **Its settings as selects and numbers** — personality, speaking speed,
-  nightlight colour and brightness
+  nightlight colour and brightness, and its **volume** (0–100 %, a radio
+  playing starts again at the new volume)
 - 🗣️ **It speaks** — `terrier.speak`, `terrier.notify` (belly, nose, counter,
   jingle and a sentence in one call), radio, podcasts, jingles, and mail to
   other rabbits
@@ -114,7 +115,10 @@ This integration is how Home Assistant talks to it.
 - 🤖 **An AI that acts** — asked out loud, the rabbit can put the radio on, set
   a reminder or the alarm (the *AI may act on the rabbit* switch)
 - 📣 **Any service, now** — `terrier.tell`: joke, name day, departures, story,
-  agenda, alerts, weather, clock, wake-up, pomodoro, briefing, home_summary
+  agenda, alerts, weather, clock, wake-up, pomodoro, briefing, home_summary;
+  `terrier.now`: the rabbit page's own buttons — **tai chi**, story, joke,
+  horoscope, name day, briefing, agenda, news, transport, weather, time,
+  compliment (tai chi is also a button)
 - 📊 **Diagnostics that explain a flaky rabbit** — availability, disconnects,
   session length, round-trip time
 
@@ -125,7 +129,7 @@ This integration is how Home Assistant talks to it.
 ### 🗺️ What one rabbit becomes
 
 <p align="center">
-  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 30 switches, 16 times, 9 selects, 5 numbers, a light, 3 buttons, a binary sensor and 23 services." width="860">
+  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 30 switches, 16 times, 9 selects, 6 numbers, a light, 4 buttons, a binary sensor and 24 services." width="860">
 </p>
 
 <sub>Most of the schedule entities ship disabled — enable the ones you want from the device page, rather than meeting thirty-seven at once.</sub>

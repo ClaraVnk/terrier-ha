@@ -154,3 +154,8 @@ def test_a_question_keeps_the_answers_it_got(call):
 def test_podcast_takes_a_catalogue_key(call):
     session, _ = call("podcast", {"feed": "franceinter-lgdj"})
     assert session.sent[0][2]["feed"] == "franceinter-lgdj"
+
+
+def test_now_takes_one_of_the_pages_actions(call):
+    session, _ = call("now", {"what": "taichi"})
+    assert session.sent == [("POST", f"/api/rabbits/{A}/now", {"what": "taichi"})]

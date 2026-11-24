@@ -13,8 +13,10 @@ import hastub  # noqa: F401  (before custom_components)
 
 from custom_components.terrier import (
     binary_sensor,
+    button,
     coordinator,
     light,
+    number,
     select,
     sensor,
     switch,
@@ -109,3 +111,13 @@ def test_the_breathing_sensor_does_not_record_the_address():
 def test_the_device_carries_its_mac_as_the_registry_writes_it():
     _entry, added = _setup(binary_sensor, {A: _rabbit()})
     assert added[0].device_info["connections"] == {("mac", "00:19:db:de:ad:be")}
+
+
+def test_the_volume_and_the_tai_chi_are_there_but_no_volume_on_a_karotz():
+    _, added = _setup(number, {A: _rabbit(), B: _rabbit(config={"hw": "karotz"})})
+    ids = {e.unique_id for e in added}
+    assert f"{A}_volume" in ids and f"{B}_volume" not in ids
+    vol = next(e for e in added if e.unique_id == f"{A}_volume")
+    assert vol.native_value == 100.0  # never set: the loudest
+    _, added = _setup(button, {A: _rabbit()})
+    assert f"{A}_taichi" in {e.unique_id for e in added}

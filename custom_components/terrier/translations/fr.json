@@ -46,6 +46,9 @@
       },
       "wake": {
         "name": "Réveiller"
+      },
+      "taichi": {
+        "name": "Tai-chi"
       }
     },
     "light": {
@@ -68,6 +71,9 @@
       },
       "pomodoro_break": {
         "name": "Pause du pomodoro"
+      },
+      "volume": {
+        "name": "Volume"
       }
     },
     "select": {
@@ -743,6 +749,20 @@
         "text": {
           "name": "Texte",
           "description": "Ce qui s'est passé."
+        }
+      }
+    },
+    "now": {
+      "name": "Le faire maintenant",
+      "description": "L'une des actions « maintenant » de la page du lapin : tai-chi, histoire, blague, horoscope, fête du jour, briefing, agenda, actualités, transports, météo, heure, compliment.",
+      "fields": {
+        "device_id": {
+          "name": "Lapin",
+          "description": "Le lapin, ou les lapins, concernés."
+        },
+        "what": {
+          "name": "Quoi",
+          "description": "taichi, story, joke, horoscope, nameday, briefing, agenda, news, transport, weather, time ou compliment."
         }
       }
     }
