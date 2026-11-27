@@ -150,6 +150,15 @@
           "belly": "Ventre seul",
           "voice": "Ventre et voix"
         }
+      },
+      "mind": {
+        "name": "Esprit",
+        "state": {
+          "off": "Éteint",
+          "discreet": "Discret",
+          "chatty": "Bavard",
+          "mischievous": "Espiègle"
+        }
       }
     },
     "sensor": {
@@ -765,6 +774,29 @@
           "description": "taichi, story, joke, horoscope, nameday, briefing, agenda, news, transport, weather, time ou compliment."
         }
       }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "L'esprit du lapin",
+        "description": "Quand il se passe quelque chose qu'une personne remarquerait, l'IA choisie dans Home Assistant décide si le lapin dit quelque chose. Rien de ta maison ne quitte Home Assistant : le Terrier ne reçoit que la phrase. Le caractère de chaque lapin se choisit sur son appareil (Esprit). Il ne parle que si un capteur de présence de sa pièce (la pièce de son appareil) dit que quelqu'un est là.",
+        "data": {
+          "mind": "Activer l'esprit",
+          "mind_ai": "IA qui réfléchit (AI Task)",
+          "mind_watch": "Ce qu'il remarque",
+          "mind_context": "Ce qu'il sait de la maison",
+          "mind_daily_cap": "Appels à l'IA par jour, au plus"
+        },
+        "data_description": {
+          "mind_watch": "Un changement d'état est une occasion : quelqu'un qui arrive, une machine qui termine, un volet. Les relevés (nombres) n'en sont pas.",
+          "mind_context": "Les causes, lues quand il réfléchit : un volet de chambre fermé l'après-midi lui dit que quelqu'un dort."
+        }
+      }
+    },
+    "error": {
+      "mind_needs_ai": "Choisis une entité AI Task.",
+      "mind_needs_watch": "Choisis au moins une chose à remarquer."
     }
   }
 }

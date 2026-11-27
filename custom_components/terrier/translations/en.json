@@ -150,6 +150,15 @@
           "belly": "Belly only",
           "voice": "Belly and voice"
         }
+      },
+      "mind": {
+        "name": "Mind",
+        "state": {
+          "off": "Off",
+          "discreet": "Discreet",
+          "chatty": "Chatty",
+          "mischievous": "Mischievous"
+        }
       }
     },
     "sensor": {
@@ -765,6 +774,29 @@
           "description": "taichi, story, joke, horoscope, nameday, briefing, agenda, news, transport, weather, time or compliment."
         }
       }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "The rabbit's mind",
+        "description": "When something a person would notice happens, the AI you chose in Home Assistant decides whether the rabbit says something. Nothing of your home leaves Home Assistant: the Terrier only receives the sentence. Pick each rabbit's character on its device (Mind). It speaks only when a presence sensor in the rabbit's room (its device's area) says someone is there.",
+        "data": {
+          "mind": "Turn the mind on",
+          "mind_ai": "AI that thinks (AI Task)",
+          "mind_watch": "What it notices",
+          "mind_context": "What it knows about the home",
+          "mind_daily_cap": "Calls to the AI a day, at most"
+        },
+        "data_description": {
+          "mind_watch": "A change of state is an occasion: someone arriving, a machine finishing, a shutter. Readings (numbers) are not.",
+          "mind_context": "The causes, read when it thinks: a bedroom shutter closed in the afternoon tells it someone sleeps."
+        }
+      }
+    },
+    "error": {
+      "mind_needs_ai": "Choose an AI Task entity.",
+      "mind_needs_watch": "Choose at least one thing to notice."
     }
   }
 }

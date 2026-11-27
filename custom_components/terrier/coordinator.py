@@ -39,6 +39,9 @@ class TerrierCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
             config_entry=entry,
         )
         self.client = client
+        # Per rabbit, its mind's character (select.py, kept in Home Assistant
+        # only; brain.py reads it). "off" until its owner picks one.
+        self.minds: dict[str, str] = {}
         # Per rabbit: the slow half (diagnostics, mood, mail) and when it was
         # last fetched, on the monotonic clock.
         self._slow: dict[str, dict[str, Any]] = {}

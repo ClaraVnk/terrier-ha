@@ -19,6 +19,7 @@
   <img src="https://img.shields.io/badge/hardware-Nabaztag%3Atag%20v2-orange?style=flat-square" alt="Nabaztag:tag v2">
   <img src="https://img.shields.io/badge/Karotz-works-44cc11?style=flat-square" alt="Karotz: works">
   <img src="https://img.shields.io/badge/v1-beta-dbab09?style=flat-square" alt="Nabaztag v1: beta">
+  <img src="https://img.shields.io/badge/TagTagTag-beta-dbab09?style=flat-square" alt="TagTagTag: beta">
   <img src="https://img.shields.io/badge/protocol-Violet-6f42c1?style=flat-square" alt="Violet protocol">
   <img src="https://img.shields.io/badge/config-UI%20only-44cc11?style=flat-square" alt="UI configuration">
   <img src="https://img.shields.io/badge/dependencies-none-3776AB?style=flat-square&logo=python&logoColor=white" alt="No extra dependencies">
@@ -45,16 +46,17 @@ protocol that nobody has run a server for since the company died around 2011.
 This integration is how Home Assistant talks to it.
 
 > [!NOTE]
-> **Karotz (v3, 2011): it works. Nabaztag v1 (2005): beta.** Both join Le Terrier and
-> show up here like a Nabaztag:tag, through the same API. A **v1** speaks and
-> moves its ears (it has no microphone, no RFID, and acts at its next poll,
-> a few seconds later). A **Karotz** runs a small client that adopts it like a
-> v2 — speech, ears, its LED, sleep, the head button and Ztamps; no
-> microphone yet, and it stays on WPA2. Since 16 November 2026, real Karotz
-> are adopted on the Terrier with their own key. The v1 was built from its
-> protocol and proven in emulation, not on the real thing yet.
-> The Karotz guide: [terrier.cyberloutre.fr/karotz](https://terrier.cyberloutre.fr/karotz).
-> Have one? [Tell us how it goes](https://github.com/ClaraVnk/nabaztag/issues/new?title=I%20have%20a%20Nabaztag%20v1%20%2F%20Karotz).
+> **Karotz (v3, 2011): it works. Nabaztag v1 (2005) and TagTagTag: beta.** All
+> join Le Terrier and show up here like a Nabaztag:tag, through the same API.
+> A **v1** speaks and moves its ears (it has no microphone, no RFID, and acts
+> at its next poll, a few seconds later); the first real one was adopted on
+> 17 November 2026. A **Karotz** runs a small client that adopts it like a
+> v2 — speech, ears, its LED, sleep, the head button and Ztamps; on Terrier OS
+> it joins WPA3 networks. A **TagTagTag** (a Nabaztag:tag on Pynab) keeps Pynab
+> and runs the Terrier's client beside it.
+> The guides: [Karotz](https://terrier.cyberloutre.fr/karotz) ·
+> [v1](https://terrier.cyberloutre.fr/v1) · [TagTagTag](https://terrier.cyberloutre.fr/tagtagtag).
+> Have one? [Tell us how it goes](https://github.com/ClaraVnk/nabaztag/issues/new?title=I%20have%20a%20Nabaztag%20v1%20%2F%20Karotz%20%2F%20TagTagTag).
 
 > **Why not talk to the rabbit directly?** Because you cannot. The hardware
 > speaks plain HTTP and XMPP from 2006 — no TLS, ever — and it expects a
@@ -119,6 +121,9 @@ This integration is how Home Assistant talks to it.
   `terrier.now`: the rabbit page's own buttons — **tai chi**, story, joke,
   horoscope, name day, briefing, agenda, news, transport, weather, time,
   compliment (tai chi is also a button)
+- 🧠 **A mind of its own (beta)** — Home Assistant's own AI decides whether
+  something in the house is worth saying, only to someone in the rabbit's
+  room; your home never leaves Home Assistant ([below](#-the-rabbits-mind-beta))
 - 📊 **Diagnostics that explain a flaky rabbit** — availability, disconnects,
   session length, round-trip time
 
@@ -165,6 +170,33 @@ The token is checked before the entry is created — an integration that sets up
 cleanly and then fails forever is worse than one that refuses at the door. If
 the token is later revoked, Home Assistant asks for a new one rather than
 going quiet.
+
+### 🧠 The rabbit's mind (beta)
+
+Off by default. When something a person in the room would notice happens —
+someone arriving, a machine finishing, a shutter closing — the AI you already
+use in Home Assistant decides whether the rabbit says something, and what.
+Any provider Home Assistant knows: it goes through an **AI Task** entity
+(Home Assistant 2025.8 or later).
+
+**Your home stays in Home Assistant.** The AI you chose sees what you picked;
+the Terrier receives only the sentence and the ears, as from any automation.
+
+- **Settings → Devices & services → Le Terrier → Configure**: turn the mind
+  on, choose the AI Task entity, **what it notices** (state changes, never
+  readings) and **what it knows about the home** (the causes: a bedroom
+  shutter closed in the afternoon tells it someone is asleep), and a daily
+  cap of calls to the AI, shared by every rabbit.
+- **On each rabbit's device**: its **Mind** — off, discreet, chatty or
+  mischievous. A rabbit whose mind is off never speaks for it.
+- **It speaks only to someone in its room.** Put each rabbit's device in its
+  room (area), with a presence sensor there: an occupancy or presence sensor,
+  a motion sensor, a camera's person detection. Nobody there, or no such
+  sensor in its room: it stays silent, and the AI is not even asked.
+- Every decision, silence included, is an event `terrier_mind` you can watch
+  in **Developer tools → Events** to tune a character.
+- Any failure (no answer, the cap reached, an odd reply) is silence; an ear
+  is never sent past 10 (lying flat).
 
 ### 🤖 Examples
 

@@ -6,16 +6,38 @@ from collections.abc import Mapping
 from typing import Any
 
 import voluptuous as vol
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import (
+    BooleanSelector,
+    EntitySelector,
+    EntitySelectorConfig,
+    NumberSelector,
+    NumberSelectorConfig,
+    NumberSelectorMode,
     TextSelector,
     TextSelectorConfig,
     TextSelectorType,
 )
 
 from .api import TerrierAuthError, TerrierClient, TerrierError
-from .const import CONF_BASE_URL, CONF_TOKEN, DOMAIN
+from .const import (
+    CONF_BASE_URL,
+    CONF_BRAIN,
+    CONF_BRAIN_AI,
+    CONF_BRAIN_CAP,
+    CONF_BRAIN_CONTEXT,
+    CONF_BRAIN_WATCH,
+    CONF_TOKEN,
+    DEFAULT_BRAIN_CAP,
+    DOMAIN,
+)
 
 DEFAULT_URL = "https://terrier.cyberloutre.fr"
 
@@ -35,6 +57,11 @@ class TerrierConfigFlow(ConfigFlow, domain=DOMAIN):
     """Ask once, check it works, and say what is wrong when it does not."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(entry: ConfigEntry) -> OptionsFlow:
+        return TerrierOptionsFlow()
 
     def __init__(self) -> None:
         self._reauth_entry_data: Mapping[str, Any] | None = None
@@ -116,3 +143,50 @@ class TerrierConfigFlow(ConfigFlow, domain=DOMAIN):
             errors=errors,
             description_placeholders={"url": entry.data[CONF_BASE_URL]},
         )
+
+
+class TerrierOptionsFlow(OptionsFlow):
+    """The rabbit's mind (brain.py): off by default. Which of Home
+    Assistant's AI Task entities thinks, what it watches (what a person in
+    the room would notice), what it is told about the home (the causes),
+    and how many calls a day at most."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        errors: dict[str, str] = {}
+        opts = dict(self.config_entry.options)
+        if user_input is not None:
+            if user_input.get(CONF_BRAIN) and not user_input.get(CONF_BRAIN_AI):
+                errors[CONF_BRAIN_AI] = "mind_needs_ai"
+            elif user_input.get(CONF_BRAIN) and not user_input.get(CONF_BRAIN_WATCH):
+                errors[CONF_BRAIN_WATCH] = "mind_needs_watch"
+            else:
+                return self.async_create_entry(data=user_input)
+            opts = user_input
+        schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_BRAIN, default=bool(opts.get(CONF_BRAIN))
+                ): BooleanSelector(),
+                vol.Optional(
+                    CONF_BRAIN_AI,
+                    description={"suggested_value": opts.get(CONF_BRAIN_AI)},
+                ): EntitySelector(EntitySelectorConfig(domain="ai_task")),
+                vol.Optional(
+                    CONF_BRAIN_WATCH, default=opts.get(CONF_BRAIN_WATCH) or []
+                ): EntitySelector(EntitySelectorConfig(multiple=True)),
+                vol.Optional(
+                    CONF_BRAIN_CONTEXT, default=opts.get(CONF_BRAIN_CONTEXT) or []
+                ): EntitySelector(EntitySelectorConfig(multiple=True)),
+                vol.Required(
+                    CONF_BRAIN_CAP,
+                    default=int(opts.get(CONF_BRAIN_CAP) or DEFAULT_BRAIN_CAP),
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=1, max=500, step=1, mode=NumberSelectorMode.BOX
+                    )
+                ),
+            }
+        )
+        return self.async_show_form(step_id="init", data_schema=schema, errors=errors)
