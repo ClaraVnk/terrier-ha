@@ -23,6 +23,8 @@ from datetime import date, datetime
 from typing import Any
 
 from homeassistant.core import Event, HomeAssistant, State, callback
+from homeassistant.helpers import area_registry as ar
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.event import async_track_state_change_event
 
@@ -84,6 +86,26 @@ def is_occasion(old: State | None, new: State | None) -> bool:
     except ValueError:
         return True
     return False
+
+
+# Someone in the room, as Home Assistant's sensors say it: a presence or
+# occupancy sensor, a motion sensor, a camera's person detection (they are
+# binary sensors of these classes). The rabbit speaks only to someone there
+# (Clara, 2026-11-27: Monsieur Lapin by the living room's camera, Nabazprout
+# by the office's presence sensor).
+PRESENCE_CLASSES = ("presence", "occupancy", "motion")
+
+
+def someone_there(states: list[State]) -> bool | None:
+    """True if one of the room's presence sensors is on, False if none is,
+    None when the room has none (then the rabbit stays silent: it speaks
+    only when it knows someone is there)."""
+    sensors = [
+        s for s in states if s.attributes.get("device_class") in PRESENCE_CLASSES
+    ]
+    if not sensors:
+        return None
+    return any(s.state == "on" for s in sensors)
 
 
 def line(state: State) -> str:
@@ -188,6 +210,26 @@ class Mind:
         occasion = f"- {name}: {old.state} -> {new.state}"
         self.hass.async_create_task(self._think(occasion))
 
+    def _room_occupied(self, mac: str) -> bool:
+        """The rabbit's room is the area of its device; its presence sensors
+        are the binary sensors in that area (theirs or their device's)."""
+        devices, entities = dr.async_get(self.hass), er.async_get(self.hass)
+        dev = devices.async_get_device(identifiers={(DOMAIN, mac)})
+        area = dev.area_id if dev else None
+        if not area or ar.async_get(self.hass).async_get_area(area) is None:
+            return False
+        states = []
+        for ent in entities.entities.values():
+            if ent.domain != "binary_sensor" or ent.disabled_by:
+                continue
+            ent_area = ent.area_id
+            if ent_area is None and ent.device_id:
+                d = devices.async_get(ent.device_id)
+                ent_area = d.area_id if d else None
+            if ent_area == area and (st := self.hass.states.get(ent.entity_id)):
+                states.append(st)
+        return someone_there(states) is True
+
     async def _think(self, occasion: str) -> None:
         characters = getattr(self.coordinator, "minds", {})
         context = [line(s) for e in self.context if (s := self.hass.states.get(e))]
@@ -196,6 +238,13 @@ class Mind:
             if character not in TONES:
                 continue
             name = rabbit.get("name") or mac
+            if not self._room_occupied(mac):
+                # Nobody in its room, or no sensor to say so: no call at all.
+                self.hass.bus.async_fire(
+                    EVENT,
+                    {"rabbit": name, "occasion": occasion, "say": "", "why": "nobody"},
+                )
+                continue
             if not self.budget.take():
                 _LOGGER.info(
                     "mind: the day's %d calls are spent; %s stays silent",

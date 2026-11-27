@@ -780,7 +780,7 @@
     "step": {
       "init": {
         "title": "L'esprit du lapin",
-        "description": "Quand il se passe quelque chose qu'une personne remarquerait, l'IA choisie dans Home Assistant décide si le lapin dit quelque chose. Rien de ta maison ne quitte Home Assistant : le Terrier ne reçoit que la phrase. Le caractère de chaque lapin se choisit sur son appareil (Esprit).",
+        "description": "Quand il se passe quelque chose qu'une personne remarquerait, l'IA choisie dans Home Assistant décide si le lapin dit quelque chose. Rien de ta maison ne quitte Home Assistant : le Terrier ne reçoit que la phrase. Le caractère de chaque lapin se choisit sur son appareil (Esprit). Il ne parle que si un capteur de présence de sa pièce (la pièce de son appareil) dit que quelqu'un est là.",
         "data": {
           "mind": "Activer l'esprit",
           "mind_ai": "IA qui réfléchit (AI Task)",

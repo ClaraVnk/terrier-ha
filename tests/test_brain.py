@@ -63,3 +63,19 @@ def test_every_character_is_translated():
     for path in (ROOT / "strings.json", *(ROOT / "translations").glob("*.json")):
         states = json.loads(path.read_text())["entity"]["select"]["mind"]["state"]
         assert set(states) == set(brain.CHARACTERS), path
+
+
+def presence(state: str, cls: str = "occupancy") -> SimpleNamespace:
+    return SimpleNamespace(
+        state=state, entity_id="binary_sensor.x", attributes={"device_class": cls}
+    )
+
+
+def test_it_speaks_only_to_someone_in_the_room():
+    """Clara, 2026-11-27: the living room's camera, the office's sensor."""
+    assert brain.someone_there([presence("off"), presence("on", "motion")]) is True
+    assert brain.someone_there([presence("off", "presence")]) is False
+    assert (
+        brain.someone_there([presence("on", "door")]) is None
+    )  # not a presence sensor
+    assert brain.someone_there([]) is None

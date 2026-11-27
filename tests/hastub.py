@@ -212,6 +212,7 @@ def install() -> None:
         "homeassistant.components.switch",
         "homeassistant.components.time",
         "homeassistant.helpers.aiohttp_client",
+        "homeassistant.helpers.area_registry",
         "homeassistant.helpers.entity_platform",
         "homeassistant.helpers.entity_registry",
         "homeassistant.helpers.event",

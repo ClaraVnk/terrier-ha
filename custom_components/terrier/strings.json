@@ -780,7 +780,7 @@
     "step": {
       "init": {
         "title": "The rabbit's mind",
-        "description": "When something a person would notice happens, the AI you chose in Home Assistant decides whether the rabbit says something. Nothing of your home leaves Home Assistant: the Terrier only receives the sentence. Pick each rabbit's character on its device (Mind).",
+        "description": "When something a person would notice happens, the AI you chose in Home Assistant decides whether the rabbit says something. Nothing of your home leaves Home Assistant: the Terrier only receives the sentence. Pick each rabbit's character on its device (Mind). It speaks only when a presence sensor in the rabbit's room (its device's area) says someone is there.",
         "data": {
           "mind": "Turn the mind on",
           "mind_ai": "AI that thinks (AI Task)",

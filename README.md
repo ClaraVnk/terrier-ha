@@ -184,6 +184,10 @@ the Terrier receives only the sentence and the ears, as from any automation.
   cap of calls to the AI, shared by every rabbit.
 - **On each rabbit's device**: its **Mind** — off, discreet, chatty or
   mischievous. A rabbit whose mind is off never speaks for it.
+- **It speaks only to someone in its room.** Put each rabbit's device in its
+  room (area), with a presence sensor there: an occupancy or presence sensor,
+  a motion sensor, a camera's person detection. Nobody there, or no such
+  sensor in its room: it stays silent, and the AI is not even asked.
 - Every decision, silence included, is an event `terrier_mind` you can watch
   in **Developer tools → Events** to tune a character.
 - Any failure (no answer, the cap reached, an odd reply) is silence; an ear
