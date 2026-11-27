@@ -166,6 +166,29 @@ cleanly and then fails forever is worse than one that refuses at the door. If
 the token is later revoked, Home Assistant asks for a new one rather than
 going quiet.
 
+### 🧠 The rabbit's mind (beta)
+
+Off by default. When something a person in the room would notice happens —
+someone arriving, a machine finishing, a shutter closing — the AI you already
+use in Home Assistant decides whether the rabbit says something, and what.
+Any provider Home Assistant knows: it goes through an **AI Task** entity
+(Home Assistant 2025.8 or later).
+
+**Your home stays in Home Assistant.** The AI you chose sees what you picked;
+the Terrier receives only the sentence and the ears, as from any automation.
+
+- **Settings → Devices & services → Le Terrier → Configure**: turn the mind
+  on, choose the AI Task entity, **what it notices** (state changes, never
+  readings) and **what it knows about the home** (the causes: a bedroom
+  shutter closed in the afternoon tells it someone is asleep), and a daily
+  cap of calls to the AI, shared by every rabbit.
+- **On each rabbit's device**: its **Mind** — off, discreet, chatty or
+  mischievous. A rabbit whose mind is off never speaks for it.
+- Every decision, silence included, is an event `terrier_mind` you can watch
+  in **Developer tools → Events** to tune a character.
+- Any failure (no answer, the cap reached, an odd reply) is silence; an ear
+  is never sent past 10 (lying flat).
+
 ### 🤖 Examples
 
 Something arrived:

@@ -20,7 +20,8 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
 
 from .api import TerrierClient
-from .const import CONF_BASE_URL, CONF_TOKEN, DOMAIN, SLOW_INTERVAL
+from .brain import Mind
+from .const import CONF_BASE_URL, CONF_BRAIN, CONF_TOKEN, DOMAIN, SLOW_INTERVAL
 from .coordinator import TerrierCoordinator, stale_devices
 from .services import async_setup_services
 
@@ -84,7 +85,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: TerrierConfigEntry) -> b
     entry.async_on_unload(coordinator.async_add_listener(_prune))
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    if entry.options.get(CONF_BRAIN):
+        entry.async_on_unload(Mind(hass, entry, coordinator).start())
+    entry.async_on_unload(entry.add_update_listener(_options_changed))
     return True
+
+
+async def _options_changed(hass: HomeAssistant, entry: TerrierConfigEntry) -> None:
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: TerrierConfigEntry) -> bool:

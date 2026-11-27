@@ -8,9 +8,11 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.restore_state import RestoreEntity
 
 from . import TerrierConfigEntry
 from .api import TerrierError
+from .brain import CHARACTERS
 from .config_entity import TerrierSetting
 from .const import NOSE_MODES, canon
 from .entity import TerrierEntity, add_per_rabbit
@@ -27,6 +29,7 @@ async def async_setup_entry(
         async_add_entities,
         lambda c, mac, _r: [
             TerrierNose(c, mac),
+            TerrierMind(c, mac),
             *(TerrierSettingSelect(c, mac, s) for s in SELECTS),
         ],
     )
@@ -84,3 +87,32 @@ class TerrierSettingSelect(TerrierSetting, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         await self.write(option)
+
+
+class TerrierMind(TerrierEntity, SelectEntity, RestoreEntity):
+    """Its mind's character (brain.py): off, discreet, chatty, mischievous.
+
+    Kept in Home Assistant alone, like everything the mind sees: the Terrier
+    never learns it (Clara, 2026-11-27: the members' homes stay at home).
+    Off until chosen, and the mind runs only when turned on in the options.
+    """
+
+    _attr_translation_key = "mind"
+    _attr_options: ClassVar[list[str]] = list(CHARACTERS)
+
+    def __init__(self, coordinator, mac: str) -> None:
+        super().__init__(coordinator, mac, "mind")
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        last = await self.async_get_last_state()
+        if last is not None and last.state in CHARACTERS:
+            self.coordinator.minds[self._mac] = last.state
+
+    @property
+    def current_option(self) -> str:
+        return self.coordinator.minds.get(self._mac, "off")
+
+    async def async_select_option(self, option: str) -> None:
+        self.coordinator.minds[self._mac] = option
+        self.async_write_ha_state()

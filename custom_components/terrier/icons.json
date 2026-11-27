@@ -71,6 +71,9 @@
       },
       "alerts_mode": {
         "default": "mdi:alert-outline"
+      },
+      "mind": {
+        "default": "mdi:head-lightbulb-outline"
       }
     },
     "sensor": {

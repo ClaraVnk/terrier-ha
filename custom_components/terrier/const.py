@@ -9,6 +9,14 @@ DOMAIN = "terrier"
 CONF_BASE_URL = "base_url"
 CONF_TOKEN = "token"
 
+# The rabbit's mind (brain.py), in the entry's options: off until chosen.
+CONF_BRAIN = "mind"
+CONF_BRAIN_AI = "mind_ai"
+CONF_BRAIN_WATCH = "mind_watch"
+CONF_BRAIN_CONTEXT = "mind_context"
+CONF_BRAIN_CAP = "mind_daily_cap"
+DEFAULT_BRAIN_CAP = 30
+
 # The listing (online, firmware, config) every thirty seconds — the period of
 # the warren's own scheduler, so a faster poll would only show the same
 # numbers. Everything else every five minutes. Review of 2026-11-18: each
