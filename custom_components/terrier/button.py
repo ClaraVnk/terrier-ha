@@ -12,13 +12,14 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import TerrierConfigEntry
 from .api import TerrierClient, TerrierError, TerrierOffline
-from .entity import TerrierEntity, add_per_rabbit
+from .entity import TerrierEntity, add_per_rabbit, can
 
 
 @dataclass(frozen=True, kw_only=True)
 class TerrierButton(ButtonEntityDescription):
     press: Callable[[TerrierClient, str], Awaitable]
     needs_rabbit: bool = True
+    view: str = ""  # the API view it calls, for the rabbits that cannot
 
 
 BUTTONS: tuple[TerrierButton, ...] = (
@@ -27,17 +28,20 @@ BUTTONS: tuple[TerrierButton, ...] = (
         translation_key="compliment",
         icon="mdi:heart-outline",
         press=lambda c, mac: c.compliment(mac),
+        view="api_compliment",
     ),
     TerrierButton(
         key="taichi",
         translation_key="taichi",
         press=lambda c, mac: c.now(mac, "taichi"),
+        view="api_now",
     ),
     TerrierButton(
         key="stop",
         translation_key="stop",
         icon="mdi:stop",
         press=lambda c, mac: c.radio(mac, stop=True),
+        view="api_radio",
     ),
     TerrierButton(
         key="wake",
@@ -56,7 +60,11 @@ async def async_setup_entry(
     add_per_rabbit(
         entry,
         async_add_entities,
-        lambda c, mac, _r: [TerrierButtonEntity(c, mac, d) for d in BUTTONS],
+        lambda c, mac, r: [
+            TerrierButtonEntity(c, mac, d)
+            for d in BUTTONS
+            if not d.view or can(r, d.view)
+        ],
     )
 
 

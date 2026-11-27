@@ -15,7 +15,7 @@ from .api import TerrierError
 from .brain import CHARACTERS
 from .config_entity import TerrierSetting
 from .const import NOSE_MODES, canon
-from .entity import TerrierEntity, add_per_rabbit
+from .entity import TerrierEntity, add_per_rabbit, can
 from .settings import SELECTS
 
 
@@ -27,8 +27,8 @@ async def async_setup_entry(
     add_per_rabbit(
         entry,
         async_add_entities,
-        lambda c, mac, _r: [
-            TerrierNose(c, mac),
+        lambda c, mac, r: [
+            *([TerrierNose(c, mac)] if can(r, "api_nose") else []),
             TerrierMind(c, mac),
             *(TerrierSettingSelect(c, mac, s) for s in SELECTS),
         ],
