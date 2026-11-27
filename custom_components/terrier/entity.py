@@ -24,6 +24,15 @@ from .const import DOMAIN, MANUFACTURER, MODEL
 from .coordinator import TerrierCoordinator
 
 
+def can(rabbit: dict[str, Any] | None, view: str) -> bool:
+    """Whether this rabbit's kind does what an API view does. The Terrier
+    lists what it cannot under "unavailable" (2026-11-27: a v1 has no nose,
+    a Karotz no volume, a TagTagTag's nose is Pynab's); an older Terrier
+    lists nothing, and everything is offered as before."""
+    unavailable = (rabbit or {}).get("unavailable")
+    return not isinstance(unavailable, list) or view not in unavailable
+
+
 @callback
 def add_per_rabbit(
     entry: ConfigEntry,

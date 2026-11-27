@@ -16,7 +16,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from . import TerrierConfigEntry
 from .api import TerrierError
 from .config_entity import TerrierSetting
-from .entity import TerrierEntity, add_per_rabbit
+from .entity import TerrierEntity, add_per_rabbit, can
 from .settings import NUMBERS
 
 
@@ -29,11 +29,13 @@ async def async_setup_entry(
         entry,
         async_add_entities,
         lambda c, mac, r: [
-            TerrierCounter(c, mac),
+            *([TerrierCounter(c, mac)] if can(r, "api_counter") else []),
             # A Karotz has no volume setting on the Terrier: its page has none.
+            # An older Terrier does not say so ("unavailable"): the hw then.
             *(
                 [TerrierVolume(c, mac)]
-                if ((r or {}).get("config") or {}).get("hw") != "karotz"
+                if can(r, "api_volume")
+                and ((r or {}).get("config") or {}).get("hw") != "karotz"
                 else []
             ),
             *(TerrierSettingNumber(c, mac, s) for s in NUMBERS),

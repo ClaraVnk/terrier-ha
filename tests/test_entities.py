@@ -121,3 +121,39 @@ def test_the_volume_and_the_tai_chi_are_there_but_no_volume_on_a_karotz():
     assert vol.native_value == 100.0  # never set: the loudest
     _, added = _setup(button, {A: _rabbit()})
     assert f"{A}_taichi" in {e.unique_id for e in added}
+
+
+def test_a_rabbit_gets_only_what_its_kind_can_do():
+    """The Terrier lists it under "unavailable" (2026-11-27)."""
+    v1 = _rabbit(
+        unavailable=[
+            "api_nose",
+            "api_counter",
+            "api_volume",
+            "api_nightlight",
+            "api_now",
+            "api_radio",
+            "api_compliment",
+        ]
+    )
+    kz = _rabbit(unavailable=["api_nose", "api_counter", "api_volume"])
+    ids = set()
+    for platform in (select, number, light, button):
+        _, added = _setup(platform, {A: v1, B: kz})
+        ids |= {e.unique_id for e in added}
+    assert (
+        f"{A}_nose" not in ids
+        and f"{A}_nightlight" not in ids
+        and f"{A}_taichi" not in ids
+    )
+    assert f"{A}_wake" in ids  # sleep: every kind
+    assert (
+        f"{B}_nose" not in ids
+        and f"{B}_counter" not in ids
+        and f"{B}_nightlight" in ids
+    )
+
+
+def test_an_older_terrier_that_says_nothing_offers_everything():
+    _, added = _setup(select, {A: _rabbit()})
+    assert f"{A}_nose" in {e.unique_id for e in added}

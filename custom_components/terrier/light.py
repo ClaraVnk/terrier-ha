@@ -26,7 +26,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from . import TerrierConfigEntry
 from .api import TerrierError
 from .const import COLOURS, DEFAULT_COLOUR, canon
-from .entity import TerrierEntity, add_per_rabbit
+from .entity import TerrierEntity, add_per_rabbit, can
 
 # Five levels, as Home Assistant's 0-255 brightness. The rabbit's LED is not
 # linear and the Terrier settled on five steps for that reason.
@@ -63,7 +63,11 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     add_per_rabbit(
-        entry, async_add_entities, lambda c, mac, _r: [TerrierNightlight(c, mac)]
+        entry,
+        async_add_entities,
+        lambda c, mac, r: [TerrierNightlight(c, mac)]
+        if can(r, "api_nightlight")
+        else [],
     )
 
 
