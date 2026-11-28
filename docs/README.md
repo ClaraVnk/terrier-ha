@@ -38,6 +38,8 @@ resolved from the translations when it is first registered and stored in the
 entity registry; changing the language afterwards leaves every name in the
 old one. Delete the config entry, purge the registry, add it again.
 
-**`entities.svg` is generated**, from `custom_components/terrier/settings.py`
-and `icons.json`, so it cannot come to describe a version that no longer
-exists. Regenerate it rather than editing it.
+**`entities.svg` is drawn by hand** from `custom_components/terrier/settings.py`
+and the platform files (`sensor.py`, `switch.py`, `select.py`…) and
+`services.yaml`. It is no generator's output: when an entity or a service is
+added, change its count and its line here and the README's alt text (it
+was three versions behind on 2026-11-28).
