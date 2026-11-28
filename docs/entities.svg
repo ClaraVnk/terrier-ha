@@ -24,13 +24,13 @@
 <rect x="18" y="244" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="244" width="5" height="36" rx="2" fill="#b3309a"/>
 <text x="38" y="267" font-size="14" font-weight="650" fill="#1a1f2e">Selects</text>
-<text x="136" y="267" font-size="14" font-weight="700" fill="#b3309a">9</text>
-<text x="170" y="267" font-size="13" fill="#5f6372">nose, personality, speed, chime, nightlight colour, alerts</text>
+<text x="136" y="267" font-size="14" font-weight="700" fill="#b3309a">10</text>
+<text x="170" y="267" font-size="13" fill="#5f6372">mind, nose, personality, speed, chime, nightlight colour, alerts</text>
 <rect x="18" y="288" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="288" width="5" height="36" rx="2" fill="#0b7285"/>
 <text x="38" y="311" font-size="14" font-weight="650" fill="#1a1f2e">Numbers</text>
-<text x="136" y="311" font-size="14" font-weight="700" fill="#0b7285">5</text>
-<text x="170" y="311" font-size="13" fill="#5f6372">counter, nightlight brightness, belly minutes, pomodoro</text>
+<text x="136" y="311" font-size="14" font-weight="700" fill="#0b7285">6</text>
+<text x="170" y="311" font-size="13" fill="#5f6372">counter, volume, nightlight brightness, belly minutes, pomodoro</text>
 <rect x="18" y="332" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="332" width="5" height="36" rx="2" fill="#d4a017"/>
 <text x="38" y="355" font-size="14" font-weight="650" fill="#1a1f2e">Light</text>
@@ -39,8 +39,8 @@
 <rect x="18" y="376" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="376" width="5" height="36" rx="2" fill="#5f6372"/>
 <text x="38" y="399" font-size="14" font-weight="650" fill="#1a1f2e">Buttons</text>
-<text x="136" y="399" font-size="14" font-weight="700" fill="#5f6372">3</text>
-<text x="170" y="399" font-size="13" fill="#5f6372">compliment, stop, wake</text>
+<text x="136" y="399" font-size="14" font-weight="700" fill="#5f6372">4</text>
+<text x="170" y="399" font-size="13" fill="#5f6372">compliment, tai-chi, stop, wake</text>
 <rect x="18" y="420" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="420" width="5" height="36" rx="2" fill="#2a7951"/>
 <text x="38" y="443" font-size="14" font-weight="650" fill="#1a1f2e">Binary</text>
@@ -49,6 +49,6 @@
 <rect x="18" y="464" width="824" height="36" rx="9" fill="#ffffff" stroke="#e8e3d4"/>
 <rect x="18" y="464" width="5" height="36" rx="2" fill="#7c3aed"/>
 <text x="38" y="487" font-size="14" font-weight="650" fill="#1a1f2e">Services</text>
-<text x="136" y="487" font-size="14" font-weight="700" fill="#7c3aed">23</text>
-<text x="170" y="487" font-size="13" fill="#5f6372">tell, reminders, birthdays, head gestures, ask, listen, notify, radio, rfid…</text>
+<text x="136" y="487" font-size="14" font-weight="700" fill="#7c3aed">24</text>
+<text x="170" y="487" font-size="13" fill="#5f6372">tell, now, reminders, birthdays, head gestures, ask, listen, notify, radio, rfid…</text>
 </svg>

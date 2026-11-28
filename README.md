@@ -134,10 +134,12 @@ This integration is how Home Assistant talks to it.
 ### 🗺️ What one rabbit becomes
 
 <p align="center">
-  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 30 switches, 16 times, 9 selects, 6 numbers, a light, 4 buttons, a binary sensor and 24 services." width="860">
+  <img src="docs/entities.svg" alt="One rabbit becomes one device, 8 sensors, 30 switches, 16 times, 10 selects, 6 numbers, a light, 4 buttons, a binary sensor and 24 services." width="860">
 </p>
 
 <sub>Most of the schedule entities ship disabled — enable the ones you want from the device page, rather than meeting thirty-seven at once.</sub>
+
+<sub>That is a Nabaztag:tag. A v1, a Karotz or a TagTagTag gets only what its kind can do (the warren says which, since 0.6.1): a v1 has no volume, no microphone, no RFID, so no entity pretends otherwise.</sub>
 
 ### 📦 Install
 
